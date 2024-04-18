@@ -1,5 +1,6 @@
 #include "GameScene.h"
 #include "ImGuiManager.h"
+#include "PrimitiveDrawer.h"
 #include "TextureManager.h"
 #include <cassert>
 
@@ -9,6 +10,7 @@ GameScene::~GameScene() {
 
 	delete sprite_;
 	delete model_;
+	delete debugCamera_;
 }
 
 void GameScene::Initialize() {
@@ -21,8 +23,10 @@ void GameScene::Initialize() {
 	model_ = Model::Create();
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
-	soundDataHandle_ = audio_->LoadWave("fanfare.wav");      // サウンドデータの読みこみ
-	voiceHandle_ = audio_->PlayWave(soundDataHandle_, true); // 音声再生
+	soundDataHandle_ = audio_->LoadWave("fanfare.wav");                  // サウンドデータの読みこみ
+	voiceHandle_ = audio_->PlayWave(soundDataHandle_, true);             // 音声再生
+	PrimitiveDrawer::GetInstance()->SetViewProjection(&viewProjection_); // ライン描画が参照するビュープロジェクションを指定する(アドレス渡し）
+	debugCamera_ = new DebugCamera(1280, 720);                           // デバッグカメラの作成
 }
 
 void GameScene::Update() {
@@ -30,6 +34,7 @@ void GameScene::Update() {
 	position.x += 2.0f;
 	position.y += 1.0f;
 	sprite_->SetPosition(position);
+	debugCamera_->Update(); // デバッグカメラの更新
 
 	if (input_->TriggerKey(DIK_SPACE)) {
 		if (audio_->IsPlaying(voiceHandle_)) {
@@ -76,10 +81,15 @@ void GameScene::Draw() {
 
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
-	model_->Draw(worldTransform_, viewProjection_, txHandle_);
+	model_->Draw(worldTransform_, debugCamera_->GetViewProjection(), txHandle_);
 	/// </summary>
 
 	// 3Dオブジェクト描画後処理
+
+	for (float i = 0; i < 30; i++) {
+		PrimitiveDrawer::GetInstance()->DrawLine3d({i * 5, 0, 0}, {0, i * 5, i * 5}, {1.0f, 0.0f, 0.0f, 1.0f});
+	}
+
 	Model::PostDraw();
 #pragma endregion
 
