@@ -1,4 +1,5 @@
 #include "GameScene.h"
+#include "AxisIndicator.h"
 #include "ImGuiManager.h"
 #include "PrimitiveDrawer.h"
 #include "TextureManager.h"
@@ -27,6 +28,10 @@ void GameScene::Initialize() {
 	voiceHandle_ = audio_->PlayWave(soundDataHandle_, true);             // 音声再生
 	PrimitiveDrawer::GetInstance()->SetViewProjection(&viewProjection_); // ライン描画が参照するビュープロジェクションを指定する(アドレス渡し）
 	debugCamera_ = new DebugCamera(1280, 720);                           // デバッグカメラの作成
+	// 軸方向の表示を有効にする
+	AxisIndicator::GetInstance()->SetVisible(true);
+	// 軸方向表示が参照するビュープロジェクションを指定する（アドレス渡し）
+	AxisIndicator::GetInstance()->SetTargetViewProjection(&debugCamera_->GetViewProjection());
 }
 
 void GameScene::Update() {
@@ -86,8 +91,20 @@ void GameScene::Draw() {
 
 	// 3Dオブジェクト描画後処理
 
-	for (float i = 0; i < 30; i++) {
-		PrimitiveDrawer::GetInstance()->DrawLine3d({i * 5, 0, 0}, {0, i * 5, i * 5}, {1.0f, 0.0f, 0.0f, 1.0f});
+	float lineWidth = 40;
+	float lineHeight = 40;
+	float lineSpanH = 2;
+	float lineSpanV = 2;
+
+	// ラインを描画する
+	for (float h = -lineWidth / 2; h <= lineWidth / 2; h += lineSpanH) {
+		PrimitiveDrawer::GetInstance()->DrawLine3d(
+		    {h, -lineHeight / 2, 0}, // w=15
+		    {h, lineHeight / 2, 0},  // h=2
+		    {1.0f, 0.0f, 0.0f, 1.0f});
+	}
+	for (float v = -lineHeight / 2; v <= lineHeight / 2; v += lineSpanV) {
+		PrimitiveDrawer::GetInstance()->DrawLine3d({-lineWidth / 2, v, 0}, {lineWidth / 2, v, 0}, {0.0f, 0.0f, 1.0f, 1.0f});
 	}
 
 	Model::PostDraw();
