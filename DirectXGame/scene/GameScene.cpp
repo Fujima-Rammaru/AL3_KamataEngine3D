@@ -5,8 +5,9 @@
 GameScene::GameScene() {}
 
 GameScene::~GameScene() {
-	delete model_;
+	
 	delete player_;
+	delete model_;
 }
 
 void GameScene::Initialize() {
@@ -18,8 +19,8 @@ void GameScene::Initialize() {
 	model_ = Model::Create();                       // 3Dモデルの生成
 	worldTransform_.Initialize();
 	viewProjection_->Initialize();
-	player_ = new Player();
-	player_->initialize(model_, txHandle_,viewProjection_);
+	player_ = new Player();//自キャラの生成
+	player_->initialize(model_, txHandle_,viewProjection_);//自キャラの初期化
 }
 
 void GameScene::Update() { player_->Update(); }
