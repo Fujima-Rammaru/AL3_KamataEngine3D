@@ -48,7 +48,7 @@ private: // メンバ変数
 	Model* model_ = nullptr;
 	WorldTransform worldTransform_;
 	ViewProjection* viewProjection_=nullptr;
-	Player* player_ = nullptr;//自キャラ
+	Player* player_ = nullptr;
 
 	/// <summary>
 	/// ゲームシーン用

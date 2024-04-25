@@ -7,20 +7,26 @@
 class Player {
 
 public:
-	void initialize(Model* model,uint32_t textureHandle,ViewProjection* viewProjection);
+	void initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection);
+
+	Player();
+
+	~Player();
 
 	void Update();
 
 	void Draw();
 
 private:
-	// ワールド変換データ
-	WorldTransform worldTrasform_;
+	
+	WorldTransform worldTransform_;
 
 	Model* model_ = nullptr;
 
-	//テクスチャハンドル
+
 	uint32_t txHandle_ = 0u;
 
-	ViewProjection* viewProjection_=nullptr;
+	ViewProjection* viewProjection_ = nullptr;
+
+	ObjectColor* objectColor_ = nullptr;
 };

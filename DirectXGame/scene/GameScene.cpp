@@ -6,7 +6,7 @@ GameScene::GameScene() {}
 
 GameScene::~GameScene() {
 	
-	delete player_;
+	
 	delete model_;
 }
 
@@ -50,7 +50,6 @@ void GameScene::Draw() {
 
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
-	// model_->Draw(worldTransform_, viewProjection_, txHandle_);
 	player_->Draw();
 
 	/// </summary>
