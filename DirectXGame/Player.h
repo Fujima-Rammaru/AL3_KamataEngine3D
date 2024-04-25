@@ -28,5 +28,5 @@ private:
 
 	ViewProjection* viewProjection_ = nullptr;
 
-	ObjectColor* objectColor_ = nullptr;
+	
 };

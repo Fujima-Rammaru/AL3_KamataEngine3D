@@ -47,9 +47,9 @@ private: // メンバ変数
 	uint32_t txHandle_ = 0;
 	Model* model_ = nullptr;
 	WorldTransform worldTransform_;
-	ViewProjection* viewProjection_=nullptr;
+	ViewProjection* viewProjection_ = nullptr;
+	
 	Player* player_ = nullptr;
-
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
