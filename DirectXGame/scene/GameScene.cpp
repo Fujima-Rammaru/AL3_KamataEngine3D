@@ -1,4 +1,6 @@
 #include "GameScene.h"
+#include "DebugCamera.h"
+#include "MatrixFunction.h"
 #include "TextureManager.h"
 #include <cassert>
 
@@ -6,8 +8,16 @@ GameScene::GameScene() {}
 
 GameScene::~GameScene() {
 
+	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+			delete worldTransformBlock;
+		}
+	}
+	worldTransformBlocks_.clear();
 	delete model_;
+	delete block_;
 	delete player_;
+	delete debugCamera_;
 }
 
 void GameScene::Initialize() {
@@ -16,14 +26,70 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 	txHandle_ = TextureManager::Load("sample.png"); // テクスチャの読み込み
-	model_ = Model::Create();                       // 3Dモデルの生成
+	blockTxHandle_ = TextureManager::Load("cube/cube.jpg");
+	model_ = Model::Create(); // 3Dモデルの生成
+	block_ = Model::Create(); // 3Dモデルの生成
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
 	player_ = new Player();                                   // 自キャラの生成
 	player_->initialize(model_, txHandle_, &viewProjection_); // 自キャラの初期化
+
+	debugCamera_ = new DebugCamera(WinApp::kWindowWidth, WinApp::kWindowHeight);
+
+	const uint32_t kNumBlockHorizontal = 20; // 要素数
+	const uint32_t kNumBlockVirtical = 10;   // 要素数
+	const float kBlockWidth = 2.0f;
+	const float kBlockHeight = 2.0f;
+	// 要素数を変更する
+
+	worldTransformBlocks_.resize(kNumBlockVirtical);
+	for (uint32_t y = 0; y < kNumBlockVirtical; y++) { // キューブの生成
+		worldTransformBlocks_[y].resize(kNumBlockHorizontal);
+		for (uint32_t x = 0; x < kNumBlockHorizontal; ++x) {
+			worldTransformBlocks_[y][x] = new WorldTransform();
+			worldTransformBlocks_[y][x]->Initialize();
+			// if (x % 2 == 1) {
+			//	worldTransformBlocks_= nullptr;
+			// }
+			worldTransformBlocks_[y][x]->translation_.x = kBlockWidth * x;
+
+			worldTransformBlocks_[y][x]->translation_.y = kBlockHeight * y;
+		}
+	}
 }
 
-void GameScene::Update() { player_->Update(); }
+void GameScene::Update() {
+	Vector3 scale{1.0f, 1.0f, 1.0f};     // 拡縮
+	Vector3 rotate{1.0f, 1.0f, 1.0f};    // 回転
+	Vector3 translate{1.0f, 1.0f, 1.0f}; // 平行移動
+
+	MatrixFunction* matrixFunction;
+	matrixFunction = new MatrixFunction;
+	for (const auto& worldTransformBlockLine : worldTransformBlocks_) {
+		for (auto worldTransformBlock : worldTransformBlockLine) {
+			if (!worldTransformBlock) {
+				continue;
+			}
+
+			worldTransformBlock->matWorld_ = matrixFunction->MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
+
+			// 定数バッファに転送する
+			worldTransformBlock->TransferMatrix();
+		}
+	}
+
+	player_->Update();
+
+#ifdef _DEBUG
+	if (input_->TriggerKey(DIK_BACKSPACE)) {
+		isDebugCameraactive_ ^= true;
+	}
+	if (isDebugCameraactive_) {
+		debugCamera_->Update();
+		viewProjection_.matView;
+	}
+#endif
+}
 
 void GameScene::Draw() {
 
@@ -50,7 +116,13 @@ void GameScene::Draw() {
 
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
-	player_->Draw();
+	// player_->Draw();
+
+	for (const auto& worldTransformBlockLine : worldTransformBlocks_) {
+		for (auto worldTransformBlock : worldTransformBlockLine) {
+			block_->Draw(*worldTransformBlock, viewProjection_);
+		}
+	}
 
 	/// </summary>
 

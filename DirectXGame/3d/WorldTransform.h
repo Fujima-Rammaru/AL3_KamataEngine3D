@@ -4,6 +4,7 @@
 #include "Vector3.h"
 #include <d3d12.h>
 #include <type_traits>
+#include "MatrixFunction.h"
 #include <wrl.h>
 
 // 定数バッファ用データ構造体
@@ -29,6 +30,8 @@ public:
 
 	WorldTransform() = default;
 	~WorldTransform() = default;
+
+	void UpdateMatrix();
 
 	/// <summary>
 	/// 初期化
