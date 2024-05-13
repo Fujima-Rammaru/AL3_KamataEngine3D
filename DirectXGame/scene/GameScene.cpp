@@ -18,6 +18,8 @@ GameScene::~GameScene() {
 	delete block_;
 	delete player_;
 	delete debugCamera_;
+	delete skyDome_;
+	delete modelSkyDome_;
 }
 
 void GameScene::Initialize() {
@@ -34,6 +36,10 @@ void GameScene::Initialize() {
 	player_ = new Player();                                   // 自キャラの生成
 	player_->initialize(model_, txHandle_, &viewProjection_); // 自キャラの初期化
 
+	skyDome_ = new SkyDome();                              // 天球の生成
+	skyDome_->Initialize();                                // 天球の初期化
+	modelSkyDome_ = Model::CreateFromOBJ("SkyDome", true); // 3Dモデルの生成
+
 	debugCamera_ = new DebugCamera(WinApp::kWindowWidth, WinApp::kWindowHeight);
 
 	const uint32_t kNumBlockHorizontal = 20; // 要素数
@@ -48,12 +54,18 @@ void GameScene::Initialize() {
 		for (uint32_t x = 0; x < kNumBlockHorizontal; ++x) {
 			worldTransformBlocks_[y][x] = new WorldTransform();
 			worldTransformBlocks_[y][x]->Initialize();
-			// if (x % 2 == 1) {
-			//	worldTransformBlocks_= nullptr;
-			// }
-			worldTransformBlocks_[y][x]->translation_.x = kBlockWidth * x;
-
-			worldTransformBlocks_[y][x]->translation_.y = kBlockHeight * y;
+			
+			if (x % 2 == 0 && y % 2 == 0) {
+				worldTransformBlocks_[y][x]->translation_.x = kBlockWidth * x;
+				worldTransformBlocks_[y][x]->translation_.y = kBlockHeight * y;
+				/*worldTransformBlocks_[y][x]->translation_.x = NULL;
+				worldTransformBlocks_[y][x]->translation_.y = NULL;*/
+			} else if (x % 2 == 1 && y % 2 == 1) {
+				/*worldTransformBlocks_[y][x]->translation_.x = NULL;
+				worldTransformBlocks_[y][x]->translation_.y = NULL;*/
+				worldTransformBlocks_[y][x]->translation_.x = kBlockWidth * x;
+				worldTransformBlocks_[y][x]->translation_.y = kBlockHeight * y;
+			}
 		}
 	}
 }
@@ -81,12 +93,17 @@ void GameScene::Update() {
 	player_->Update();
 
 #ifdef _DEBUG
-	if (input_->TriggerKey(DIK_BACKSPACE)) {
+	if (input_->TriggerKey(DIK_BACK)) {
 		isDebugCameraactive_ ^= true;
 	}
 	if (isDebugCameraactive_) {
 		debugCamera_->Update();
-		viewProjection_.matView;
+		//	viewProjection_.matView = debugCamera_; /////
+		// viewProjection_.matProjection=
+
+		viewProjection_.TransferMatrix();
+	} else {
+		viewProjection_.UpdateMatrix();
 	}
 #endif
 }
@@ -123,7 +140,7 @@ void GameScene::Draw() {
 			block_->Draw(*worldTransformBlock, viewProjection_);
 		}
 	}
-
+	model_->Draw(worldTransform_, viewProjection_);
 	/// </summary>
 
 	// 3Dオブジェクト描画後処理

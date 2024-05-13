@@ -10,6 +10,7 @@
 #include "WorldTransform.h"
 #include <vector>
 #include "DebugCamera.h"
+#include "SkyDome.h"
 
 /// <summary>
 /// ゲームシーン
@@ -58,6 +59,8 @@ private: // メンバ変数
 
 	bool isDebugCameraactive_ = false;
 	DebugCamera* debugCamera_ = nullptr;
+	SkyDome* skyDome_ = nullptr;
+	Model* modelSkyDome_ = nullptr;
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
