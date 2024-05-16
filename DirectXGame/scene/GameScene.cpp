@@ -54,7 +54,7 @@ void GameScene::Initialize() {
 		for (uint32_t x = 0; x < kNumBlockHorizontal; ++x) {
 			worldTransformBlocks_[y][x] = new WorldTransform();
 			worldTransformBlocks_[y][x]->Initialize();
-			
+
 			if (x % 2 == 0 && y % 2 == 0) {
 				worldTransformBlocks_[y][x]->translation_.x = kBlockWidth * x;
 				worldTransformBlocks_[y][x]->translation_.y = kBlockHeight * y;
