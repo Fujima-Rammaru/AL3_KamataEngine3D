@@ -28,6 +28,7 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 	txHandle_ = TextureManager::Load("sample.png"); // テクスチャの読み込み
+	// uint32_t skyDomeTxHandle_ = TextureManager::Load("uvChecker.png"); // テクスチャの読み込み
 	blockTxHandle_ = TextureManager::Load("cube/cube.jpg");
 	model_ = Model::Create(); // 3Dモデルの生成
 	block_ = Model::Create(); // 3Dモデルの生成
@@ -37,10 +38,10 @@ void GameScene::Initialize() {
 	player_->initialize(model_, txHandle_, &viewProjection_); // 自キャラの初期化
 
 	skyDome_ = new SkyDome();                              // 天球の生成
-	skyDome_->Initialize();                                // 天球の初期化
 	modelSkyDome_ = Model::CreateFromOBJ("SkyDome", true); // 3Dモデルの生成
-
+	skyDome_->Initialize(modelSkyDome_, &viewProjection_); // 天球の初期化
 	debugCamera_ = new DebugCamera(WinApp::kWindowWidth, WinApp::kWindowHeight);
+	debugCamera_->SetFarZ(5000);
 
 	const uint32_t kNumBlockHorizontal = 20; // 要素数
 	const uint32_t kNumBlockVirtical = 10;   // 要素数
@@ -91,6 +92,7 @@ void GameScene::Update() {
 	}
 
 	player_->Update();
+	skyDome_->Update();
 
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_BACK)) {
@@ -141,6 +143,8 @@ void GameScene::Draw() {
 		}
 	}
 	model_->Draw(worldTransform_, viewProjection_);
+	skyDome_->Draw();
+
 	/// </summary>
 
 	// 3Dオブジェクト描画後処理

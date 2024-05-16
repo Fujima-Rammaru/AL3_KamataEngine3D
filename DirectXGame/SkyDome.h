@@ -1,9 +1,11 @@
 #pragma once
 #include "WorldTransform.h"
 #include "Model.h"
+#include "cassert"
+#include "ViewProjection.h"
 class SkyDome {
 public:
-	void Initialize();
+	void Initialize(Model* model,  ViewProjection* viewProjection);
 
 	void Update();
 
@@ -13,6 +15,8 @@ public:
 private:
 	WorldTransform worldTransform_;
 	Model* model_ = nullptr;
-
+	ViewProjection* viewProjection_ = nullptr;
+	
+	
 };
 
