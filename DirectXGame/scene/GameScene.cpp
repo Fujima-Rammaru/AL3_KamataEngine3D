@@ -96,6 +96,7 @@ void GameScene::Update() {
 	if (input_->TriggerKey(DIK_BACK)) {
 		isDebugCameraactive_ ^= true;
 	}
+
 	if (isDebugCameraactive_) {
 		debugCamera_->Update();
 		//	viewProjection_.matView = debugCamera_; /////
