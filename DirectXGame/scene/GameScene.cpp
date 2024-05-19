@@ -14,8 +14,8 @@ GameScene::~GameScene() {
 		}
 	}
 	worldTransformBlocks_.clear();
-	delete model_;
-	delete block_;
+	delete modelPlayer_;
+	delete modelBlock_;
 	delete player_;
 	delete debugCamera_;
 	delete skyDome_;
@@ -30,19 +30,18 @@ void GameScene::Initialize() {
 	txHandle_ = TextureManager::Load("sample.png"); // テクスチャの読み込み
 	// uint32_t skyDomeTxHandle_ = TextureManager::Load("uvChecker.png"); // テクスチャの読み込み
 	blockTxHandle_ = TextureManager::Load("cube/cube.jpg");
-	model_ = Model::Create(); // 3Dモデルの生成
-	block_ = Model::Create(); // 3Dモデルの生成
+	modelPlayer_ = Model::Create(); // 3Dモデルの生成
+	modelBlock_ = Model::Create();  // 3Dモデルの生成
 	worldTransform_.Initialize();
-	viewProjection_.Initialize();
-	player_ = new Player();                                   // 自キャラの生成
-	player_->initialize(model_, txHandle_, &viewProjection_); // 自キャラの初期化
+	player_ = new Player();                                         // 自キャラの生成
+	player_->initialize(modelPlayer_, txHandle_, &viewProjection_); // 自キャラの初期化
 
 	skyDome_ = new SkyDome();                              // 天球の生成
 	modelSkyDome_ = Model::CreateFromOBJ("SkyDome", true); // 3Dモデルの生成
 	skyDome_->Initialize(modelSkyDome_, &viewProjection_); // 天球の初期化
 	debugCamera_ = new DebugCamera(WinApp::kWindowWidth, WinApp::kWindowHeight);
 	debugCamera_->SetFarZ(5000);
-
+	viewProjection_.Initialize();
 	const uint32_t kNumBlockHorizontal = 20; // 要素数
 	const uint32_t kNumBlockVirtical = 10;   // 要素数
 	const float kBlockWidth = 2.0f;
@@ -100,8 +99,6 @@ void GameScene::Update() {
 	}
 	if (isDebugCameraactive_) {
 		debugCamera_->Update();
-		//	viewProjection_.matView = debugCamera_; /////
-		// viewProjection_.matProjection=
 
 		viewProjection_.TransferMatrix();
 	} else {
@@ -139,11 +136,12 @@ void GameScene::Draw() {
 
 	for (const auto& worldTransformBlockLine : worldTransformBlocks_) {
 		for (auto worldTransformBlock : worldTransformBlockLine) {
-			block_->Draw(*worldTransformBlock, viewProjection_);
+			modelBlock_->Draw(*worldTransformBlock, debugCamera_->GetViewProjection());
 		}
 	}
-	model_->Draw(worldTransform_, viewProjection_);
-	skyDome_->Draw();
+	modelPlayer_->Draw(worldTransform_, debugCamera_->GetViewProjection());
+	modelSkyDome_->Draw(worldTransform_, debugCamera_->GetViewProjection());
+	// skyDome_->Draw();
 
 	/// </summary>
 

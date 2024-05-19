@@ -48,12 +48,12 @@ private: // メンバ変数
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
 	uint32_t txHandle_ = 0u;
-	Model* model_ = nullptr;//自キャラ
+	Model* modelPlayer_ = nullptr;//自キャラ
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
 	Player* player_ = nullptr;
 
-	Model* block_ = nullptr;//ブロック
+	Model* modelBlock_ = nullptr;//ブロック
 	uint32_t blockTxHandle_ = 0u;//ブロックテクスチャハンドル
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;//可変個配列
 
