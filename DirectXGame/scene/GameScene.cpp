@@ -99,8 +99,6 @@ void GameScene::Update() {
 
 	if (isDebugCameraactive_) {
 		debugCamera_->Update();
-		//	viewProjection_.matView = debugCamera_; /////
-		// viewProjection_.matProjection=
 
 		viewProjection_.TransferMatrix();
 	} else {
@@ -138,10 +136,10 @@ void GameScene::Draw() {
 
 	for (const auto& worldTransformBlockLine : worldTransformBlocks_) {
 		for (auto worldTransformBlock : worldTransformBlockLine) {
-			block_->Draw(*worldTransformBlock, viewProjection_);
+			block_->Draw(*worldTransformBlock, debugCamera_->GetViewProjection());
 		}
 	}
-	model_->Draw(worldTransform_, viewProjection_);
+	// model_->Draw(worldTransform_, viewProjection);
 	/// </summary>
 
 	// 3Dオブジェクト描画後処理
