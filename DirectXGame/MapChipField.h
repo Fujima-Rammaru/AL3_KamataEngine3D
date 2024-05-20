@@ -28,12 +28,16 @@ public:
 
 	Vector3 GetMapChipPositionByIndex(uint32_t xIndex, uint32_t yIndex);
 
-	    private :
+	uint32_t GetNumBlockVirtical();
+	uint32_t GetNumBlockHorizontal();
+	float GetkBlockWidth();
+	float GetkBlockHeight();
 
-	    MapChipData mapChipData_;
+private:
+	MapChipData mapChipData_;
 
-	static inline const float kBlockWidth = 1.0f;
-	static inline const float kBlockHeight = 1.0f;
+	static inline const float kBlockWidth = 2.0f;
+	static inline const float kBlockHeight = 2.0f;
 
 	static inline const uint32_t kNumBlockVirtical = 20;    // 縦幅
 	static inline const uint32_t kNumBlockHorizontal = 100; // 横幅

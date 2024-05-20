@@ -70,7 +70,12 @@ MapChipType MapChipField::GetMapChipTypeByIndex(uint32_t xIndex, uint32_t yIndex
 	return mapChipData_.data[yIndex][xIndex];
 }
 
-//縦横のインデックスを指定してその位置のマップチップのワールド座標を取得する
-Vector3 MapChipField::GetMapChipPositionByIndex(uint32_t xIndex, uint32_t yIndex) {
-	return Vector3(kBlockWidth * xIndex, kBlockHeight * (kNumBlockVirtical - 1 - yIndex), 0);
-}
+// 縦横のインデックスを指定してその位置のマップチップのワールド座標を取得する
+Vector3 MapChipField::GetMapChipPositionByIndex(uint32_t xIndex, uint32_t yIndex) { return Vector3(kBlockWidth * xIndex, kBlockHeight * (kNumBlockVirtical - 1 - yIndex), 0); }
+
+uint32_t MapChipField::GetNumBlockVirtical() { return kNumBlockVirtical; }
+
+uint32_t MapChipField::GetNumBlockHorizontal() { return kNumBlockHorizontal; }
+
+float MapChipField::GetkBlockHeight() { return kBlockHeight; }
+float MapChipField::GetkBlockWidth() { return kBlockWidth; }

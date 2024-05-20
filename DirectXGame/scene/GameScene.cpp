@@ -33,6 +33,7 @@ void GameScene::Initialize() {
 	blockTxHandle_ = TextureManager::Load("cube/cube.jpg");
 	model_ = Model::Create(); // 3Dモデルの生成
 	block_ = Model::Create(); // 3Dモデルの生成
+
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
 	player_ = new Player();                                   // 自キャラの生成
@@ -44,36 +45,34 @@ void GameScene::Initialize() {
 	debugCamera_ = new DebugCamera(WinApp::kWindowWidth, WinApp::kWindowHeight);
 	debugCamera_->SetFarZ(5000);
 
-	
 	mapChipField_ = new MapChipField;
 	mapChipField_->LoadMapChipCsv("Resources/MapChip.csv");
+	GenerateBlocks();
 
-	
+	// const uint32_t kNumBlockHorizontal = 20; // 要素数
+	// const uint32_t kNumBlockVirtical = 10;   // 要素数
+	// const float kBlockWidth = 2.0f;
+	// const float kBlockHeight = 2.0f;
 
-	const uint32_t kNumBlockHorizontal = 20; // 要素数
-	const uint32_t kNumBlockVirtical = 10;   // 要素数
-	const float kBlockWidth = 2.0f;
-	const float kBlockHeight = 2.0f;
+	//// 要素数を変更する
+	// worldTransformBlocks_.resize(kNumBlockVirtical);
+	// for (uint32_t y = 0; y < kNumBlockVirtical; y++) { // キューブの生成
+	//	worldTransformBlocks_[y].resize(kNumBlockHorizontal);
+	//	for (uint32_t x = 0; x < kNumBlockHorizontal; ++x) {
+	//		worldTransformBlocks_[y][x] = new WorldTransform();
+	//		worldTransformBlocks_[y][x]->Initialize();
 
-	// 要素数を変更する
-	worldTransformBlocks_.resize(kNumBlockVirtical);
-	for (uint32_t y = 0; y < kNumBlockVirtical; y++) { // キューブの生成
-		worldTransformBlocks_[y].resize(kNumBlockHorizontal);
-		for (uint32_t x = 0; x < kNumBlockHorizontal; ++x) {
-			worldTransformBlocks_[y][x] = new WorldTransform();
-			worldTransformBlocks_[y][x]->Initialize();
+	//		if (x % 2 == 0 && y % 2 == 0) {
+	//			worldTransformBlocks_[y][x]->translation_.x = kBlockWidth * x;
+	//			worldTransformBlocks_[y][x]->translation_.y = kBlockHeight * y;
 
-			if (x % 2 == 0 && y % 2 == 0) {
-				worldTransformBlocks_[y][x]->translation_.x = kBlockWidth * x;
-				worldTransformBlocks_[y][x]->translation_.y = kBlockHeight * y;
-				
-			} else if (x % 2 == 1 && y % 2 == 1) {
-				
-				worldTransformBlocks_[y][x]->translation_.x = kBlockWidth * x;
-				worldTransformBlocks_[y][x]->translation_.y = kBlockHeight * y;
-			}
-		}
-	}
+	//		} else if (x % 2 == 1 && y % 2 == 1) {
+
+	//			worldTransformBlocks_[y][x]->translation_.x = kBlockWidth * x;
+	//			worldTransformBlocks_[y][x]->translation_.y = kBlockHeight * y;
+	//		}
+	//	}
+	//}
 }
 
 void GameScene::Update() {
@@ -83,7 +82,8 @@ void GameScene::Update() {
 
 	MatrixFunction* matrixFunction;
 	matrixFunction = new MatrixFunction;
-	for (const auto& worldTransformBlockLine : worldTransformBlocks_) {
+
+	for (auto& worldTransformBlockLine : worldTransformBlocks_) {
 		for (auto worldTransformBlock : worldTransformBlockLine) {
 			if (!worldTransformBlock) {
 				continue;
@@ -144,11 +144,11 @@ void GameScene::Draw() {
 
 	for (const auto& worldTransformBlockLine : worldTransformBlocks_) {
 		for (auto worldTransformBlock : worldTransformBlockLine) {
-			block_->Draw(*worldTransformBlock, viewProjection_);
+			block_->Draw(*worldTransformBlock, debugCamera_->GetViewProjection());
 		}
 	}
-	model_->Draw(worldTransform_, viewProjection_);
-	skyDome_->Draw();
+	model_->Draw(worldTransform_, debugCamera_->GetViewProjection());
+	modelSkyDome_->Draw(worldTransform_, debugCamera_->GetViewProjection());
 
 	/// </summary>
 
@@ -171,5 +171,29 @@ void GameScene::Draw() {
 }
 
 void GameScene::GenerateBlocks() {
+	uint32_t kNumBlockHorizontal = mapChipField_->GetNumBlockHorizontal(); // 要素数
+	uint32_t kNumBlockVirtical = mapChipField_->GetNumBlockVirtical();     // 要素数
+	                                                                       //	float kBlockWidth = mapChipField_->GetkBlockWidth();
+	                                                                       //	float kBlockHeight = mapChipField_->GetkBlockHeight();
 
+	// 要素数を変更する
+	worldTransformBlocks_.resize(kNumBlockVirtical);
+	for (uint32_t y = 0; y < kNumBlockVirtical; y++) { // キューブの生成
+		worldTransformBlocks_[y].resize(kNumBlockHorizontal);
+
+		for (uint32_t x = 0; x < kNumBlockHorizontal; ++x) {
+			worldTransformBlocks_[y][x] = new WorldTransform();
+
+			if (mapChipField_->GetMapChipTypeByIndex(x, y) == MapChipType::kBlock) {
+
+				WorldTransform* worldTransform = new WorldTransform();
+				worldTransform->Initialize();
+
+				worldTransformBlocks_[y][x] = worldTransform;
+				// worldTransformBlocks_[y][x]->Initialize();
+				worldTransformBlocks_[y][x]->translation_ = mapChipField_->GetMapChipPositionByIndex(x, y);
+			}
+			worldTransformBlocks_[y][x]->Initialize();
+		}
+	}
 }
