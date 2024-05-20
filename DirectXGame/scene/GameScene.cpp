@@ -28,13 +28,12 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 	txHandle_ = TextureManager::Load("sample.png"); // テクスチャの読み込み
-	// uint32_t skyDomeTxHandle_ = TextureManager::Load("uvChecker.png"); // テクスチャの読み込み
 	blockTxHandle_ = TextureManager::Load("cube/cube.jpg");
 	modelPlayer_ = Model::Create(); // 3Dモデルの生成
 	modelBlock_ = Model::Create();  // 3Dモデルの生成
 	worldTransform_.Initialize();
-	player_ = new Player();                                         // 自キャラの生成
-	player_->initialize(modelPlayer_, txHandle_, &viewProjection_); // 自キャラの初期化
+	player_ = new Player();                                               // 自キャラの生成
+	player_->initialize(modelPlayer_, txHandle_, &playerViewProjection_); // 自キャラの初期化
 
 	skyDome_ = new SkyDome();                              // 天球の生成
 	modelSkyDome_ = Model::CreateFromOBJ("SkyDome", true); // 3Dモデルの生成
@@ -42,12 +41,13 @@ void GameScene::Initialize() {
 	debugCamera_ = new DebugCamera(WinApp::kWindowWidth, WinApp::kWindowHeight);
 	debugCamera_->SetFarZ(5000);
 	viewProjection_.Initialize();
+	playerViewProjection_.Initialize();
 	const uint32_t kNumBlockHorizontal = 20; // 要素数
 	const uint32_t kNumBlockVirtical = 10;   // 要素数
 	const float kBlockWidth = 2.0f;
 	const float kBlockHeight = 2.0f;
-	// 要素数を変更する
 
+	// 要素数を変更する
 	worldTransformBlocks_.resize(kNumBlockVirtical);
 	for (uint32_t y = 0; y < kNumBlockVirtical; y++) { // キューブの生成
 		worldTransformBlocks_[y].resize(kNumBlockHorizontal);
@@ -58,16 +58,14 @@ void GameScene::Initialize() {
 			if (x % 2 == 0 && y % 2 == 0) {
 				worldTransformBlocks_[y][x]->translation_.x = kBlockWidth * x;
 				worldTransformBlocks_[y][x]->translation_.y = kBlockHeight * y;
-				/*worldTransformBlocks_[y][x]->translation_.x = NULL;
-				worldTransformBlocks_[y][x]->translation_.y = NULL;*/
 			} else if (x % 2 == 1 && y % 2 == 1) {
-				/*worldTransformBlocks_[y][x]->translation_.x = NULL;
-				worldTransformBlocks_[y][x]->translation_.y = NULL;*/
 				worldTransformBlocks_[y][x]->translation_.x = kBlockWidth * x;
 				worldTransformBlocks_[y][x]->translation_.y = kBlockHeight * y;
 			}
 		}
 	}
+
+	// アフィン変換行列の関数作成やり直し
 }
 
 void GameScene::Update() {
@@ -89,6 +87,10 @@ void GameScene::Update() {
 			worldTransformBlock->TransferMatrix();
 		}
 	}
+
+	worldTransform_.translation_.y = 50.0f;
+	worldTransform_.matWorld_ = matrixFunction->MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
+	// playerViewProjection_.translation_.y = 10.0f;
 
 	player_->Update();
 	skyDome_->Update();
