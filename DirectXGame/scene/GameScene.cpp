@@ -20,6 +20,7 @@ GameScene::~GameScene() {
 	delete debugCamera_;
 	delete skyDome_;
 	delete modelSkyDome_;
+	delete mapChipField_;
 }
 
 void GameScene::Initialize() {
@@ -43,12 +44,18 @@ void GameScene::Initialize() {
 	debugCamera_ = new DebugCamera(WinApp::kWindowWidth, WinApp::kWindowHeight);
 	debugCamera_->SetFarZ(5000);
 
+	
+	mapChipField_ = new MapChipField;
+	mapChipField_->LoadMapChipCsv("Resources/MapChip.csv");
+
+	
+
 	const uint32_t kNumBlockHorizontal = 20; // 要素数
 	const uint32_t kNumBlockVirtical = 10;   // 要素数
 	const float kBlockWidth = 2.0f;
 	const float kBlockHeight = 2.0f;
-	// 要素数を変更する
 
+	// 要素数を変更する
 	worldTransformBlocks_.resize(kNumBlockVirtical);
 	for (uint32_t y = 0; y < kNumBlockVirtical; y++) { // キューブの生成
 		worldTransformBlocks_[y].resize(kNumBlockHorizontal);
@@ -59,11 +66,9 @@ void GameScene::Initialize() {
 			if (x % 2 == 0 && y % 2 == 0) {
 				worldTransformBlocks_[y][x]->translation_.x = kBlockWidth * x;
 				worldTransformBlocks_[y][x]->translation_.y = kBlockHeight * y;
-				/*worldTransformBlocks_[y][x]->translation_.x = NULL;
-				worldTransformBlocks_[y][x]->translation_.y = NULL;*/
+				
 			} else if (x % 2 == 1 && y % 2 == 1) {
-				/*worldTransformBlocks_[y][x]->translation_.x = NULL;
-				worldTransformBlocks_[y][x]->translation_.y = NULL;*/
+				
 				worldTransformBlocks_[y][x]->translation_.x = kBlockWidth * x;
 				worldTransformBlocks_[y][x]->translation_.y = kBlockHeight * y;
 			}
@@ -163,4 +168,8 @@ void GameScene::Draw() {
 	Sprite::PostDraw();
 
 #pragma endregion
+}
+
+void GameScene::GenerateBlocks() {
+
 }
