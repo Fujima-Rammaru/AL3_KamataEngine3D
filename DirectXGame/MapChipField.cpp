@@ -3,6 +3,7 @@
 #include <fstream>
 #include <map>
 #include <sstream>
+#include <iostream>
 
 namespace {
 
