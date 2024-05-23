@@ -4,6 +4,7 @@
 #include "TextureManager.h"
 #include <cassert>
 
+
 GameScene::GameScene() {}
 
 GameScene::~GameScene() {
@@ -47,6 +48,7 @@ void GameScene::Initialize() {
 
 	mapChipField_ = new MapChipField;
 	mapChipField_->LoadMapChipCsv("Resources/MapChip.csv");
+
 	GenerateBlocks();
 
 	// const uint32_t kNumBlockHorizontal = 20; // 要素数
@@ -91,6 +93,7 @@ void GameScene::Update() {
 
 			worldTransformBlock->matWorld_ = matrixFunction->MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
 
+			
 			// 定数バッファに転送する
 			worldTransformBlock->TransferMatrix();
 		}
@@ -144,10 +147,10 @@ void GameScene::Draw() {
 
 	for (const auto& worldTransformBlockLine : worldTransformBlocks_) {
 		for (auto worldTransformBlock : worldTransformBlockLine) {
-			block_->Draw(*worldTransformBlock, debugCamera_->GetViewProjection());
+			block_->Draw(*worldTransformBlock,debugCamera_->GetViewProjection());
 		}
 	}
-	model_->Draw(worldTransform_, debugCamera_->GetViewProjection());
+	//model_->Draw(worldTransform_, debugCamera_->GetViewProjection());
 	modelSkyDome_->Draw(worldTransform_, debugCamera_->GetViewProjection());
 
 	/// </summary>
@@ -183,16 +186,14 @@ void GameScene::GenerateBlocks() {
 
 		for (uint32_t x = 0; x < kNumBlockHorizontal; ++x) {
 			worldTransformBlocks_[y][x] = new WorldTransform();
-			WorldTransform* worldTransform = new WorldTransform();
+			worldTransformBlocks_[y][x]->Initialize();
 			
 			if (mapChipField_->GetMapChipTypeByIndex(x, y) == MapChipType::kBlock) {
-
+				WorldTransform* worldTransform = new WorldTransform();
+				worldTransform->Initialize();
 				worldTransformBlocks_[y][x] = worldTransform;
-				// worldTransformBlocks_[y][x]->Initialize();
 				worldTransformBlocks_[y][x]->translation_ = mapChipField_->GetMapChipPositionByIndex(x, y);
-				
 			}
-			worldTransformBlocks_[y][x]->Initialize();
 		}
 	}
 }
