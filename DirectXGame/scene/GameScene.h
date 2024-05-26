@@ -54,7 +54,7 @@ private: // メンバ変数
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
 	uint32_t txHandle_ = 0u;
-	Model* model_ = nullptr;//自キャラ
+	Model* modelPlayer_ = nullptr;//自キャラ
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
 	Player* player_ = nullptr;
@@ -71,4 +71,6 @@ private: // メンバ変数
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
+	/// 
+	///if(velocity_.x*velocity_x<0.001f){velocity_.x}
 };

@@ -14,7 +14,7 @@ GameScene::~GameScene() {
 		}
 	}
 	worldTransformBlocks_.clear();
-	delete model_;
+	delete modelPlayer_;
 	delete block_;
 	delete player_;
 	delete debugCamera_;
@@ -31,13 +31,13 @@ void GameScene::Initialize() {
 	txHandle_ = TextureManager::Load("sample.png"); // テクスチャの読み込み
 	// uint32_t skyDomeTxHandle_ = TextureManager::Load("uvChecker.png"); // テクスチャの読み込み
 	blockTxHandle_ = TextureManager::Load("cube/cube.jpg");
-	model_ = Model::Create(); // 3Dモデルの生成
-	block_ = Model::Create(); // 3Dモデルの生成
+	modelPlayer_ = Model::Create(); // 3Dモデルの生成
+	block_ = Model::Create();       // 3Dモデルの生成
 
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
-	player_ = new Player();                                   // 自キャラの生成
-	player_->initialize(model_, txHandle_, &viewProjection_); // 自キャラの初期化
+
+	player_ = new Player(); // 自キャラの生成
 
 	skyDome_ = new SkyDome();                              // 天球の生成
 	modelSkyDome_ = Model::CreateFromOBJ("SkyDome", true); // 3Dモデルの生成
@@ -46,33 +46,11 @@ void GameScene::Initialize() {
 	debugCamera_->SetFarZ(5000);
 
 	mapChipField_ = new MapChipField;
-	mapChipField_->LoadMapChipCsv("Resources/MapChip.csv");
+	mapChipField_->LoadMapChipCsv("Resources/MapChip.csv"); // CSVファイル読み込み
 	GenerateBlocks();
 
-	// const uint32_t kNumBlockHorizontal = 20; // 要素数
-	// const uint32_t kNumBlockVirtical = 10;   // 要素数
-	// const float kBlockWidth = 2.0f;
-	// const float kBlockHeight = 2.0f;
-
-	//// 要素数を変更する
-	// worldTransformBlocks_.resize(kNumBlockVirtical);
-	// for (uint32_t y = 0; y < kNumBlockVirtical; y++) { // キューブの生成
-	//	worldTransformBlocks_[y].resize(kNumBlockHorizontal);
-	//	for (uint32_t x = 0; x < kNumBlockHorizontal; ++x) {
-	//		worldTransformBlocks_[y][x] = new WorldTransform();
-	//		worldTransformBlocks_[y][x]->Initialize();
-
-	//		if (x % 2 == 0 && y % 2 == 0) {
-	//			worldTransformBlocks_[y][x]->translation_.x = kBlockWidth * x;
-	//			worldTransformBlocks_[y][x]->translation_.y = kBlockHeight * y;
-
-	//		} else if (x % 2 == 1 && y % 2 == 1) {
-
-	//			worldTransformBlocks_[y][x]->translation_.x = kBlockWidth * x;
-	//			worldTransformBlocks_[y][x]->translation_.y = kBlockHeight * y;
-	//		}
-	//	}
-	//}
+	Vector3 playerposition = mapChipField_->GetMapChipPositionByIndex(2, 15);
+	player_->initialize(modelPlayer_, txHandle_, &viewProjection_, playerposition); // 自キャラの初期化
 }
 
 void GameScene::Update() {
@@ -147,9 +125,9 @@ void GameScene::Draw() {
 			block_->Draw(*worldTransformBlock, debugCamera_->GetViewProjection());
 		}
 	}
-	model_->Draw(worldTransform_, debugCamera_->GetViewProjection());
+	// modelPlayer_->Draw(worldTransform_, debugCamera_->GetViewProjection());
 	modelSkyDome_->Draw(worldTransform_, debugCamera_->GetViewProjection());
-
+	player_->Draw();
 	/// </summary>
 
 	// 3Dオブジェクト描画後処理
@@ -171,11 +149,9 @@ void GameScene::Draw() {
 }
 
 void GameScene::GenerateBlocks() {
-	uint32_t kNumBlockHorizontal = mapChipField_->GetNumBlockHorizontal(); // 要素数
-	uint32_t kNumBlockVirtical = mapChipField_->GetNumBlockVirtical();     // 要素数
-	                                                                       //	float kBlockWidth = mapChipField_->GetkBlockWidth();
-	                                                                       //	float kBlockHeight = mapChipField_->GetkBlockHeight();
-
+	uint32_t kNumBlockHorizontal = mapChipField_->GetNumBlockHorizontal(); 
+	uint32_t kNumBlockVirtical = mapChipField_->GetNumBlockVirtical();     
+	                                                                      	                                                                      
 	// 要素数を変更する
 	worldTransformBlocks_.resize(kNumBlockVirtical);
 	for (uint32_t y = 0; y < kNumBlockVirtical; y++) { // キューブの生成
@@ -184,13 +160,12 @@ void GameScene::GenerateBlocks() {
 		for (uint32_t x = 0; x < kNumBlockHorizontal; ++x) {
 			worldTransformBlocks_[y][x] = new WorldTransform();
 			WorldTransform* worldTransform = new WorldTransform();
-			
+
 			if (mapChipField_->GetMapChipTypeByIndex(x, y) == MapChipType::kBlock) {
 
 				worldTransformBlocks_[y][x] = worldTransform;
 				// worldTransformBlocks_[y][x]->Initialize();
 				worldTransformBlocks_[y][x]->translation_ = mapChipField_->GetMapChipPositionByIndex(x, y);
-				
 			}
 			worldTransformBlocks_[y][x]->Initialize();
 		}
