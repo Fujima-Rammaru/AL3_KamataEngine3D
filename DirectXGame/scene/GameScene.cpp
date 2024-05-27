@@ -4,6 +4,7 @@
 #include "TextureManager.h"
 #include <cassert>
 
+
 GameScene::GameScene() {}
 
 GameScene::~GameScene() {
@@ -49,7 +50,7 @@ void GameScene::Initialize() {
 	mapChipField_->LoadMapChipCsv("Resources/MapChip.csv"); // CSVファイル読み込み
 	GenerateBlocks();
 
-	Vector3 playerposition = mapChipField_->GetMapChipPositionByIndex(2, 15);
+	Vector3 playerposition = mapChipField_->GetMapChipPositionByIndex(2, 18);
 	player_->initialize(modelPlayer_, txHandle_, &viewProjection_, playerposition); // 自キャラの初期化
 }
 
@@ -76,6 +77,7 @@ void GameScene::Update() {
 
 	player_->Update();
 	skyDome_->Update();
+	
 
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_BACK)) {
@@ -90,6 +92,8 @@ void GameScene::Update() {
 	} else {
 		viewProjection_.UpdateMatrix();
 	}
+	
+
 #endif
 }
 
@@ -149,9 +153,9 @@ void GameScene::Draw() {
 }
 
 void GameScene::GenerateBlocks() {
-	uint32_t kNumBlockHorizontal = mapChipField_->GetNumBlockHorizontal(); 
-	uint32_t kNumBlockVirtical = mapChipField_->GetNumBlockVirtical();     
-	                                                                      	                                                                      
+	uint32_t kNumBlockHorizontal = mapChipField_->GetNumBlockHorizontal();
+	uint32_t kNumBlockVirtical = mapChipField_->GetNumBlockVirtical();
+
 	// 要素数を変更する
 	worldTransformBlocks_.resize(kNumBlockVirtical);
 	for (uint32_t y = 0; y < kNumBlockVirtical; y++) { // キューブの生成
