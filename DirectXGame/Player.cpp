@@ -129,3 +129,5 @@ void Player::Update() {
 void Player::Draw() { model_->Draw(worldTransform_, *viewProjection_, txHandle_); }
 
 float Player::EaseInOut(float y) { return -(std::cosf(std::numbers::pi_v<float> * y) - 1 / 2); }
+
+ WorldTransform* Player::GetWorldTransform() { return &worldTransform_; }

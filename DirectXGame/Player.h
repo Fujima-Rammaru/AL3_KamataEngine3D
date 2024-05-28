@@ -21,6 +21,8 @@ public:
 
 	float EaseInOut(float y);
 
+	 WorldTransform* GetWorldTransform();
+
 private:
 	WorldTransform worldTransform_;
 
