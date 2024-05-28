@@ -53,14 +53,14 @@ private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
-	uint32_t txHandle_ = 0u;
+	uint32_t playerTxHandle_ = 0u;
 	Model* modelPlayer_ = nullptr;//自キャラ
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
 	 ViewProjection cameraViewProjection_;//カメラ用
 	Player* player_ = nullptr;
 
-	Model* block_ = nullptr;//ブロック
+	Model* modelBlock_ = nullptr;//ブロック
 	uint32_t blockTxHandle_ = 0u;//ブロックテクスチャハンドル
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;//可変個配列
 

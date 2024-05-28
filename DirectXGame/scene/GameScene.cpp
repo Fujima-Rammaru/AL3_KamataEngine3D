@@ -16,7 +16,7 @@ GameScene::~GameScene() {
 	}
 	worldTransformBlocks_.clear();
 	delete modelPlayer_;
-	delete block_;
+	delete modelBlock_;
 	delete player_;
 	delete debugCamera_;
 	delete skyDome_;
@@ -29,18 +29,16 @@ void GameScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
-	txHandle_ = TextureManager::Load("sample.png"); // テクスチャの読み込み
-	// uint32_t skyDomeTxHandle_ = TextureManager::Load("uvChecker.png"); // テクスチャの読み込み
+	playerTxHandle_ = TextureManager::Load("sample.png"); // テクスチャの読み込み
 	blockTxHandle_ = TextureManager::Load("cube/cube.jpg");
 	modelPlayer_ = Model::Create(); // 3Dモデルの生成
-	block_ = Model::Create();       // 3Dモデルの生成
+	modelBlock_ = Model::Create();
 
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
 	cameraViewProjection_.Initialize();
 
-	player_ = new Player(); // 自キャラの生成
-
+	player_ = new Player();                                // 自キャラの生成
 	skyDome_ = new SkyDome();                              // 天球の生成
 	modelSkyDome_ = Model::CreateFromOBJ("SkyDome", true); // 3Dモデルの生成
 	skyDome_->Initialize(modelSkyDome_, &viewProjection_); // 天球の初期化
@@ -52,7 +50,7 @@ void GameScene::Initialize() {
 	GenerateBlocks();
 
 	Vector3 playerposition = mapChipField_->GetMapChipPositionByIndex(2, 18);
-	player_->initialize(modelPlayer_, txHandle_, &cameraViewProjection_, playerposition); // 自キャラの初期化
+	player_->initialize(modelPlayer_, playerTxHandle_, &cameraViewProjection_, playerposition); // 自キャラの初期化
 }
 
 void GameScene::Update() {
@@ -75,7 +73,6 @@ void GameScene::Update() {
 			worldTransformBlock->TransferMatrix();
 		}
 	}
-
 	player_->Update();
 	skyDome_->Update();
 
@@ -85,11 +82,11 @@ void GameScene::Update() {
 	}
 	if (isDebugCameraactive_) {
 		debugCamera_->Update();
-		cameraViewProjection_.matProjection = debugCamera_->GetmatProjection();
 		cameraViewProjection_.matView = debugCamera_->GetmatView();
 
-		cameraViewProjection_.TransferMatrix();
+		cameraViewProjection_.matProjection = debugCamera_->GetmatProjection();
 
+		cameraViewProjection_.TransferMatrix();
 	} else {
 		cameraViewProjection_.UpdateMatrix();
 	}
@@ -122,18 +119,16 @@ void GameScene::Draw() {
 
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
-	// player_->Draw();
 
 	for (const auto& worldTransformBlockLine : worldTransformBlocks_) {
 		for (auto worldTransformBlock : worldTransformBlockLine) {
-			block_->Draw(*worldTransformBlock, cameraViewProjection_);
+			modelBlock_->Draw(*worldTransformBlock, cameraViewProjection_);
 		}
 	}
-	// modelPlayer_->Draw(worldTransform_, debugCamera_->GetViewProjection());
+
 	modelSkyDome_->Draw(worldTransform_, cameraViewProjection_);
 	player_->Draw();
 	/// </summary>
-
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
 #pragma endregion
@@ -166,9 +161,7 @@ void GameScene::GenerateBlocks() {
 			WorldTransform* worldTransform = new WorldTransform();
 
 			if (mapChipField_->GetMapChipTypeByIndex(x, y) == MapChipType::kBlock) {
-
 				worldTransformBlocks_[y][x] = worldTransform;
-				// worldTransformBlocks_[y][x]->Initialize();
 				worldTransformBlocks_[y][x]->translation_ = mapChipField_->GetMapChipPositionByIndex(x, y);
 			}
 			worldTransformBlocks_[y][x]->Initialize();
