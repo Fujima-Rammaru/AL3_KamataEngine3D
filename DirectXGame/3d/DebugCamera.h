@@ -1,6 +1,7 @@
 #pragma once
 #include "Input.h"
 #include "ViewProjection.h"
+#include "WorldTransform.h"
 
 /// <summary>
 /// デバッグ用カメラ
@@ -25,6 +26,9 @@ public:
 	/// </summary>
 	/// <returns>ビュープロジェクション</returns>
 	const ViewProjection& GetViewProjection() { return viewProjection_; }
+
+	 Matrix4x4 GetmatProjection() { return viewProjection_.matProjection; }
+	 Matrix4x4 GetmatView() { return viewProjection_.matView; }
 
 	/// <summary>
 	/// プロジェクション行列計算用のメンバ設定関数群

@@ -57,6 +57,7 @@ private: // メンバ変数
 	Model* modelPlayer_ = nullptr;//自キャラ
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
+	 ViewProjection cameraViewProjection_;//カメラ用
 	Player* player_ = nullptr;
 
 	Model* block_ = nullptr;//ブロック

@@ -2,8 +2,8 @@
 #include "DebugCamera.h"
 #include "MatrixFunction.h"
 #include "TextureManager.h"
+#include "ViewProjection.h"
 #include <cassert>
-
 
 GameScene::GameScene() {}
 
@@ -37,6 +37,7 @@ void GameScene::Initialize() {
 
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
+	cameraViewProjection_.Initialize();
 
 	player_ = new Player(); // 自キャラの生成
 
@@ -51,7 +52,7 @@ void GameScene::Initialize() {
 	GenerateBlocks();
 
 	Vector3 playerposition = mapChipField_->GetMapChipPositionByIndex(2, 18);
-	player_->initialize(modelPlayer_, txHandle_, &viewProjection_, playerposition); // 自キャラの初期化
+	player_->initialize(modelPlayer_, txHandle_, &cameraViewProjection_, playerposition); // 自キャラの初期化
 }
 
 void GameScene::Update() {
@@ -77,7 +78,6 @@ void GameScene::Update() {
 
 	player_->Update();
 	skyDome_->Update();
-	
 
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_BACK)) {
@@ -85,14 +85,14 @@ void GameScene::Update() {
 	}
 	if (isDebugCameraactive_) {
 		debugCamera_->Update();
-		//	viewProjection_.matView = debugCamera_; /////
-		// viewProjection_.matProjection=
+		cameraViewProjection_.matProjection = debugCamera_->GetmatProjection();
+		cameraViewProjection_.matView = debugCamera_->GetmatView();
 
-		viewProjection_.TransferMatrix();
+		cameraViewProjection_.TransferMatrix();
+
 	} else {
-		viewProjection_.UpdateMatrix();
+		cameraViewProjection_.UpdateMatrix();
 	}
-	
 
 #endif
 }
@@ -126,11 +126,11 @@ void GameScene::Draw() {
 
 	for (const auto& worldTransformBlockLine : worldTransformBlocks_) {
 		for (auto worldTransformBlock : worldTransformBlockLine) {
-			block_->Draw(*worldTransformBlock, debugCamera_->GetViewProjection());
+			block_->Draw(*worldTransformBlock, cameraViewProjection_);
 		}
 	}
 	// modelPlayer_->Draw(worldTransform_, debugCamera_->GetViewProjection());
-	modelSkyDome_->Draw(worldTransform_, debugCamera_->GetViewProjection());
+	modelSkyDome_->Draw(worldTransform_, cameraViewProjection_);
 	player_->Draw();
 	/// </summary>
 
