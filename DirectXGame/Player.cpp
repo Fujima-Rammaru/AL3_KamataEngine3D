@@ -121,7 +121,7 @@ void Player::Update() {
 	worldTransform_.UpdateMatrix();
 #ifdef _DEBUG
 	ImGui::Text(
-	    "rotation.y=%5.2f\nvelocity.y=%5.2f\ntranslation.y=%5.2f\nonGroud=%d\nlanding=%d", worldTransform_.rotation_.y, velocity_.y, worldTransform_.translation_.y, onGround_,
+	    "rotation.y=%5.2f\nvelocity.y=%5.2f\nvelocity.y=%5.2f\nonGroud=%d\nlanding=%d", worldTransform_.rotation_.y, velocity_.y,velocity_.y, onGround_,
 	    landing); // デバッグテキスト
 #endif
 }
