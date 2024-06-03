@@ -22,6 +22,7 @@ GameScene::~GameScene() {
 	delete skyDome_;
 	delete modelSkyDome_;
 	delete mapChipField_;
+	delete cameraController_;
 }
 
 void GameScene::Initialize() {
@@ -49,8 +50,16 @@ void GameScene::Initialize() {
 	mapChipField_->LoadMapChipCsv("Resources/MapChip.csv"); // CSVファイル読み込み
 	GenerateBlocks();
 
-	Vector3 playerposition = mapChipField_->GetMapChipPositionByIndex(2, 18);
+	Vector3 playerposition = mapChipField_->GetMapChipPositionByIndex(5, 18);
 	player_->initialize(modelPlayer_, playerTxHandle_, &cameraViewProjection_, playerposition); // 自キャラの初期化
+
+	// カメラコントローラー初期化
+	Rect area_ = {30.0f,170.0f,0.0f,100.0f};
+	cameraController_ = new CameraController;
+	cameraController_->Initialize();
+	cameraController_->SetTarget(player_);
+	cameraController_->Reset();
+	cameraController_->SetMovaAbleArea(area_);
 }
 
 void GameScene::Update() {
@@ -81,10 +90,15 @@ void GameScene::Update() {
 		isDebugCameraactive_ ^= true;
 	}
 	if (isDebugCameraactive_) {
-		debugCamera_->Update();
+		/*debugCamera_->Update();
 		cameraViewProjection_.matView = debugCamera_->GetmatView();
 
-		cameraViewProjection_.matProjection = debugCamera_->GetmatProjection();
+		cameraViewProjection_.matProjection = debugCamera_->GetmatProjection();*/
+
+		cameraController_->Update();
+		cameraViewProjection_.matView = cameraController_->GetMatView();
+
+		cameraViewProjection_.matProjection = cameraController_->GetMatProjection();
 
 		cameraViewProjection_.TransferMatrix();
 	} else {

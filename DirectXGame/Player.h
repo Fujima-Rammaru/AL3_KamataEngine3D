@@ -10,18 +10,13 @@ class Player {
 
 public:
 	void initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection, const Vector3& position);
-
 	Player();
-
 	~Player();
-
 	void Update();
-
 	void Draw();
-
 	float EaseInOut(float y);
-
-	 WorldTransform* GetWorldTransform();
+	WorldTransform* GetWorldTransform();
+	const Vector3& GetVelocity() const { return velocity_; };//自キャラの速度を取得するためのgetter
 
 private:
 	WorldTransform worldTransform_;
@@ -43,7 +38,7 @@ private:
 		kRight,
 		kLeft,
 	};
-	LRDirection lrDirection_ = LRDirection::kRight;
+	LRDirection lrDirection_ = LRDirection::kRight; // 右向きで初期化
 
 	float turnFirstRotationY_ = 0.0f;                      // 旋回開始時の角度
 	float turnTimer_ = 0.0f;                               // 旋回タイマー
@@ -51,7 +46,8 @@ private:
 	bool onGround_ = true;                                 // 設置状態フラグ
 	static inline const float kGravityAcceleration = 0.2f; // 重力加速度(下方向)
 	static inline const float kLimitFallSpeed = 2.0f;      // 最大落下速度(下方向)
-	static inline const float kJumpAcceleration = 2.0f;    // ジャンプ初速(上方向）
+	static inline const float kJumpAcceleration = 2.5f;    // ジャンプ初速(上方向）
 	static inline const float kGroundPos = 2.0f;           // 地面の座標
 	bool landing = false;
+	
 };

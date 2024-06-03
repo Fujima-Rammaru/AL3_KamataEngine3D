@@ -1,6 +1,6 @@
 #define NOMINMAX
 #include "Player.h"
-#include "ImGuiManager.h"
+
 #include "Input.h"
 #include <algorithm>
 #include <numbers>
@@ -119,11 +119,7 @@ void Player::Update() {
 
 	// 行列計算
 	worldTransform_.UpdateMatrix();
-#ifdef _DEBUG
-	ImGui::Text(
-	    "rotation.y=%5.2f\nvelocity.y=%5.2f\ntranslation.y=%5.2f\nonGroud=%d\nlanding=%d", worldTransform_.rotation_.y, velocity_.y, worldTransform_.translation_.y, onGround_,
-	    landing); // デバッグテキスト
-#endif
+
 }
 
 void Player::Draw() { model_->Draw(worldTransform_, *viewProjection_, txHandle_); }
