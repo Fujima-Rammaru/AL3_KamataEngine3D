@@ -18,8 +18,17 @@ void CameraController::Update() {
 	goalPosition.y = targetWorldTransform.translation_.y + targetOffset_.y + targetVelocity.y * kVelocityBias;
 	goalPosition.z = targetWorldTransform.translation_.z + targetOffset_.z + targetVelocity.z * kVelocityBias;
 
+	
+
 	// 座標補間によりゆったり追従
 	viewProjection_.translation_ = LerpVector3();
+
+	//追従対象が画面外に出ないように補正
+	viewProjection_.translation_.x = std::max(viewProjection_.translation_.x, targetWorldTransform.translation_.x + kTargetMovableArea.left);
+	viewProjection_.translation_.x = std::min(viewProjection_.translation_.x, targetWorldTransform.translation_.x + kTargetMovableArea.right);
+	viewProjection_.translation_.y = std::max(viewProjection_.translation_.y, targetWorldTransform.translation_.y + kTargetMovableArea.bottom);
+	viewProjection_.translation_.y = std::min(viewProjection_.translation_.y, targetWorldTransform.translation_.y + kTargetMovableArea.top);
+	
 
 	// 移動範囲制限
 	viewProjection_.translation_.x = std::max(viewProjection_.translation_.x, movableArea_.left);
@@ -30,7 +39,7 @@ void CameraController::Update() {
 	viewProjection_.UpdateMatrix();
 
 #ifdef _DEBUG
-	ImGui::Text("targetVelocity.x=%5.2f",targetVelocity.x); // デバッグテキスト
+	ImGui::Text("goalPosition.x=%5.2f", goalPosition.x); // デバッグテキスト
 #endif
 }
 
