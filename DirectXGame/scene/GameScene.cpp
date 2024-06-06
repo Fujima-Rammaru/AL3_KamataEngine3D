@@ -64,8 +64,6 @@ void GameScene::Initialize() {
 			}
 		}
 	}
-
-	// アフィン変換行列の関数作成やり直し
 }
 
 void GameScene::Update() {
@@ -88,8 +86,8 @@ void GameScene::Update() {
 		}
 	}
 
-	worldTransform_.translation_.y = 50.0f;
-	worldTransform_.matWorld_ = matrixFunction->MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
+	//worldTransform_.translation_.y = 50.0f;
+	//worldTransform_.matWorld_ = matrixFunction->MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
 	// playerViewProjection_.translation_.y = 10.0f;
 
 	player_->Update();
