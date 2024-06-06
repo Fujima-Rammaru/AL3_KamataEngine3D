@@ -1,7 +1,7 @@
 #include "MatrixFunction.h"
 #include <cmath>
 
-Matrix4x4 MatrixFunction::MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate) {
+const Matrix4x4 MatrixFunction::MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate) {
 	Matrix4x4 result1;
 	Matrix4x4 resultScale;
 	Matrix4x4 resultRX;
