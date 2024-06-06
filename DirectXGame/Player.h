@@ -21,8 +21,7 @@ public:
 	const Vector3& GetVelocity() const { return velocity_; };                          // 自キャラの速度を取得するためのgetter
 	void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; } // setter
 	void Move();
-	//void Collision
-
+	
 private:
 	WorldTransform worldTransform_;
 
@@ -57,4 +56,13 @@ private:
 	bool landing = false;
 	static inline const float kWidth = 1.8f; // キャラクターの当たり判定サイズ
 	static inline const float kHeight = 1.8f;
+
+	struct CollisionMapInfo {
+		bool collisionCeiling = false;//天井衝突フラグ
+		bool landingC = false;
+		bool wall = false;
+		Vector3 amountOfMovement;
+	};
+
+
 };
