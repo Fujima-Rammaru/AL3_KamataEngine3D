@@ -8,6 +8,7 @@ void Player::initialize(Model* model, uint32_t textureHandle, ViewProjection* vi
 	txHandle_ = textureHandle;
 	viewProjection_ = viewProjection;
 	worldTransform_.Initialize();
+	worldTransform_.translation_.y = 4.0f;
 }
 
 Player::Player() {}

@@ -33,17 +33,18 @@ void GameScene::Initialize() {
 	modelBlock_ = Model::Create();  // 3Dモデルの生成
 	worldTransform_.Initialize();
 	player_ = new Player();                                               // 自キャラの生成
-	player_->initialize(modelPlayer_, txHandle_, &playerViewProjection_); // 自キャラの初期化
+	player_->initialize(modelPlayer_, txHandle_, &cameraViewProjection_); // 自キャラの初期化
 
 	skyDome_ = new SkyDome();                              // 天球の生成
 	modelSkyDome_ = Model::CreateFromOBJ("SkyDome", true); // 3Dモデルの生成
-	skyDome_->Initialize(modelSkyDome_, &viewProjection_); // 天球の初期化
+
 	debugCamera_ = new DebugCamera(WinApp::kWindowWidth, WinApp::kWindowHeight);
 	debugCamera_->SetFarZ(5000);
-	viewProjection_.Initialize();
-	playerViewProjection_.Initialize();
-	const uint32_t kNumBlockHorizontal = 20; // 要素数
-	const uint32_t kNumBlockVirtical = 10;   // 要素数
+
+	cameraViewProjection_.Initialize();
+	skyDome_->Initialize(modelSkyDome_, &cameraViewProjection_); // 天球の初期化
+	const uint32_t kNumBlockHorizontal = 20;                     // 要素数
+	const uint32_t kNumBlockVirtical = 10;                       // 要素数
 	const float kBlockWidth = 2.0f;
 	const float kBlockHeight = 2.0f;
 
@@ -86,9 +87,9 @@ void GameScene::Update() {
 		}
 	}
 
-	//worldTransform_.translation_.y = 50.0f;
-	//worldTransform_.matWorld_ = matrixFunction->MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
-	// playerViewProjection_.translation_.y = 10.0f;
+	// worldTransform_.translation_.y = 50.0f;
+	// worldTransform_.matWorld_ = matrixFunction->MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
+	//  playerViewProjection_.translation_.y = 10.0f;
 
 	player_->Update();
 	skyDome_->Update();
@@ -99,10 +100,13 @@ void GameScene::Update() {
 	}
 	if (isDebugCameraactive_) {
 		debugCamera_->Update();
+		cameraViewProjection_.matView = debugCamera_->GetmatView();
 
-		viewProjection_.TransferMatrix();
+		cameraViewProjection_.matProjection = debugCamera_->GetmatProjection();
+
+		cameraViewProjection_.TransferMatrix();
 	} else {
-		viewProjection_.UpdateMatrix();
+		cameraViewProjection_.UpdateMatrix();
 	}
 #endif
 }
@@ -136,11 +140,14 @@ void GameScene::Draw() {
 
 	for (const auto& worldTransformBlockLine : worldTransformBlocks_) {
 		for (auto worldTransformBlock : worldTransformBlockLine) {
-			modelBlock_->Draw(*worldTransformBlock, debugCamera_->GetViewProjection());
+			modelBlock_->Draw(*worldTransformBlock, cameraViewProjection_);
 		}
 	}
-	modelPlayer_->Draw(worldTransform_, debugCamera_->GetViewProjection());
-	modelSkyDome_->Draw(worldTransform_, debugCamera_->GetViewProjection());
+
+	// modelSkyDome_->Draw(worldTransform_,cameraViewProjection_);
+
+	skyDome_->Draw();
+	player_->Draw();
 	// skyDome_->Draw();
 
 	/// </summary>
