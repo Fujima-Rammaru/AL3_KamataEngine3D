@@ -14,6 +14,6 @@ Player::Player() {}
 
 Player::~Player() {}
 
-void Player::Update() { worldTransform_.TransferMatrix(); }
+void Player::Update() { worldTransform_.UpdateMatrix(); }
 
 void Player::Draw() { model_->Draw(worldTransform_, *viewProjection_, txHandle_); }
