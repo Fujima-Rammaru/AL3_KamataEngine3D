@@ -43,13 +43,12 @@ public:
 private:
 	ViewProjection viewProjection_;
 	Player* target_ = nullptr;                    // 追従対象のポインタ
-	const Vector3 targetOffset_ = {0, 0, -40.0f}; // 追従対象とカメラの座標の差
+	 Vector3 targetOffset_ = {0, 0, -40.0f}; // 追従対象とカメラの座標の差
 	WorldTransform worldTransform_;
-	Rect movableArea_ = {0, 0, 0, 0}; // カメラ移動範囲
-	Vector3 goalPosition;             // カメラの目標座標
-	static inline const float kInterpolationRate = 0.2f;//座標補間割合
-	static inline const float kVelocityBias = 15.0f;//速度掛け率
-	static inline const Rect kTargetMovableArea = {-20,20,-20,20};   // 追従対象の各方向へのカメラ移動範囲
-	Vector3 targetVelocity = {0, 0, 0};//追従対象の加速度を受け取るためのメンバ変数
-
+	Rect movableArea_ = {0, 0, 0, 0};                                 // カメラ移動範囲
+	Vector3 goalPosition;                                             // カメラの目標座標
+	static inline const float kInterpolationRate = 0.4f;              // 座標補間割合
+	static inline const float kVelocityBias = 50.0f;                  // 速度掛け率
+	static inline const Rect kTargetMovableArea = {-20, 20, -10, 10}; // 追従対象の各方向へのカメラ移動範囲
+	Vector3 targetVelocity = {0, 0, 0};                               // 追従対象の加速度を受け取るためのメンバ変数
 };

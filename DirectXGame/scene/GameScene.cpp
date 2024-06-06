@@ -39,7 +39,7 @@ void GameScene::Initialize() {
 	viewProjection_.Initialize();
 	cameraViewProjection_.Initialize();
 
-	player_ = new Player();                                // 自キャラの生成
+	
 	skyDome_ = new SkyDome();                              // 天球の生成
 	modelSkyDome_ = Model::CreateFromOBJ("SkyDome", true); // 3Dモデルの生成
 	skyDome_->Initialize(modelSkyDome_, &viewProjection_); // 天球の初期化
@@ -50,8 +50,10 @@ void GameScene::Initialize() {
 	mapChipField_->LoadMapChipCsv("Resources/MapChip.csv"); // CSVファイル読み込み
 	GenerateBlocks();
 
+	player_ = new Player(); // 自キャラの生成
 	Vector3 playerposition = mapChipField_->GetMapChipPositionByIndex(5, 18);
 	player_->initialize(modelPlayer_, playerTxHandle_, &cameraViewProjection_, playerposition); // 自キャラの初期化
+	player_->SetMapChipField(mapChipField_);
 
 	// カメラコントローラー初期化
 	Rect area_ = {30.0f,170.0f,0.0f,100.0f};

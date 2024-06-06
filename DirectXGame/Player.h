@@ -6,6 +6,8 @@
 #include "WorldTransform.h"
 #include "cassert"
 
+class MapChipField;
+
 class Player {
 
 public:
@@ -16,7 +18,10 @@ public:
 	void Draw();
 	float EaseInOut(float y);
 	WorldTransform* GetWorldTransform();
-	const Vector3& GetVelocity() const { return velocity_; };//自キャラの速度を取得するためのgetter
+	const Vector3& GetVelocity() const { return velocity_; };                          // 自キャラの速度を取得するためのgetter
+	void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; } // setter
+	void Move();
+	//void Collision
 
 private:
 	WorldTransform worldTransform_;
@@ -24,10 +29,11 @@ private:
 	Model* model_ = nullptr;
 
 	uint32_t txHandle_ = 0u;
-
 	ViewProjection* viewProjection_ = nullptr;
 
 	Vector3 velocity_ = {0, 0, 0};
+
+	MapChipField* mapChipField_ = nullptr;
 
 	static inline const float kAcceleration = 0.1f;
 	static inline const float kAttenuation = 0.1f; // 速度減衰率
@@ -45,9 +51,10 @@ private:
 	static inline const float kTimeTurn = 0.3f;            // 旋回時間<秒>
 	bool onGround_ = true;                                 // 設置状態フラグ
 	static inline const float kGravityAcceleration = 0.1f; // 重力加速度(下方向)
-	static inline const float kLimitFallSpeed = 1.0f;      // 最大落下速度(下方向)
+	static inline const float kLimitFallSpeed = 2.0f;      // 最大落下速度(下方向)
 	static inline const float kJumpAcceleration = 2.0f;    // ジャンプ初速(上方向）
 	static inline const float kGroundPos = 2.0f;           // 地面の座標
 	bool landing = false;
-	
+	static inline const float kWidth = 1.8f; // キャラクターの当たり判定サイズ
+	static inline const float kHeight = 1.8f;
 };
