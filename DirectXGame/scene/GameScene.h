@@ -64,7 +64,7 @@ private: // メンバ変数
 	uint32_t blockTxHandle_ = 0u;                                    // ブロックテクスチャハンドル
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_; // 可変個配列
 
-	bool isDebugCameraactive_ = false;
+	bool isDebugCameraactive_ = true;
 	DebugCamera* debugCamera_ = nullptr;
 	CameraController* cameraController_ = nullptr;//カメラコントローラー
 

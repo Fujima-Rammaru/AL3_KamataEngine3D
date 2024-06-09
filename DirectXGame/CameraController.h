@@ -6,10 +6,11 @@ class Player;
 
 // 矩形
 struct Rect {
-	float left = 0.0f;
-	float right = 1.0f;
-	float bottom = 0.0f;
-	float top = 1.0f;
+
+	float left = 0.0f;   // 左方向
+	float right = 1.0f;  // 右方向
+	float bottom = 0.0f; // 下方向
+	float top = 1.0f;    // 上方向
 };
 
 /// <summary>
@@ -42,13 +43,13 @@ public:
 
 private:
 	ViewProjection viewProjection_;
-	Player* target_ = nullptr;                    // 追従対象のポインタ
-	 Vector3 targetOffset_ = {0, 0, -40.0f}; // 追従対象とカメラの座標の差
+	Player* target_ = nullptr;              // 追従対象のポインタ
+	Vector3 targetOffset_ = {0, 0, -40.0f}; // 追従対象とカメラの座標の差
 	WorldTransform worldTransform_;
 	Rect movableArea_ = {0, 0, 0, 0};                                 // カメラ移動範囲
 	Vector3 goalPosition;                                             // カメラの目標座標
 	static inline const float kInterpolationRate = 0.4f;              // 座標補間割合
 	static inline const float kVelocityBias = 40.0f;                  // 速度掛け率
-	static inline const Rect kTargetMovableArea = {-20, 20, -10, 10}; // 追従対象の各方向へのカメラ移動範囲
+	static inline const Rect kTargetMovableArea = {-20, 20, -5,5}; // 追従対象の各方向へのカメラ移動範囲
 	Vector3 targetVelocity = {0, 0, 0};                               // 追従対象の加速度を受け取るためのメンバ変数
 };

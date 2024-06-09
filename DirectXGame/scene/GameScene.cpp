@@ -87,7 +87,7 @@ void GameScene::Update() {
 	player_->Update();
 	skyDome_->Update();
 
-#ifdef _DEBUG
+
 	if (input_->TriggerKey(DIK_BACK)) {
 		isDebugCameraactive_ ^= true;
 	}
@@ -103,7 +103,6 @@ void GameScene::Update() {
 		cameraViewProjection_.UpdateMatrix();
 	}
 
-#endif
 }
 
 void GameScene::Draw() {
