@@ -34,10 +34,6 @@ void CameraController::Update() {
 	viewProjection_.translation_.y = std::min(viewProjection_.translation_.y, movableArea_.top);
 	// 行列を更新
 	viewProjection_.UpdateMatrix();
-
-#ifdef _DEBUG
-	ImGui::Text("goalPosition.x=%5.2f", goalPosition.x); // デバッグテキスト
-#endif
 }
 
 void CameraController::Reset() {
@@ -45,8 +41,6 @@ void CameraController::Reset() {
 	viewProjection_.translation_.x = targetWorldTransform.translation_.x + targetOffset_.x;
 	viewProjection_.translation_.y = targetWorldTransform.translation_.y + targetOffset_.y;
 	viewProjection_.translation_.z = targetWorldTransform.translation_.z + targetOffset_.z;
-
-	
 
 	viewProjection_.UpdateMatrix();
 }
