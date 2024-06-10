@@ -15,6 +15,18 @@ struct MapChipData {
 	vector<vector<MapChipType>> data;
 };
 
+struct IndexSet {
+	uint32_t xIndex;
+	uint32_t yIndex;
+};
+
+struct BRect {
+	float left;
+	float right;
+	float bottom;
+	float top;
+};
+
 /// <summary>
 /// マップチップフィールド
 /// </summary>
@@ -32,6 +44,9 @@ public:
 	uint32_t GetNumBlockHorizontal();
 	float GetkBlockWidth();
 	float GetkBlockHeight();
+	//指定座標がマップチップの何番の位置にあるか
+	IndexSet GetMapChipIndexSetByPosition(const Vector3& position);
+	BRect GetRectByIndex(uint32_t xIndex, uint32_t yIndex);
 
 private:
 	MapChipData mapChipData_;

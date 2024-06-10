@@ -1,9 +1,9 @@
 #include "MapChipField.h"
 #include <cassert>
 #include <fstream>
+#include <iostream>
 #include <map>
 #include <sstream>
-#include <iostream>
 
 namespace {
 
@@ -79,4 +79,22 @@ uint32_t MapChipField::GetNumBlockVirtical() { return kNumBlockVirtical; }
 uint32_t MapChipField::GetNumBlockHorizontal() { return kNumBlockHorizontal; }
 
 float MapChipField::GetkBlockHeight() { return kBlockHeight; }
+IndexSet MapChipField::GetMapChipIndexSetByPosition(const Vector3& position) {
+	IndexSet indexSet{};
+	indexSet.xIndex = uint32_t((position.x + kBlockWidth / 2) / kBlockWidth);
+	float beforeReverseYIndex = (position.y + kBlockHeight / 2) / kBlockHeight;
+	indexSet.yIndex = uint32_t(kNumBlockVirtical - 1 - beforeReverseYIndex);
+	return indexSet;
+}
+BRect MapChipField::GetRectByIndex(uint32_t xIndex, uint32_t yIndex) {
+	Vector3 center = GetMapChipPositionByIndex(xIndex, yIndex); // 指定ブロックの中心座標を取得する
+
+	BRect rect;
+	rect.left = center.x - kBlockWidth / 2.0f;
+	rect.right = center.x + kBlockWidth / 2.0f;
+	rect.bottom = center.y - kBlockHeight / 2.0f;
+	rect.top = center.y + kBlockHeight / 2.0f;
+
+	return rect;
+}
 float MapChipField::GetkBlockWidth() { return kBlockWidth; }

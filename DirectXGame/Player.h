@@ -10,6 +10,22 @@ class MapChipField;
 
 class Player {
 
+private:
+	struct CollisionMapInfo {
+		bool ceiling = false; // 天井衝突フラグ
+		bool landing = false;
+		bool hitWall = false;
+		Vector3 move;
+	};
+
+	enum Corner {
+		kRightBottom,
+		kLeftBottom,
+		kRightTop,
+		kLeftTop,
+		kNumCorner // 要素数
+	};
+
 public:
 	void initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection, const Vector3& position);
 	Player();
@@ -21,7 +37,15 @@ public:
 	const Vector3& GetVelocity() const { return velocity_; };                          // 自キャラの速度を取得するためのgetter
 	void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; } // setter
 	void Move();
-	
+//	void CollisionMapCheck(CollisionMapInfo& info); // マップ衝突判定
+	void CollisionMapCheckUp(CollisionMapInfo& info);
+//	void CollisionMapCheckDown(CollisionMapInfo& info);
+//	void CollisionMapCheckLeft(CollisionMapInfo& info);
+//	void CollisionMapCheckRight(CollisionMapInfo& info);
+	Vector3 CornerPosition(const Vector3& center, Corner corner);
+	void MoveByCollisionMap(const CollisionMapInfo& info);
+	void CollisionCeilingCase(const CollisionMapInfo& info);//天井に接触している場合の処理
+
 private:
 	WorldTransform worldTransform_;
 
@@ -36,8 +60,8 @@ private:
 
 	static inline const float kAcceleration = 0.1f;
 	static inline const float kAttenuation = 0.1f; // 速度減衰率
-
 	static inline const float kLimitRunSpeed = 1.0f; // 最大速度制限
+	static inline const float kBlank = 1.0f;
 
 	enum class LRDirection {
 		kRight,
@@ -56,13 +80,4 @@ private:
 	bool landing = false;
 	static inline const float kWidth = 1.8f; // キャラクターの当たり判定サイズ
 	static inline const float kHeight = 1.8f;
-
-	struct CollisionMapInfo {
-		bool collisionCeiling = false;//天井衝突フラグ
-		bool landingC = false;
-		bool wall = false;
-		Vector3 amountOfMovement;
-	};
-
-
 };
