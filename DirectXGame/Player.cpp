@@ -4,6 +4,7 @@
 #include "MapChipField.h"
 #include <algorithm>
 #include <numbers>
+#include"DebugText.h"
 
 void Player::initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection, const Vector3& position) {
 
@@ -83,7 +84,7 @@ void Player::Move() { // 移動入力
 	if (onGround_) {  // 接地状態
 		if (Input::GetInstance()->PushKey(DIK_RIGHT) || Input::GetInstance()->PushKey(DIK_LEFT)) {
 			// 左右加速
-			Vector3 acceleration = {};
+			Vector3 acceleration(0,0,0);
 			if (Input::GetInstance()->PushKey(DIK_RIGHT)) {
 
 				if (velocity_.x < 0.0f) {
@@ -117,7 +118,7 @@ void Player::Move() { // 移動入力
 		}
 		// ジャンプ処理
 		if (Input::GetInstance()->TriggerKey(DIK_UP)) { // 上キーを押した瞬間だけtrue
-			landing = false;
+			  landing = false;
 			// ジャンプ初速
 			velocity_.y += kJumpAcceleration;
 		}
@@ -180,7 +181,7 @@ void Player::CollisionMapCheckUp(CollisionMapInfo& info) {
 		indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightTop]);
 		// めり込み先ブロックの範囲矩形
 		BRect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
-		info.move.y = std::max(0.0f, velocity_.y);
+		info.move.y = std::max(0.0f,info.move.y);//\\
 		// 天井に当たったことを記録する
 		info.ceiling = true;
 	}
@@ -198,7 +199,7 @@ Vector3 Player::CornerPosition(const Vector3& center, Corner corner) {
 	    {-kWidth / 2.0f, kHeight / 2.0f,  0}, //  kLeftTop
 	};
 	Vector3 result;
-	
+
 	result.x = center.x + offSetTable[static_cast<uint32_t>(corner)].x;
 	result.y = center.y + offSetTable[static_cast<uint32_t>(corner)].y;
 	result.z = center.z + offSetTable[static_cast<uint32_t>(corner)].z;
@@ -214,6 +215,7 @@ void Player::MoveByCollisionMap(const CollisionMapInfo& info) {
 void Player::CollisionCeilingCase(const CollisionMapInfo& info) {
 	// 天井に当たった?
 	if (info.ceiling) {
+		DebugText::GetInstance()->ConsolePrintf("hit ceiling\n");
 		velocity_.y = 0;
 	}
 }
