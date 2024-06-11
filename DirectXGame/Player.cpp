@@ -198,6 +198,7 @@ Vector3 Player::CornerPosition(const Vector3& center, Corner corner) {
 	    {-kWidth / 2.0f, kHeight / 2.0f,  0}, //  kLeftTop
 	};
 	Vector3 result;
+	
 	result.x = center.x + offSetTable[static_cast<uint32_t>(corner)].x;
 	result.y = center.y + offSetTable[static_cast<uint32_t>(corner)].y;
 	result.z = center.z + offSetTable[static_cast<uint32_t>(corner)].z;
@@ -216,3 +217,5 @@ void Player::CollisionCeilingCase(const CollisionMapInfo& info) {
 		velocity_.y = 0;
 	}
 }
+
+

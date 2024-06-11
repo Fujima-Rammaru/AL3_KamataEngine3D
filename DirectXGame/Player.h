@@ -15,7 +15,7 @@ private:
 		bool ceiling = false; // 天井衝突フラグ
 		bool landing = false;
 		bool hitWall = false;
-		Vector3 move;
+		Vector3 move = {};
 	};
 
 	enum Corner {
