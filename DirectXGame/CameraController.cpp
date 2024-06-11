@@ -35,9 +35,7 @@ void CameraController::Update() {
 	// 行列を更新
 	viewProjection_.UpdateMatrix();
 
-#ifdef _DEBUG
-	ImGui::Text("goalPosition.x=%5.2f", goalPosition.x); // デバッグテキスト
-#endif
+
 }
 
 void CameraController::Reset() {

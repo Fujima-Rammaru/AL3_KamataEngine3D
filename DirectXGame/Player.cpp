@@ -1,10 +1,10 @@
 #define NOMINMAX
 #include "Player.h"
+#include "Imgui.h"
 #include "Input.h"
 #include "MapChipField.h"
 #include <algorithm>
 #include <numbers>
-#include"DebugText.h"
 
 void Player::initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection, const Vector3& position) {
 
@@ -25,17 +25,21 @@ Player::~Player() {}
 void Player::Update() {
 
 	Move(); // 移動入力
+	// 移動
+	worldTransform_.translation_.x += velocity_.x;
+
 	// 衝突情報を初期化
 	CollisionMapInfo info;
 	// 移動量に速度の値をコピー
 	info.move = velocity_;
 	// マップ衝突チェック
-	CollisionMapCheckUp(info);//天井のみ
-
+	CollisionMapCheckUp(info); // 天井のみ
 	// 判定結果を反映して移動する
-	MoveByCollisionMap(info);
+	MoveByCollisionResult(info);
+
 	// 天井に接触している場合の処理
 	CollisionCeilingCase(info);
+
 	// 壁に接触している場合の処理
 
 	// 接地状態の切り替え
@@ -66,9 +70,9 @@ void Player::Update() {
 		// 自キャラの角度を設定する
 		worldTransform_.rotation_.y = nowRotationY;
 	}
-
-	// 移動
-	worldTransform_.translation_.x += velocity_.x;
+	Vector3 CR;
+	CR = CornerPosition(worldTransform_.translation_, kRightTop);
+	ImGui::Text("krightTop=%3.2f", CR.y);
 
 	// 行列計算
 	worldTransform_.UpdateMatrix();
@@ -84,7 +88,7 @@ void Player::Move() { // 移動入力
 	if (onGround_) {  // 接地状態
 		if (Input::GetInstance()->PushKey(DIK_RIGHT) || Input::GetInstance()->PushKey(DIK_LEFT)) {
 			// 左右加速
-			Vector3 acceleration(0,0,0);
+			Vector3 acceleration(0, 0, 0);
 			if (Input::GetInstance()->PushKey(DIK_RIGHT)) {
 
 				if (velocity_.x < 0.0f) {
@@ -118,7 +122,7 @@ void Player::Move() { // 移動入力
 		}
 		// ジャンプ処理
 		if (Input::GetInstance()->TriggerKey(DIK_UP)) { // 上キーを押した瞬間だけtrue
-			  landing = false;
+			landing = false;
 			// ジャンプ初速
 			velocity_.y += kJumpAcceleration;
 		}
@@ -162,13 +166,16 @@ void Player::CollisionMapCheckUp(CollisionMapInfo& info) {
 	MapChipType mapChipType;
 
 	bool hit = false;
+
 	// 左上点の判定
 	IndexSet indexSet;
+
 	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop]);
 	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
 	if (mapChipType == MapChipType::kBlock) {
 		hit = true;
 	}
+
 	// 右上点の判定
 	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightTop]);
 	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
@@ -179,9 +186,11 @@ void Player::CollisionMapCheckUp(CollisionMapInfo& info) {
 	if (hit) {
 		// めり込みを排除する方向に移動量を設定する
 		indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightTop]);
-		// めり込み先ブロックの範囲矩形
-		BRect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
-		info.move.y = std::max(0.0f,info.move.y);//\\
+		// indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop]);
+		//  めり込み先ブロックの範囲矩形
+		BlockRect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
+
+		info.move.y = std::max(0.0f, (rect.bottom - worldTransform_.translation_.y) - (1.0f + kBlank)); //\\
 		// 天井に当たったことを記録する
 		info.ceiling = true;
 	}
@@ -206,7 +215,7 @@ Vector3 Player::CornerPosition(const Vector3& center, Corner corner) {
 	return result;
 }
 
-void Player::MoveByCollisionMap(const CollisionMapInfo& info) {
+void Player::MoveByCollisionResult(const CollisionMapInfo& info) {
 	worldTransform_.translation_.x += info.move.x;
 	worldTransform_.translation_.y += info.move.y;
 	worldTransform_.translation_.z += info.move.z;
@@ -215,9 +224,6 @@ void Player::MoveByCollisionMap(const CollisionMapInfo& info) {
 void Player::CollisionCeilingCase(const CollisionMapInfo& info) {
 	// 天井に当たった?
 	if (info.ceiling) {
-		DebugText::GetInstance()->ConsolePrintf("hit ceiling\n");
 		velocity_.y = 0;
 	}
 }
-
-

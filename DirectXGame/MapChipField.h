@@ -20,7 +20,7 @@ struct IndexSet {
 	uint32_t yIndex;
 };
 
-struct BRect {
+struct BlockRect {
 	float left;
 	float right;
 	float bottom;
@@ -46,7 +46,7 @@ public:
 	float GetkBlockHeight();
 	//指定座標がマップチップの何番の位置にあるか
 	IndexSet GetMapChipIndexSetByPosition(const Vector3& position);
-	BRect GetRectByIndex(uint32_t xIndex, uint32_t yIndex);
+	BlockRect GetRectByIndex(uint32_t xIndex, uint32_t yIndex);
 
 private:
 	MapChipData mapChipData_;
