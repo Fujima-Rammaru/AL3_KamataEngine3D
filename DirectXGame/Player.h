@@ -61,9 +61,9 @@ private:
 	MapChipField* mapChipField_ = nullptr;
 
 	static inline const float kAcceleration = 0.1f;
-	static inline const float kAttenuation = 0.1f;   // 速度減衰率
+	static inline const float kAttenuation = 0.2f;   // 速度減衰率
 	static inline const float kLimitRunSpeed = 0.25f; // 最大速度制限
-	static inline const float kBlank = 0.1f;
+	static inline const float kBlank = 0.2f;
 
 	enum class LRDirection {
 		kRight,
@@ -76,11 +76,11 @@ private:
 	static inline const float kTimeTurn = 0.3f;            // 旋回時間<秒>
 	bool onGround_ = true;                                 // 設置状態フラグ
 	static inline const float kGravityAcceleration = 0.1f; // 重力加速度(下方向)
-	static inline const float kLimitFallSpeed = 1.0f;      // 最大落下速度(下方向)
+	static inline const float kLimitFallSpeed = 0.8f;      // 最大落下速度(下方向)
 	static inline const float kJumpAcceleration = 1.0f;    // ジャンプ初速(上方向）
 	static inline const float kGroundPos = 2.0f;           // 地面の座標
 	bool landing = false;
 	// bool hit = false;
-	static inline const float kWidth = 1.7f; // キャラクターの当たり判定サイズ
-	static inline const float kHeight = 1.7f;
+	static inline const float kWidth = 1.8f; // キャラクターの当たり判定サイズ
+	static inline const float kHeight = 1.8f;
 };

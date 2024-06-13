@@ -72,8 +72,6 @@ void Player::Update() {
 	}
 	Vector3 CR;
 	CR = CornerPosition(worldTransform_.translation_, kRightTop);
-	ImGui::Text("krightTop=%3.2f", CR.y);
-
 	// 行列計算
 	worldTransform_.UpdateMatrix();
 }
@@ -150,8 +148,6 @@ void Player::Move() { // 移動入力
 	}
 }
 
-// void Player::CollisionMapCheck(CollisionMapInfo& info) {}
-
 void Player::CollisionMapCheckUp(CollisionMapInfo& info) {
 	if (info.move.y <= 0) {
 		return;
@@ -159,7 +155,6 @@ void Player::CollisionMapCheckUp(CollisionMapInfo& info) {
 	// 移動後の4つの角座標
 	std::array<Vector3, kNumCorner> positionsNew;
 	for (uint32_t i = 0; i < positionsNew.size(); ++i) {
-		// 演算子オーバーロード
 		positionsNew[i] = CornerPosition(worldTransform_.translation_ + info.move, static_cast<Corner>(i));
 	}
 
@@ -184,9 +179,10 @@ void Player::CollisionMapCheckUp(CollisionMapInfo& info) {
 	}
 
 	if (hit) {
+	
 		// めり込みを排除する方向に移動量を設定する
-		indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightTop]);
-		// indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop]);
+	//	indexSet = mapChipField_->GetMapChipIndexSetByPosition(playerTop);
+		 indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop]);
 		//  めり込み先ブロックの範囲矩形
 		BlockRect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 
