@@ -192,9 +192,48 @@ void Player::CollisionMapCheckUp(CollisionMapInfo& info) {
 	}
 }
 
-// void Player::CollisionMapCheckDown(CollisionMapInfo& info) {}
-// void Player::CollisionMapCheckLeft(CollisionMapInfo& info) {}
-// void Player::CollisionMapCheckRight(CollisionMapInfo& info) {}
+void Player::CollisionMapCheckDown(CollisionMapInfo& info) {
+	if (info.move.y >= 0) {
+		return;
+	}
+
+	// 移動後の4つの角座標
+	std::array<Vector3, kNumCorner> positionsNew;
+	for (uint32_t i = 0; i < positionsNew.size(); ++i) {
+		positionsNew[i] = CornerPosition(worldTransform_.translation_ + info.move, static_cast<Corner>(i));
+	}
+
+	MapChipType mapChipType;
+
+	bool hit = false;
+
+	// 左下点の判定
+	IndexSet indexSet;
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	if (mapChipType == MapChipType::kBlock) {
+		hit = true;
+	}
+	// 右下点の判定
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	if (mapChipType == MapChipType::kBlock) {
+		hit = true;
+	}
+
+	if (hit) {
+		// めり込みを排除する方向に移動量を設定する
+		//	indexSet = mapChipField_->GetMapChipIndexSetByPosition(playerTop);
+		indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom]);
+		//  めり込み先ブロックの範囲矩形
+		BlockRect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
+
+		info.move.y = std::min(0.0f, (rect.top - worldTransform_.translation_.y) + (1.0f + kBlank)); //\\
+		// 地面に当たったことを記録する
+		info.landing = true;
+	}
+}
+
 
 Vector3 Player::CornerPosition(const Vector3& center, Corner corner) {
 	Vector3 offSetTable[kNumCorner] = {

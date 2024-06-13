@@ -40,8 +40,8 @@ public:
 	void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; } // setter
 	void Move();
 	//	void CollisionMapCheck(CollisionMapInfo& info); // マップ衝突判定
-	void CollisionMapCheckUp(CollisionMapInfo& info);
-	//	void CollisionMapCheckDown(CollisionMapInfo& info);
+	void CollisionMapCheckUp(CollisionMapInfo& info);//衝突判定上方向
+		void CollisionMapCheckDown(CollisionMapInfo& info);
 	//	void CollisionMapCheckLeft(CollisionMapInfo& info);
 	//	void CollisionMapCheckRight(CollisionMapInfo& info);
 	Vector3 CornerPosition(const Vector3& center, Corner corner);
