@@ -47,6 +47,8 @@ public:
 	Vector3 CornerPosition(const Vector3& center, Corner corner);
 	void MoveByCollisionResult(const CollisionMapInfo& info);
 	void CollisionCeilingCase(const CollisionMapInfo& info); // 天井に接触している場合の処理
+	void GroundStateChange(const CollisionMapInfo& info);//接地状態の処理
+//	void cornerDetect(const MapChipType& mapChipType,const int& corner);//4角の判定
 
 private:
 	WorldTransform worldTransform_;
@@ -60,17 +62,16 @@ private:
 
 	MapChipField* mapChipField_ = nullptr;
 
-	static inline const float kAcceleration = 0.1f;
-	static inline const float kAttenuation = 0.2f;   // 速度減衰率
-	static inline const float kLimitRunSpeed = 0.25f; // 最大速度制限
-	static inline const float kBlank = 0.2f;
-
 	enum class LRDirection {
 		kRight,
 		kLeft,
 	};
 	LRDirection lrDirection_ = LRDirection::kRight; // 右向きで初期化
 
+	static inline const float kAcceleration = 0.1f;
+	static inline const float kAttenuation = 0.2f;   // 速度減衰率
+	static inline const float kLimitRunSpeed = 0.25f; // 最大速度制限
+	static inline const float kBlank = 0.2f;
 	float turnFirstRotationY_ = 0.0f;                      // 旋回開始時の角度
 	float turnTimer_ = 0.0f;                               // 旋回タイマー
 	static inline const float kTimeTurn = 0.3f;            // 旋回時間<秒>
@@ -80,7 +81,7 @@ private:
 	static inline const float kJumpAcceleration = 1.0f;    // ジャンプ初速(上方向）
 	static inline const float kGroundPos = 2.0f;           // 地面の座標
 	bool landing = false;
-	// bool hit = false;
 	static inline const float kWidth = 1.8f; // キャラクターの当たり判定サイズ
 	static inline const float kHeight = 1.8f;
+	static inline const float kAttenuationLanding = 0.2f;//着地時の速度減衰率
 };

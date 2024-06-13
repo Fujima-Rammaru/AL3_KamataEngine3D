@@ -179,10 +179,10 @@ void Player::CollisionMapCheckUp(CollisionMapInfo& info) {
 	}
 
 	if (hit) {
-	
+
 		// めり込みを排除する方向に移動量を設定する
-	//	indexSet = mapChipField_->GetMapChipIndexSetByPosition(playerTop);
-		 indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop]);
+		//	indexSet = mapChipField_->GetMapChipIndexSetByPosition(playerTop);
+		indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop]);
 		//  めり込み先ブロックの範囲矩形
 		BlockRect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 
@@ -234,7 +234,6 @@ void Player::CollisionMapCheckDown(CollisionMapInfo& info) {
 	}
 }
 
-
 Vector3 Player::CornerPosition(const Vector3& center, Corner corner) {
 	Vector3 offSetTable[kNumCorner] = {
 	    {kWidth / 2.0f,  -kHeight / 2.0f, 0}, //  kRightBottom
@@ -262,3 +261,39 @@ void Player::CollisionCeilingCase(const CollisionMapInfo& info) {
 		velocity_.y = 0;
 	}
 }
+
+void Player::GroundStateChange(const CollisionMapInfo& info) {
+	// 自キャラが接地状態?
+	if (onGround_) {
+		if (velocity_.y > 0.0f) {
+			onGround_ = false;
+
+		} else {
+			// 落下判定
+			MapChipType mapChipType;
+
+			bool hit = false;
+			// 落下なら空中状態に切り替え
+			if (!hit) {
+				// 空中状態に切り替わる
+				onGround_ = false;
+			}
+		}
+	} else {
+		if (info.landing) {
+			// 着地状態に切り替える
+			onGround_ = true;
+			velocity_.x += (1.0f - kAttenuationLanding);
+			velocity_.y = 0.0f;
+		}
+	}
+}
+
+// void Player::cornerDetect(const MapChipType& mapChipType,const int& corner) {
+//	IndexSet indexSet;
+//	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom]);
+//	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+//	if (mapChipType == MapChipType::kBlock) {
+//		hit = true;
+//	}
+// }
