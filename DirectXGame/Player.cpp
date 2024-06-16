@@ -270,7 +270,7 @@ void Player::GroundStateChange(const CollisionMapInfo& info) {
 
 		} else {
 			// 落下判定
-			MapChipType mapChipType;
+			MapChipType mapChipType; // 次回落下判定から
 
 			bool hit = false;
 			// 落下なら空中状態に切り替え
@@ -289,11 +289,12 @@ void Player::GroundStateChange(const CollisionMapInfo& info) {
 	}
 }
 
+//
 // void Player::cornerDetect(const MapChipType& mapChipType,const int& corner) {
 //	IndexSet indexSet;
-//	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom]);
+//	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom]);//指定した角の座標からマップチップ番号を取得
 //	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
 //	if (mapChipType == MapChipType::kBlock) {
-//		hit = true;
+//		hit = true;//ブロックが当たったとき
 //	}
 // }
