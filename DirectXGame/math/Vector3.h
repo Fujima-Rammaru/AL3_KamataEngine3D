@@ -9,13 +9,21 @@ struct Vector3 final {
 	float y;
 	float z;
 
-	Vector3 operator+(const Vector3 & a) {
+	Vector3 operator+(const Vector3& a) {
 		Vector3 c = {};
-		
 
 		c.x = this->x + a.x;
 		c.y = this->y + a.y;
 		c.z = this->z + a.z;
+		return c;
+	};
+
+	Vector3 operator-(const Vector3& a) {
+		Vector3 c = {};
+
+		c.x = this->x - a.x;
+		c.y = this->y - a.y;
+		c.z = this->z - a.z;
 		return c;
 	};
 
