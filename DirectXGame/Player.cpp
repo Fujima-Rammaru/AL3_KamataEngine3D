@@ -4,6 +4,7 @@
 #include "MapChipField.h"
 #include <algorithm>
 #include <numbers>
+#include"imgui.h"
 
 void Player::initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection, const Vector3& position) {
 
@@ -69,10 +70,11 @@ void Player::Update() {
 		// 自キャラの角度を設定する
 		worldTransform_.rotation_.y = nowRotationY;
 	}
-	Vector3 CR;
-	CR = CornerPosition(worldTransform_.translation_, kRightTop);
+	/*Vector3 CR;
+	CR = CornerPosition(worldTransform_.translation_, kRightTop);*/
 	// 行列計算
 	worldTransform_.UpdateMatrix();
+	ImGui::Text("onground=%d",onGround_);
 }
 
 void Player::Draw() { model_->Draw(worldTransform_, *viewProjection_, txHandle_); }
