@@ -27,6 +27,8 @@ private:
 		kLeftTop,
 		kNumCorner // 要素数
 	};
+	// 衝突情報を初期化
+	CollisionMapInfo info_;
 
 public:
 	void initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection, const Vector3& position);
@@ -59,8 +61,8 @@ private:
 	uint32_t txHandle_ = 0u;
 	ViewProjection* viewProjection_ = nullptr;
 
-	Vector3 velocity_ = {0, -1.0f, 0};
-	Vector3 vectorBlank = {0, -1.3f, 0};
+	Vector3 velocity_ = {0.0f, 0.0f, 0.0f};
+	Vector3 vectorBlank = {0, -2.0f, 0};
 
 	MapChipField* mapChipField_ = nullptr;
 
@@ -70,15 +72,15 @@ private:
 	};
 	LRDirection lrDirection_ = LRDirection::kRight; // 右向きで初期化
 
-	static inline const float kAcceleration = 0.1f;
+	static inline const float kAcceleration = 0.05f;
 	static inline const float kAttenuation = 0.2f;    // 速度減衰率
 	static inline const float kLimitRunSpeed = 0.25f; // 最大速度制限
-	static inline const float kBlank = 0.2f;
-	static inline const float kBlank2 = 1.0f;
+	static inline const float kBlank = 0.5f;
+	static inline const float kBlank2 = 0.2f;
 	float turnFirstRotationY_ = 0.0f;                      // 旋回開始時の角度
 	float turnTimer_ = 0.0f;                               // 旋回タイマー
 	static inline const float kTimeTurn = 0.3f;            // 旋回時間<秒>
-	bool onGround_ = false;                                // 設置状態フラグ
+	bool onGround_ = true;                                // 設置状態フラグ
 	static inline const float kGravityAcceleration = 0.1f; // 重力加速度(下方向)
 	static inline const float kLimitFallSpeed = 0.8f;      // 最大落下速度(下方向)
 	static inline const float kJumpAcceleration = 1.0f;    // ジャンプ初速(上方向）
