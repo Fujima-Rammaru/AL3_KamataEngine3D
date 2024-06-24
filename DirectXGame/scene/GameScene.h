@@ -8,6 +8,7 @@
 #include "MapChipField.h"
 #include "Model.h"
 #include "Player.h"
+#include "Enemy.h"
 #include "SkyDome.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
@@ -54,11 +55,14 @@ private: // メンバ変数
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
 	uint32_t playerTxHandle_ = 0u;
-	Model* modelPlayer_ = nullptr; // 自キャラ
+	Model* modelPlayer_ = nullptr; // 自キャラ3Dmodel
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
 	ViewProjection cameraViewProjection_; // カメラ用
 	Player* player_ = nullptr;
+	Enemy* enemy_ = nullptr;
+	Model* modelEnemy = nullptr;
+	uint32_t enemyTxhandle = 0u;
 
 	Model* modelBlock_ = nullptr;                                    // ブロック
 	uint32_t blockTxHandle_ = 0u;                                    // ブロックテクスチャハンドル

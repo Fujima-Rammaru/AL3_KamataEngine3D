@@ -54,6 +54,12 @@ void GameScene::Initialize() {
 	player_->initialize(modelPlayer_, playerTxHandle_, &cameraViewProjection_, playerposition); // 自キャラの初期化
 	player_->SetMapChipField(mapChipField_);
 
+	//敵キャラの生成
+	enemy_ = new Enemy();
+	enemyTxhandle = TextureManager::Load("sample.png"); // テクスチャの読み込み
+	modelEnemy = Model::Create();
+	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(13, 18);
+	enemy_->Initialize(modelEnemy,enemyTxhandle,&cameraViewProjection_,enemyPosition);
 	// カメラコントローラー初期化
 	Rect area_ = {30.0f, 170.0f, 0.0f, 100.0f};
 	cameraController_ = new CameraController;
@@ -85,6 +91,7 @@ void GameScene::Update() {
 	}
 	player_->Update();
 	skyDome_->Update();
+	enemy_->Update();
 
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_BACK)) {
@@ -138,6 +145,7 @@ void GameScene::Draw() {
 
 	modelSkyDome_->Draw(worldTransform_, cameraViewProjection_);
 	player_->Draw();
+	enemy_->Draw();
 	/// </summary>
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

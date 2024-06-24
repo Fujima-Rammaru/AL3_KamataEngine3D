@@ -4,7 +4,7 @@
 // 3次元ベクトル
 // </summary>
 struct Vector3 final {
-	
+
 	float x;
 	float y;
 	float z;
@@ -27,16 +27,14 @@ struct Vector3 final {
 		return c;
 	};
 
-	//bool operator==(const Vector3& other) const = default;
+	void operator+=(const Vector3& a) {
+
+		x += a.x;
+		y += a.y;
+		z += a.z;
+	};
+
+	// bool operator==(const Vector3& other) const = default;
 };
-	
 
-//	Vector3 
-
-	
-
-	
-
-
-
-
+//	Vector3
