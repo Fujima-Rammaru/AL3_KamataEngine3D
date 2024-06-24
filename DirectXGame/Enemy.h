@@ -21,4 +21,8 @@ private:
 	ViewProjection* viewProjection_ = nullptr;
 	static inline const float kWalkSpeed = 0.05f;
 	Vector3 velocity_ = {};
+	static inline const float kWalkMotionAngleStart = 1.0f; 
+	static inline const float kWalkMotionAngleEnd = 20.0f;
+	static inline const float kWalkMotionTime = 1.0f;
+	float walkTimer_ = 0.0f;
 };
