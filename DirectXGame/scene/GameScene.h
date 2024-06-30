@@ -50,8 +50,11 @@ public: // メンバ関数
 	/// </summary>
 	void GenerateBlocks();
 
+	//全ての当たり判定を行う
+	void CheckAllCollisions();
+
 private: // メンバ変数
-	DirectXCommon* dxCommon_ = nullptr;
+	DirectXCommon* dxCommon_= nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
 	uint32_t playerTxHandle_ = 0u;
@@ -63,6 +66,9 @@ private: // メンバ変数
 	Enemy* enemy_ = nullptr;
 	Model* modelEnemy = nullptr;
 	uint32_t enemyTxhandle = 0u;
+	//std::list<Enemy*> enemies_;
+	//std::list<Enemy*>::iterator itr;//イテレーター宣言
+	//Enemy* newEnemy = nullptr;
 
 	Model* modelBlock_ = nullptr;                                    // ブロック
 	uint32_t blockTxHandle_ = 0u;                                    // ブロックテクスチャハンドル
@@ -79,5 +85,4 @@ private: // メンバ変数
 	/// ゲームシーン用
 	/// </summary>
 	///
-	/// if(velocity_.x*velocity_x<0.001f){velocity_.x}
 };
