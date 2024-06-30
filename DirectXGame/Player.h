@@ -95,4 +95,3 @@ private:
 	static inline const float kWidth = 1.9f; // キャラクターの当たり判定サイズ
 	static inline const float kHeight = 1.90f;
 	static inline const float kAttenuationLanding = 0.2f; // 着地時の速度減衰率
-};
