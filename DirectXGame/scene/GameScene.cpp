@@ -1,9 +1,6 @@
 #include "GameScene.h"
 #include "DebugCamera.h"
-#include "MatrixFunction.h"
 #include "TextureManager.h"
-#include "ViewProjection.h"
-#include <cassert>
 
 GameScene::GameScene() {}
 
@@ -25,6 +22,8 @@ GameScene::~GameScene() {
 	delete modelSkyDome_;
 	delete mapChipField_;
 	delete cameraController_;
+	delete modelParticles_;
+	delete deathParticles_;
 }
 
 void GameScene::Initialize() {
@@ -55,6 +54,9 @@ void GameScene::Initialize() {
 	Vector3 playerposition = mapChipField_->GetMapChipPositionByIndex(3, 18);
 	player_->initialize(modelPlayer_, playerTxHandle_, &cameraViewProjection_, playerposition); // 自キャラの初期化
 	player_->SetMapChipField(mapChipField_);
+	deathParticles_ = new DeathParticles();
+	modelParticles_ = Model::Create();
+	deathParticles_->Initialize(modelParticles_,playerTxHandle_, &cameraViewProjection_, playerposition);
 
 	// 敵キャラの生成
 	enemyTxhandle = TextureManager::Load("sample.png"); // テクスチャの読み込み
@@ -85,9 +87,7 @@ void GameScene::Update() {
 			if (!worldTransformBlock) {
 				continue;
 			}
-
 			worldTransformBlock->matWorld_ = matrixFunction->MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
-
 			// 定数バッファに転送する
 			worldTransformBlock->TransferMatrix();
 		}
@@ -96,6 +96,9 @@ void GameScene::Update() {
 	player_->Update();
 	skyDome_->Update();
 	enemy_->Update();
+	if (deathParticles_) {
+		deathParticles_->Update();
+	}
 
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_BACK)) {
@@ -151,6 +154,9 @@ void GameScene::Draw() {
 	modelSkyDome_->Draw(worldTransform_, cameraViewProjection_);
 	player_->Draw();
 	enemy_->Draw();
+	if (deathParticles_) {
+		deathParticles_->Draw();
+	}
 
 	/// </summary>
 	// 3Dオブジェクト描画後処理

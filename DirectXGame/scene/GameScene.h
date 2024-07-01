@@ -2,18 +2,18 @@
 
 #include "Audio.h"
 #include "CameraController.h"
+#include "DeathParticles.h"
 #include "DebugCamera.h"
 #include "DirectXCommon.h"
+#include "Enemy.h"
 #include "Input.h"
 #include "MapChipField.h"
 #include "Model.h"
 #include "Player.h"
-#include "Enemy.h"
 #include "SkyDome.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include <vector>
-
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -50,11 +50,11 @@ public: // メンバ関数
 	/// </summary>
 	void GenerateBlocks();
 
-	//全ての当たり判定を行う
+	// 全ての当たり判定を行う
 	void CheckAllCollisions();
 
 private: // メンバ変数
-	DirectXCommon* dxCommon_= nullptr;
+	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
 	uint32_t playerTxHandle_ = 0u;
@@ -63,12 +63,14 @@ private: // メンバ変数
 	ViewProjection viewProjection_;
 	ViewProjection cameraViewProjection_; // カメラ用
 	Player* player_ = nullptr;
+	DeathParticles* deathParticles_ = nullptr;
+	Model* modelParticles_ = nullptr;
 	Enemy* enemy_ = nullptr;
 	Model* modelEnemy = nullptr;
 	uint32_t enemyTxhandle = 0u;
-	//std::list<Enemy*> enemies_;
-	//std::list<Enemy*>::iterator itr;//イテレーター宣言
-	//Enemy* newEnemy = nullptr;
+	// std::list<Enemy*> enemies_;
+	// std::list<Enemy*>::iterator itr;//イテレーター宣言
+	// Enemy* newEnemy = nullptr;
 
 	Model* modelBlock_ = nullptr;                                    // ブロック
 	uint32_t blockTxHandle_ = 0u;                                    // ブロックテクスチャハンドル
@@ -76,13 +78,13 @@ private: // メンバ変数
 
 	bool isDebugCameraactive_ = false;
 	DebugCamera* debugCamera_ = nullptr;
-	CameraController* cameraController_ = nullptr;//カメラコントローラー
+	CameraController* cameraController_ = nullptr; // カメラコントローラー
 
 	SkyDome* skyDome_ = nullptr;
 	Model* modelSkyDome_ = nullptr;
 	MapChipField* mapChipField_; // マップチップフィールド
-	/// <summary>
-	/// ゲームシーン用
-	/// </summary>
-	///
+	                             /// <summary>
+	                             /// ゲームシーン用
+	                             /// </summary>
+	                             ///
 };

@@ -33,8 +33,4 @@ struct Vector3 final {
 		y += a.y;
 		z += a.z;
 	};
-
-	// bool operator==(const Vector3& other) const = default;
 };
-
-//	Vector3

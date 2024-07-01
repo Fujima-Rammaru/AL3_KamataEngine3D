@@ -54,10 +54,7 @@ void Player::Update() {
 			landing = true;
 		}
 	}
-
 	GroundStateChange(info);
-
-	// velocity_ = info.move;
 
 	// 移動
 	worldTransform_.translation_.x += velocity_.x;
@@ -80,10 +77,6 @@ void Player::Update() {
 		// 自キャラの角度を設定する
 		worldTransform_.rotation_.y = nowRotationY;
 	}
-	// Vector3 CR;
-	// CR = CornerPosition(worldTransform_.translation_, kRightTop);
-	//  行列計算
-
 	worldTransform_.UpdateMatrix();
 }
 
