@@ -23,10 +23,8 @@ private:
 
 	Model* model_ = nullptr;
 
-
 	uint32_t txHandle_ = 0u;
 
 	ViewProjection* viewProjection_ = nullptr;
 
-	
 };

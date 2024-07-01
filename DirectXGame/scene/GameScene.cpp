@@ -143,13 +143,9 @@ void GameScene::Draw() {
 			modelBlock_->Draw(*worldTransformBlock, cameraViewProjection_);
 		}
 	}
-
-	// modelSkyDome_->Draw(worldTransform_,cameraViewProjection_);
-
 	skyDome_->Draw();
 	player_->Draw();
-	// skyDome_->Draw();
-
+	
 	/// </summary>
 
 	// 3Dオブジェクト描画後処理
