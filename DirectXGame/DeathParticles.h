@@ -13,13 +13,12 @@
 class DeathParticles {
 
 public:
-	void Initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection, const Vector3& position);
+	void Initialize(Model* model, ViewProjection* viewProjection, const Vector3& position);
 	void Update();
 	void Draw();
 
 private:
 	Model* model_ = nullptr;
-	uint32_t txHandle_ = 0u;
 	ViewProjection* viewProjection_ = nullptr;
 	static inline const uint32_t kNumParticles = 8;//パーティクルの個数
 	std::array<WorldTransform, kNumParticles> worldTransforms_;

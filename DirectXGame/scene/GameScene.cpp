@@ -55,8 +55,8 @@ void GameScene::Initialize() {
 	player_->initialize(modelPlayer_, playerTxHandle_, &cameraViewProjection_, playerposition); // 自キャラの初期化
 	player_->SetMapChipField(mapChipField_);
 	deathParticles_ = new DeathParticles();
-	modelParticles_ = Model::Create();
-	deathParticles_->Initialize(modelParticles_,playerTxHandle_, &cameraViewProjection_, playerposition);
+	modelParticles_ = Model::CreateFromOBJ("Particle", true);
+	deathParticles_->Initialize(modelParticles_, &cameraViewProjection_, playerposition);
 
 	// 敵キャラの生成
 	enemyTxhandle = TextureManager::Load("sample.png"); // テクスチャの読み込み

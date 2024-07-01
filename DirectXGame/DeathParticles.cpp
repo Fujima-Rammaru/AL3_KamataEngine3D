@@ -1,11 +1,9 @@
 #include "DeathParticles.h"
 #include "MatrixFunction.h"
 #include <algorithm>
-void DeathParticles::Initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection, const Vector3& position) {
+void DeathParticles::Initialize(Model* model, ViewProjection* viewProjection, const Vector3& position) {
 	assert(model);
 	model_ = model;
-
-	txHandle_ = textureHandle;
 	viewProjection_ = viewProjection;
 	objectColor_.Initialize();
 	color_ = {1, 1, 1, 1};
@@ -58,6 +56,6 @@ void DeathParticles::Draw() {
 		return;
 	}
 	for (auto& worldTransform : worldTransforms_) {
-		model_->Draw(worldTransform, *viewProjection_, txHandle_, &objectColor_);
+		model_->Draw(worldTransform, *viewProjection_,&objectColor_);
 	}
 }
