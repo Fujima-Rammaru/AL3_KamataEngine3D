@@ -45,7 +45,7 @@ private:
 
 	float turnFirstRotationY_ = 0.0f;                      // 旋回開始時の角度
 	float turnTimer_ = 0.0f;                               // 旋回タイマー
-	static inline const float kTimeTurn = 0.3f;            // 旋回時間<秒>
+	static inline const float kTimeTurn = 0.4f;            // 旋回時間<秒>
 	bool onGround_ = true;                                 // 設置状態フラグ
 	static inline const float kGravityAcceleration = 0.2f; // 重力加速度(下方向)
 	static inline const float kLimitFallSpeed = 2.0f;      // 最大落下速度(下方向)
