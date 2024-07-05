@@ -1,10 +1,11 @@
 #define NOMINMAX
 #include "Player.h"
+#include "ImGuiManager.h"
 #include "Input.h"
 #include "MapChipField.h"
 #include <algorithm>
 #include <numbers>
-#include "ImGuiManager.h"
+#include "GameScene.h"
 
 void Player::initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection, const Vector3& position) {
 
@@ -15,7 +16,7 @@ void Player::initialize(Model* model, uint32_t textureHandle, ViewProjection* vi
 	viewProjection_ = viewProjection;
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = position;
-	worldTransform_.rotation_.y = std::numbers::pi_v<float> * 5.0f / 2.0f; // 450度
+	worldTransform_.rotation_.y = std::numbers::pi_v<float> * 0.0f; // 450度
 }
 
 Player::Player() {}
@@ -32,8 +33,8 @@ void Player::Update() {
 	// info.move = velocity_;
 	info.move = velocity_;
 	// マップ衝突チェック
-	CollisionMapCheckLeft(info);
-	CollisionMapCheckRight(info);
+	//CollisionMapCheckLeft(info);
+	//CollisionMapCheckRight(info);
 	CollisionMapCheckDown(info); // 下方向
 	CollisionMapCheckUp(info);   // 天井のみ
 
@@ -66,7 +67,7 @@ void Player::Update() {
 		turnTimer_ -= 0.0166f; // 1/60秒
 
 		// 左右の自キャラ角度テーブル
-		float destinationRotationYTable[] = {std::numbers::pi_v<float> * 5.0f / 2.0f, std::numbers::pi_v<float> * 3.0f / 2.0f};
+		float destinationRotationYTable[] = {std::numbers::pi_v<float> * 0.0f, std::numbers::pi_v<float> / 2.0f};
 
 		// 状況に応じた角度を取得する
 		float destinationRotationY = destinationRotationYTable[static_cast<uint32_t>(lrDirection_)];
@@ -236,7 +237,8 @@ void Player::CollisionMapCheckDown(CollisionMapInfo& info) {
 		//  めり込み先ブロックの範囲矩形
 		BlockRect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 		// float radius = (positionsNew[kRightTop].y - positionsNew[kRightBottom].y) / 2;
-		info.move.y = std::min(0.0f, (rect.top - worldTransform_.translation_.y) + (1.150f + kBlank)); //
+		info.move.y = std::min(0.0f, (rect.top - worldTransform_.translation_.y) + (0.9f + kBlank)); //
+		velocity_.y = info.move.y;
 		// worldTransform_.translation_.y += info.move.y;
 		//  地面に当たったことを記録する
 		//	ImGui::Text("hit=%d", hit);
@@ -365,7 +367,7 @@ void Player::GroundStateChange(const CollisionMapInfo& info) {
 			// 移動後の4つの角座標
 			std::array<Vector3, kNumCorner> positionsNew;
 			for (uint32_t i = 0; i < positionsNew.size(); ++i) {
-				positionsNew[i] = CornerPosition(worldTransform_.translation_, static_cast<Corner>(i));
+				positionsNew[i] = CornerPosition(worldTransform_.translation_+info.move, static_cast<Corner>(i));
 			}
 
 			// 真下の当たり判定を行う
@@ -428,10 +430,10 @@ AABB Player::GetAABB() {
 	return aabb;
 }
 
-void Player::OnCollision(const Enemy* enemy) { 
+void Player::OnCollision(const Enemy* enemy) {
 	(void)enemy;
 	worldTransform_.rotation_.y += 0.1f;
-	
+	//GameScene::IsDead();
 }
 
 //

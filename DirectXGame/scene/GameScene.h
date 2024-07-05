@@ -17,6 +17,14 @@
 /// <summary>
 /// ゲームシーン
 /// </summary>
+ 
+enum class Phase {
+	kPlay,
+	kDeath,
+};
+
+
+
 class GameScene {
 
 public: // メンバ関数
@@ -53,6 +61,11 @@ public: // メンバ関数
 	// 全ての当たり判定を行う
 	void CheckAllCollisions();
 
+	//フェーズの切り替え
+	void ChangePhase();
+
+bool IsDead() const { return isDead_; }
+
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -68,9 +81,6 @@ private: // メンバ変数
 	Enemy* enemy_ = nullptr;
 	Model* modelEnemy = nullptr;
 	uint32_t enemyTxhandle = 0u;
-	// std::list<Enemy*> enemies_;
-	// std::list<Enemy*>::iterator itr;//イテレーター宣言
-	// Enemy* newEnemy = nullptr;
 
 	Model* modelBlock_ = nullptr;                                    // ブロック
 	uint32_t blockTxHandle_ = 0u;                                    // ブロックテクスチャハンドル
@@ -83,8 +93,8 @@ private: // メンバ変数
 	SkyDome* skyDome_ = nullptr;
 	Model* modelSkyDome_ = nullptr;
 	MapChipField* mapChipField_; // マップチップフィールド
-	                             /// <summary>
-	                             /// ゲームシーン用
-	                             /// </summary>
-	                             ///
+	      
+	MatrixFunction* matrixFunction=nullptr;
+	Phase phase_;
+	bool isDead_ = false;//デスフラグ
 };

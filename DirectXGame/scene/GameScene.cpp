@@ -24,6 +24,7 @@ GameScene::~GameScene() {
 	delete cameraController_;
 	delete modelParticles_;
 	delete deathParticles_;
+	delete matrixFunction;
 }
 
 void GameScene::Initialize() {
@@ -40,12 +41,15 @@ void GameScene::Initialize() {
 	viewProjection_.Initialize();
 	cameraViewProjection_.Initialize();
 
+	phase_ = Phase::kPlay;
+
 	skyDome_ = new SkyDome();                              // 天球の生成
 	modelSkyDome_ = Model::CreateFromOBJ("SkyDome", true); // 3Dモデルの生成
 	skyDome_->Initialize(modelSkyDome_, &viewProjection_); // 天球の初期化
 	debugCamera_ = new DebugCamera(WinApp::kWindowWidth, WinApp::kWindowHeight);
 	debugCamera_->SetFarZ(5000);
 
+	matrixFunction = new MatrixFunction;
 	mapChipField_ = new MapChipField;
 	mapChipField_->LoadMapChipCsv("Resources/MapChip.csv"); // CSVファイル読み込み
 	GenerateBlocks();
@@ -75,48 +79,80 @@ void GameScene::Initialize() {
 }
 
 void GameScene::Update() {
-	Vector3 scale{1.0f, 1.0f, 1.0f};     // 拡縮
-	Vector3 rotate{1.0f, 1.0f, 1.0f};    // 回転
-	Vector3 translate{1.0f, 1.0f, 1.0f}; // 平行移動
+	switch (phase_) {
 
-	MatrixFunction* matrixFunction;
-	matrixFunction = new MatrixFunction;
-
-	for (auto& worldTransformBlockLine : worldTransformBlocks_) {
-		for (auto worldTransformBlock : worldTransformBlockLine) {
-			if (!worldTransformBlock) {
-				continue;
+	case Phase::kPlay:
+		for (auto& worldTransformBlockLine : worldTransformBlocks_) {
+			for (auto worldTransformBlock : worldTransformBlockLine) {
+				if (!worldTransformBlock) {
+					continue;
+				}
+				worldTransformBlock->matWorld_ = matrixFunction->MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
+				// 定数バッファに転送する
+				worldTransformBlock->TransferMatrix();
 			}
-			worldTransformBlock->matWorld_ = matrixFunction->MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
-			// 定数バッファに転送する
-			worldTransformBlock->TransferMatrix();
 		}
-	}
-	
-	player_->Update();
-	skyDome_->Update();
-	enemy_->Update();
-	if (deathParticles_) {
-		deathParticles_->Update();
-	}
+
+		player_->Update();
+		skyDome_->Update();
+		enemy_->Update();
 
 #ifdef _DEBUG
-	if (input_->TriggerKey(DIK_BACK)) {
-		isDebugCameraactive_ ^= true;
-	}
-	if (isDebugCameraactive_) {
-		cameraController_->Update();
-		cameraViewProjection_.matView = cameraController_->GetMatView();
+		if (input_->TriggerKey(DIK_BACK)) {
+			isDebugCameraactive_ ^= true;
+		}
+		if (isDebugCameraactive_) {
+			cameraController_->Update();
+			cameraViewProjection_.matView = cameraController_->GetMatView();
 
-		cameraViewProjection_.matProjection = cameraController_->GetMatProjection();
+			cameraViewProjection_.matProjection = cameraController_->GetMatProjection();
 
-		cameraViewProjection_.TransferMatrix();
-	} else {
-		cameraViewProjection_.UpdateMatrix();
-	}
+			cameraViewProjection_.TransferMatrix();
+		} else {
+			cameraViewProjection_.UpdateMatrix();
+		}
 
 #endif
-	CheckAllCollisions();
+		CheckAllCollisions();
+		break;
+
+	case Phase::kDeath:
+
+		for (auto& worldTransformBlockLine : worldTransformBlocks_) {
+			for (auto worldTransformBlock : worldTransformBlockLine) {
+				if (!worldTransformBlock) {
+					continue;
+				}
+				worldTransformBlock->matWorld_ = matrixFunction->MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
+				// 定数バッファに転送する
+				worldTransformBlock->TransferMatrix();
+			}
+		}
+		skyDome_->Update();
+		enemy_->Update();
+
+#ifdef _DEBUG
+		if (input_->TriggerKey(DIK_BACK)) {
+			isDebugCameraactive_ ^= true;
+		}
+		if (isDebugCameraactive_) {
+			cameraController_->Update();
+			cameraViewProjection_.matView = cameraController_->GetMatView();
+
+			cameraViewProjection_.matProjection = cameraController_->GetMatProjection();
+
+			cameraViewProjection_.TransferMatrix();
+		} else {
+			cameraViewProjection_.UpdateMatrix();
+		}
+
+#endif
+		if (deathParticles_) {
+			deathParticles_->Update();
+			deathParticles_->Update();
+		}
+		break;
+	}
 }
 
 void GameScene::Draw() {
