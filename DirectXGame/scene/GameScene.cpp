@@ -78,82 +78,7 @@ void GameScene::Initialize() {
 	cameraController_->SetMovaAbleArea(area_);
 }
 
-void GameScene::Update() {
-	switch (phase_) {
-
-	case Phase::kPlay:
-		for (auto& worldTransformBlockLine : worldTransformBlocks_) {
-			for (auto worldTransformBlock : worldTransformBlockLine) {
-				if (!worldTransformBlock) {
-					continue;
-				}
-				worldTransformBlock->matWorld_ = matrixFunction->MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
-				// 定数バッファに転送する
-				worldTransformBlock->TransferMatrix();
-			}
-		}
-
-		player_->Update();
-		skyDome_->Update();
-		enemy_->Update();
-
-#ifdef _DEBUG
-		if (input_->TriggerKey(DIK_BACK)) {
-			isDebugCameraactive_ ^= true;
-		}
-		if (isDebugCameraactive_) {
-			cameraController_->Update();
-			cameraViewProjection_.matView = cameraController_->GetMatView();
-
-			cameraViewProjection_.matProjection = cameraController_->GetMatProjection();
-
-			cameraViewProjection_.TransferMatrix();
-		} else {
-			cameraViewProjection_.UpdateMatrix();
-		}
-
-#endif
-		CheckAllCollisions();
-		break;
-
-	case Phase::kDeath:
-
-		for (auto& worldTransformBlockLine : worldTransformBlocks_) {
-			for (auto worldTransformBlock : worldTransformBlockLine) {
-				if (!worldTransformBlock) {
-					continue;
-				}
-				worldTransformBlock->matWorld_ = matrixFunction->MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
-				// 定数バッファに転送する
-				worldTransformBlock->TransferMatrix();
-			}
-		}
-		skyDome_->Update();
-		enemy_->Update();
-
-#ifdef _DEBUG
-		if (input_->TriggerKey(DIK_BACK)) {
-			isDebugCameraactive_ ^= true;
-		}
-		if (isDebugCameraactive_) {
-			cameraController_->Update();
-			cameraViewProjection_.matView = cameraController_->GetMatView();
-
-			cameraViewProjection_.matProjection = cameraController_->GetMatProjection();
-
-			cameraViewProjection_.TransferMatrix();
-		} else {
-			cameraViewProjection_.UpdateMatrix();
-		}
-
-#endif
-		if (deathParticles_) {
-			deathParticles_->Update();
-			deathParticles_->Update();
-		}
-		break;
-	}
-}
+void GameScene::Update() { ChangePhase(); }
 
 void GameScene::Draw() {
 
@@ -188,7 +113,11 @@ void GameScene::Draw() {
 	}
 
 	modelSkyDome_->Draw(worldTransform_, cameraViewProjection_);
-	player_->Draw();
+
+	if (player_->IsDeadGetter() == false) {
+		player_->Draw();
+	}
+
 	enemy_->Draw();
 	if (deathParticles_) {
 		deathParticles_->Draw();
@@ -250,4 +179,91 @@ void GameScene::CheckAllCollisions() {
 		enemy_->OnCollision(player_); // 敵の衝突時コールバックを呼び出す
 	}
 #pragma endregion
+}
+
+void GameScene::ChangePhase() {
+
+	switch (phase_) {
+
+	case Phase::kPlay:
+		for (auto& worldTransformBlockLine : worldTransformBlocks_) {
+			for (auto worldTransformBlock : worldTransformBlockLine) {
+				if (!worldTransformBlock) {
+					continue;
+				}
+				worldTransformBlock->matWorld_ = matrixFunction->MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
+				// 定数バッファに転送する
+				worldTransformBlock->TransferMatrix();
+			}
+		}
+
+		if (player_->IsDeadGetter() == false) {
+			player_->Update();
+		}
+
+		skyDome_->Update();
+		enemy_->Update();
+
+#ifdef _DEBUG
+		if (input_->TriggerKey(DIK_BACK)) {
+			isDebugCameraactive_ ^= true;
+		}
+		if (isDebugCameraactive_) {
+			cameraController_->Update();
+			cameraViewProjection_.matView = cameraController_->GetMatView();
+
+			cameraViewProjection_.matProjection = cameraController_->GetMatProjection();
+
+			cameraViewProjection_.TransferMatrix();
+		} else {
+			cameraViewProjection_.UpdateMatrix();
+		}
+#endif
+		CheckAllCollisions();
+
+		// 自キャラがやられたら
+		if (player_->IsDeadGetter()) {
+			phase_ = Phase::kDeath;
+
+			const Vector3& deathParticlePosition = player_->GetWorldPosition();
+			deathParticles_->Initialize(modelParticles_, &cameraViewProjection_, deathParticlePosition);
+		}
+		break;
+
+	case Phase::kDeath:
+
+		for (auto& worldTransformBlockLine : worldTransformBlocks_) {
+			for (auto worldTransformBlock : worldTransformBlockLine) {
+				if (!worldTransformBlock) {
+					continue;
+				}
+				worldTransformBlock->matWorld_ = matrixFunction->MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
+				// 定数バッファに転送する
+				worldTransformBlock->TransferMatrix();
+			}
+		}
+		skyDome_->Update();
+		enemy_->Update();
+
+#ifdef _DEBUG
+		if (input_->TriggerKey(DIK_BACK)) {
+			isDebugCameraactive_ ^= true;
+		}
+		if (isDebugCameraactive_) {
+			cameraController_->Update();
+			cameraViewProjection_.matView = cameraController_->GetMatView();
+
+			cameraViewProjection_.matProjection = cameraController_->GetMatProjection();
+
+			cameraViewProjection_.TransferMatrix();
+		} else {
+			cameraViewProjection_.UpdateMatrix();
+		}
+
+#endif
+		if (deathParticles_) {
+			deathParticles_->Update();
+		}
+		break;
+	}
 }

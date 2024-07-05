@@ -1,11 +1,11 @@
 #define NOMINMAX
 #include "Player.h"
+#include "GameScene.h"
 #include "ImGuiManager.h"
 #include "Input.h"
 #include "MapChipField.h"
 #include <algorithm>
 #include <numbers>
-#include "GameScene.h"
 
 void Player::initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection, const Vector3& position) {
 
@@ -33,8 +33,8 @@ void Player::Update() {
 	// info.move = velocity_;
 	info.move = velocity_;
 	// マップ衝突チェック
-	//CollisionMapCheckLeft(info);
-	//CollisionMapCheckRight(info);
+	// CollisionMapCheckLeft(info);
+	// CollisionMapCheckRight(info);
 	CollisionMapCheckDown(info); // 下方向
 	CollisionMapCheckUp(info);   // 天井のみ
 
@@ -367,7 +367,7 @@ void Player::GroundStateChange(const CollisionMapInfo& info) {
 			// 移動後の4つの角座標
 			std::array<Vector3, kNumCorner> positionsNew;
 			for (uint32_t i = 0; i < positionsNew.size(); ++i) {
-				positionsNew[i] = CornerPosition(worldTransform_.translation_+info.move, static_cast<Corner>(i));
+				positionsNew[i] = CornerPosition(worldTransform_.translation_ + info.move, static_cast<Corner>(i));
 			}
 
 			// 真下の当たり判定を行う
@@ -432,9 +432,10 @@ AABB Player::GetAABB() {
 
 void Player::OnCollision(const Enemy* enemy) {
 	(void)enemy;
-	worldTransform_.rotation_.y += 0.1f;
-	//GameScene::IsDead();
+	isDead_ = true;
 }
+
+bool Player::IsDeadGetter() { return isDead_; }
 
 //
 // void Player::cornerDetect(const MapChipType& mapChipType,const int& corner) {

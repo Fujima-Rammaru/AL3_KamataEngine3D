@@ -17,13 +17,11 @@
 /// <summary>
 /// ゲームシーン
 /// </summary>
- 
+
 enum class Phase {
 	kPlay,
 	kDeath,
 };
-
-
 
 class GameScene {
 
@@ -61,10 +59,10 @@ public: // メンバ関数
 	// 全ての当たり判定を行う
 	void CheckAllCollisions();
 
-	//フェーズの切り替え
+	// フェーズの切り替え
 	void ChangePhase();
 
-bool IsDead() const { return isDead_; }
+	
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
@@ -93,8 +91,8 @@ private: // メンバ変数
 	SkyDome* skyDome_ = nullptr;
 	Model* modelSkyDome_ = nullptr;
 	MapChipField* mapChipField_; // マップチップフィールド
-	      
-	MatrixFunction* matrixFunction=nullptr;
+
+	MatrixFunction* matrixFunction = nullptr;
 	Phase phase_;
-	bool isDead_ = false;//デスフラグ
+	
 };

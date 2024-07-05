@@ -58,8 +58,10 @@ public:
 	Vector3 GetWorldPosition();
 	AABB GetAABB(); // AABB取得関数
 	void OnCollision(const Enemy* enemy);//衝突応答
-	
-private:
+	// デスフラグのgetter
+	bool IsDeadGetter();
+
+	private:
 	WorldTransform worldTransform_;
 
 	Model* model_ = nullptr;
@@ -95,5 +97,5 @@ private:
 	static inline const float kWidth = 1.8f; // キャラクターの当たり判定サイズ
 	static inline const float kHeight = 1.8f;
 	static inline const float kAttenuationLanding = 0.2f; // 着地時の速度減衰率
-	
+	bool isDead_ = false;
 };
