@@ -62,7 +62,8 @@ public: // メンバ関数
 	// フェーズの切り替え
 	void ChangePhase();
 
-	
+	//終了フラグのgetter
+	bool IsFinished() const { return IsFinished_; }
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
@@ -94,5 +95,7 @@ private: // メンバ変数
 
 	MatrixFunction* matrixFunction = nullptr;
 	Phase phase_;
-	
+
+	// 終了フラグ
+	bool IsFinished_ = false;
 };
