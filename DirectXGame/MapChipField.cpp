@@ -85,14 +85,15 @@ IndexSet MapChipField::GetMapChipIndexSetByPosition(const Vector3& position) {
 	IndexSet indexSet{};
 	indexSet.xIndex = uint32_t((position.x + kBlockWidth / 2) / kBlockWidth);
 	float beforeReverseYIndex = (position.y + kBlockHeight / 2) / kBlockHeight;
-	indexSet.yIndex = uint32_t(kNumBlockVirtical - 1 - beforeReverseYIndex);
+	indexSet.yIndex = uint32_t(kNumBlockVirtical  -1- beforeReverseYIndex);
 	return indexSet;
 }
 
 
 BlockRect MapChipField::GetRectByIndex(uint32_t xIndex, uint32_t yIndex) {
+	//左下中心座標
 	Vector3 center = GetMapChipPositionByIndex(xIndex, yIndex); // 指定ブロックの中心座標を取得する
-
+	
 	BlockRect rect;
 	rect.left = center.x - kBlockWidth / 2.0f;
 	rect.right = center.x + kBlockWidth / 2.0f;

@@ -2,6 +2,7 @@
 #include "DebugCamera.h"
 #include "TextureManager.h"
 
+
 GameScene::GameScene() {}
 
 GameScene::~GameScene() {
@@ -17,7 +18,6 @@ GameScene::~GameScene() {
 	delete modelEnemy;
 	delete enemy_;
 	delete player_;
-	delete debugCamera_;
 	delete skyDome_;
 	delete modelSkyDome_;
 	delete mapChipField_;
@@ -32,32 +32,33 @@ void GameScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
-	playerTxHandle_ = TextureManager::Load("sample.png"); // テクスチャの読み込み
-	blockTxHandle_ = TextureManager::Load("cube/cube.jpg");
-	modelPlayer_ = Model::Create(); // 3Dモデルの生成
-	modelBlock_ = Model::Create();
 
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
 	cameraViewProjection_.Initialize();
+
+	matrixFunction = new MatrixFunction;
+
+	mapChipField_ = new MapChipField;
+	mapChipField_->LoadMapChipCsv("Resources/MapChip.csv"); // CSVファイル読み込み
+
+	blockTxHandle_ = TextureManager::Load("cube/cube.jpg");
+	modelBlock_ = Model::Create();
+	GenerateBlocks();
+
+	playerTxHandle_ = TextureManager::Load("sample.png"); // テクスチャの読み込み
+	modelPlayer_ = Model::Create();                       // 3Dモデルの生成
+	player_ = new Player();                               // 自キャラの生成
+	Vector3 playerposition = mapChipField_->GetMapChipPositionByIndex(3, 18);
+	player_->initialize(modelPlayer_, playerTxHandle_, &cameraViewProjection_, playerposition); // 自キャラの初期化
+	player_->SetMapChipField(mapChipField_);
 
 	phase_ = Phase::kPlay;
 
 	skyDome_ = new SkyDome();                              // 天球の生成
 	modelSkyDome_ = Model::CreateFromOBJ("SkyDome", true); // 3Dモデルの生成
 	skyDome_->Initialize(modelSkyDome_, &viewProjection_); // 天球の初期化
-	debugCamera_ = new DebugCamera(WinApp::kWindowWidth, WinApp::kWindowHeight);
-	debugCamera_->SetFarZ(5000);
 
-	matrixFunction = new MatrixFunction;
-	mapChipField_ = new MapChipField;
-	mapChipField_->LoadMapChipCsv("Resources/MapChip.csv"); // CSVファイル読み込み
-	GenerateBlocks();
-
-	player_ = new Player(); // 自キャラの生成
-	Vector3 playerposition = mapChipField_->GetMapChipPositionByIndex(3, 18);
-	player_->initialize(modelPlayer_, playerTxHandle_, &cameraViewProjection_, playerposition); // 自キャラの初期化
-	player_->SetMapChipField(mapChipField_);
 	deathParticles_ = new DeathParticles();
 	modelParticles_ = Model::CreateFromOBJ("Particle", true);
 	deathParticles_->Initialize(modelParticles_, &cameraViewProjection_, playerposition);
@@ -66,7 +67,7 @@ void GameScene::Initialize() {
 	enemyTxhandle = TextureManager::Load("sample.png"); // テクスチャの読み込み
 	modelEnemy = Model::Create();
 	enemy_ = new Enemy();
-	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(13, 18);
+	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(70, 18);
 	enemy_->Initialize(modelEnemy, enemyTxhandle, &cameraViewProjection_, enemyPosition);
 
 	// カメラコントローラー初期化
@@ -75,7 +76,7 @@ void GameScene::Initialize() {
 	cameraController_->Initialize();
 	cameraController_->SetTarget(player_);
 	cameraController_->Reset();
-	cameraController_->SetMovaAbleArea(area_);
+	cameraController_->SetMovableArea(area_);
 }
 
 void GameScene::Update() { ChangePhase(); }
@@ -92,7 +93,7 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
-
+	Sprite::
 	// スプライト描画後処理
 	Sprite::PostDraw();
 	// 深度バッファクリア
@@ -160,6 +161,7 @@ void GameScene::GenerateBlocks() {
 				worldTransformBlocks_[y][x]->translation_ = mapChipField_->GetMapChipPositionByIndex(x, y);
 			}
 			worldTransformBlocks_[y][x]->Initialize();
+			// ImGui::Text("BlocksPos=%5.2f",worldTransformBlocks_[0][19]->translation_.y);
 		}
 	}
 }
@@ -186,16 +188,7 @@ void GameScene::ChangePhase() {
 	switch (phase_) {
 
 	case Phase::kPlay:
-		for (auto& worldTransformBlockLine : worldTransformBlocks_) {
-			for (auto worldTransformBlock : worldTransformBlockLine) {
-				if (!worldTransformBlock) {
-					continue;
-				}
-				worldTransformBlock->matWorld_ = matrixFunction->MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
-				// 定数バッファに転送する
-				worldTransformBlock->TransferMatrix();
-			}
-		}
+		BlocksUpdate();
 
 		if (player_->IsDeadGetter() == false) {
 			player_->Update();
@@ -204,21 +197,9 @@ void GameScene::ChangePhase() {
 		skyDome_->Update();
 		enemy_->Update();
 
-#ifdef _DEBUG
-		if (input_->TriggerKey(DIK_BACK)) {
-			isDebugCameraactive_ ^= true;
-		}
-		if (isDebugCameraactive_) {
-			cameraController_->Update();
-			cameraViewProjection_.matView = cameraController_->GetMatView();
 
-			cameraViewProjection_.matProjection = cameraController_->GetMatProjection();
+		CameraUpdate();
 
-			cameraViewProjection_.TransferMatrix();
-		} else {
-			cameraViewProjection_.UpdateMatrix();
-		}
-#endif
 		CheckAllCollisions();
 
 		// 自キャラがやられたら
@@ -231,36 +212,13 @@ void GameScene::ChangePhase() {
 		break;
 
 	case Phase::kDeath:
-
-		for (auto& worldTransformBlockLine : worldTransformBlocks_) {
-			for (auto worldTransformBlock : worldTransformBlockLine) {
-				if (!worldTransformBlock) {
-					continue;
-				}
-				worldTransformBlock->matWorld_ = matrixFunction->MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
-				// 定数バッファに転送する
-				worldTransformBlock->TransferMatrix();
-			}
-		}
+		BlocksUpdate();
 		skyDome_->Update();
 		enemy_->Update();
 
-#ifdef _DEBUG
-		if (input_->TriggerKey(DIK_BACK)) {
-			isDebugCameraactive_ ^= true;
-		}
-		if (isDebugCameraactive_) {
-			cameraController_->Update();
-			cameraViewProjection_.matView = cameraController_->GetMatView();
 
-			cameraViewProjection_.matProjection = cameraController_->GetMatProjection();
+		CameraUpdate();
 
-			cameraViewProjection_.TransferMatrix();
-		} else {
-			cameraViewProjection_.UpdateMatrix();
-		}
-
-#endif
 		if (deathParticles_) {
 			deathParticles_->Update();
 		}
@@ -269,5 +227,35 @@ void GameScene::ChangePhase() {
 			IsFinished_ = true;
 		}
 		break;
+	}
+}
+
+void GameScene::BlocksUpdate() {
+	for (auto& worldTransformBlockLine : worldTransformBlocks_) {
+		for (auto worldTransformBlock : worldTransformBlockLine) {
+			if (!worldTransformBlock) {
+				continue;
+			}
+			worldTransformBlock->matWorld_ = matrixFunction->MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
+			// 定数バッファに転送する
+			worldTransformBlock->TransferMatrix();
+			// ImGui::Text("BlocksPos=%5.2f",worldTransformBlock->translation_.y );
+		}
+	}
+}
+
+void GameScene::CameraUpdate() {
+	if (input_->TriggerKey(DIK_BACK)) {
+		isDebugCameraactive_ ^= true;
+	}
+	if (isDebugCameraactive_) {
+		cameraController_->Update();
+		cameraViewProjection_.matView = cameraController_->GetMatView();
+
+		cameraViewProjection_.matProjection = cameraController_->GetMatProjection();
+
+		cameraViewProjection_.TransferMatrix();
+	} else {
+		cameraViewProjection_.UpdateMatrix();
 	}
 }

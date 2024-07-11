@@ -1,11 +1,11 @@
 #pragma once
+#include "AABB.h"
 #include "MatrixFunction.h"
 #include "Model.h"
 #include "Vector3.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "cassert"
-#include"AABB.h"  
 
 class MapChipField;
 
@@ -31,7 +31,7 @@ private:
 		kNumCorner // 要素数
 	};
 	// 衝突情報を初期化
-	CollisionMapInfo info_;
+	// CollisionMapInfo info_;
 
 public:
 	void initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection, const Vector3& position);
@@ -56,12 +56,12 @@ public:
 	void GroundStateChange(const CollisionMapInfo& info);    // 接地状態の処理
 	//	void cornerDetect(const MapChipType& mapChipType,const int& corner);//4角の判定
 	Vector3 GetWorldPosition();
-	AABB GetAABB(); // AABB取得関数
-	void OnCollision(const Enemy* enemy);//衝突応答
+	AABB GetAABB();                       // AABB取得関数
+	void OnCollision(const Enemy* enemy); // 衝突応答
 	// デスフラグのgetter
 	bool IsDeadGetter();
 
-	private:
+private:
 	WorldTransform worldTransform_;
 
 	Model* model_ = nullptr;
@@ -70,7 +70,7 @@ public:
 	ViewProjection* viewProjection_ = nullptr;
 
 	Vector3 velocity_ = {0.0f, 0.0f, 0.0f};
-	Vector3 vectorBlank = {0, -2.0f, 0};
+	Vector3 vectorBlank = {0, -2.1f, 0};
 
 	MapChipField* mapChipField_ = nullptr;
 
@@ -82,9 +82,9 @@ public:
 
 	static inline const float kAcceleration = 0.05f;
 	static inline const float kAttenuation = 0.2f;    // 速度減衰率
+	static inline const float kWallAttenuation = 0.4f;    // 速度減衰率(wall)
 	static inline const float kLimitRunSpeed = 0.25f; // 最大速度制限
-	static inline const float kBlank = 0.2f;
-	//	static inline const float kBlank2 = 0.2f;
+	static inline const float kBlank = 0.05f;
 	float turnFirstRotationY_ = 0.0f;                       // 旋回開始時の角度
 	float turnTimer_ = 0.0f;                                // 旋回タイマー
 	static inline const float kTimeTurn = 0.4f;             // 旋回時間<秒>

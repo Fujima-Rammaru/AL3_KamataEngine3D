@@ -32,7 +32,7 @@ public:
 
 	void Reset();
 
-	void SetMovaAbleArea(Rect area) { movableArea_ = area; }
+	void SetMovableArea(Rect area) { movableArea_ = area; }
 
 	Matrix4x4 GetMatView();
 

@@ -19,7 +19,7 @@ void Enemy::Update() {
 	float param= std::sin(std::numbers::pi_v<float> * 2.0f*walkTimer_/kWalkMotionTime);
 	float radian = kWalkMotionAngleStart + kWalkMotionAngleEnd * (param) ;
 	worldTransform_.rotation_.x = std::numbers::pi_v<float> / 180.0f * radian;
-	worldTransform_.translation_ += velocity_;
+	//worldTransform_.translation_ += velocity_;
 	worldTransform_.UpdateMatrix();
 }
 

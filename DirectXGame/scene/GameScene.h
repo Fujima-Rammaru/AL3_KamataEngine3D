@@ -62,8 +62,12 @@ public: // メンバ関数
 	// フェーズの切り替え
 	void ChangePhase();
 
-	//終了フラグのgetter
+	// 終了フラグのgetter
 	bool IsFinished() const { return IsFinished_; }
+
+	void BlocksUpdate();
+
+	void CameraUpdate();
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
@@ -86,7 +90,6 @@ private: // メンバ変数
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_; // 可変個配列
 
 	bool isDebugCameraactive_ = false;
-	DebugCamera* debugCamera_ = nullptr;
 	CameraController* cameraController_ = nullptr; // カメラコントローラー
 
 	SkyDome* skyDome_ = nullptr;
