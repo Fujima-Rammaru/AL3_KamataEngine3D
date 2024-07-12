@@ -1,7 +1,7 @@
 #include "GameScene.h"
 #include "DebugCamera.h"
 #include "TextureManager.h"
-
+#include"PrimitiveDrawer.h"
 
 GameScene::GameScene() {}
 
@@ -36,7 +36,7 @@ void GameScene::Initialize() {
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
 	cameraViewProjection_.Initialize();
-
+	PrimitiveDrawer::GetInstance()->SetViewProjection(&cameraViewProjection_);
 	matrixFunction = new MatrixFunction;
 
 	mapChipField_ = new MapChipField;
@@ -123,7 +123,7 @@ void GameScene::Draw() {
 	if (deathParticles_) {
 		deathParticles_->Draw();
 	}
-
+	PrimitiveDrawer::GetInstance()->DrawLine3d({0, 0, 0}, {0, -40, 0}, {1.0f, 0.0f, 0.0f, 1.0f});
 	/// </summary>
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

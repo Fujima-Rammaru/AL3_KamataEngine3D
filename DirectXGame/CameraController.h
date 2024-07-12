@@ -43,7 +43,7 @@ public:
 private:
 	ViewProjection viewProjection_;
 	Player* target_ = nullptr;              // 追従対象のポインタ
-	Vector3 targetOffset_ = {0, 0, -40.0f}; // 追従対象とカメラの座標の差
+	Vector3 targetOffset_ = {0, 0, -50.0f}; // 追従対象とカメラの座標の差
 	WorldTransform worldTransform_;
 	Rect movableArea_ = {0, 0, 0, 0};                                 // カメラ移動範囲
 	Vector3 goalPosition;                                             // カメラの目標座標

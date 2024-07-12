@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <numbers>
 
+
 void Player::initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection, const Vector3& position) {
 
 	assert(model);
@@ -18,6 +19,7 @@ void Player::initialize(Model* model, uint32_t textureHandle, ViewProjection* vi
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = position;
 	worldTransform_.rotation_.y = std::numbers::pi_v<float> * 0.0f; // 450度
+
 }
 
 Player::Player() {}
@@ -49,7 +51,7 @@ void Player::Update() {
 	// 接地状態の切り替え
 	//	info.landing = landing;
 	//  地面との当たり判定
-	GroundStateChange(info);
+//	GroundStateChange(info);
 
 	// 移動
 	worldTransform_.translation_.x += velocity_.x;
@@ -82,7 +84,9 @@ void Player::Update() {
 #endif // DEBUG
 }
 
-void Player::Draw() { model_->Draw(worldTransform_, *viewProjection_, txHandle_); }
+void Player::Draw() { model_->Draw(worldTransform_, *viewProjection_, txHandle_);
+
+}
 
 float Player::EaseInOut(float y) { return -(std::cosf(std::numbers::pi_v<float> * y) - 1 / 2); }
 
@@ -197,7 +201,7 @@ void Player::CollisionMapCheckUp(CollisionMapInfo& info) {
 		//  めり込み先ブロックの範囲矩形
 		BlockRect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 
-		info.move.y = std::max(0.0f, (rect.bottom - worldTransform_.translation_.y) - (1.0f + kBlank)); //\\
+		info.move.y = std::max(0.0f, (rect.bottom - worldTransform_.translation_.y) - (0.9f + kBlank)); //\\
 		// 天井に当たったことを記録する
 		info.ceiling = true;
 	}
