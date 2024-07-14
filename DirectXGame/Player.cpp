@@ -51,7 +51,7 @@ void Player::Update() {
 	// 接地状態の切り替え
 	//	info.landing = landing;
 	//  地面との当たり判定
-//	GroundStateChange(info);
+	GroundStateChange(info);
 
 	// 移動
 	worldTransform_.translation_.x += velocity_.x;
