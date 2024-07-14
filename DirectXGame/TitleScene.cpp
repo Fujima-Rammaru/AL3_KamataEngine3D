@@ -1,7 +1,9 @@
 #include "TitleScene.h"
 #include "Input.h"
 
-void TitleScene::Initialize() {}
+void TitleScene::Initialize() {
+
+}
 
 void TitleScene::Update() {
 
@@ -10,4 +12,4 @@ void TitleScene::Update() {
 	}
 }
 
-void TitleScene::Draw() {}
+void TitleScene::Draw() { }

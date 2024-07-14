@@ -98,7 +98,7 @@ private: // メンバ変数
 
 	MatrixFunction* matrixFunction = nullptr;
 	Phase phase_;
-
+	
 	// 終了フラグ
 	bool IsFinished_ = false;
 };
