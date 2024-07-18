@@ -16,16 +16,16 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle, ViewProjection* vie
 
 void Enemy::Update() {
 	walkTimer_ += 1.0f / 60.0f;
-	float param= std::sin(std::numbers::pi_v<float> * 2.0f*walkTimer_/kWalkMotionTime);
-	float radian = kWalkMotionAngleStart + kWalkMotionAngleEnd * (param) ;
+	float param = std::sin(std::numbers::pi_v<float> * 2.0f * walkTimer_ / kWalkMotionTime);
+	float radian = kWalkMotionAngleStart + kWalkMotionAngleEnd * (param);
 	worldTransform_.rotation_.x = std::numbers::pi_v<float> / 180.0f * radian;
-	//worldTransform_.translation_ += velocity_;
+	worldTransform_.translation_ += velocity_;
 	worldTransform_.UpdateMatrix();
 }
 
 void Enemy::Draw() { model_->Draw(worldTransform_, *viewProjection_, txHandle_); }
 
-AABB Enemy::GetAABB() { 
+AABB Enemy::GetAABB() {
 	AABB aabb;
 
 	Vector3 worldPos = GetWorldPosition();
@@ -46,5 +46,3 @@ Vector3 Enemy::GetWorldPosition() {
 }
 
 void Enemy::OnCollision(const Player* player) { (void)player; }
-
-
