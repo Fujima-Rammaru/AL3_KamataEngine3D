@@ -46,6 +46,7 @@ public:
 	void CollisionMapCheckDown(CollisionMapInfo& info);
 		void CollisionMapCheckLeft(CollisionMapInfo& info);
 		void CollisionMapCheckRight(CollisionMapInfo& info);
+	    void CollisionMapCheckAllDirection(CollisionMapInfo& info);
 	Vector3 CornerPosition(const Vector3& center, Corner corner);
 	void MoveByCollisionResult(const CollisionMapInfo& info);
 	void CollisionCeilingCase(const CollisionMapInfo& info); // 天井に接触している場合の処理
@@ -80,12 +81,12 @@ private:
 	float turnTimer_ = 0.0f;                               // 旋回タイマー
 	static inline const float kTimeTurn = 0.3f;            // 旋回時間<秒>
 	bool onGround_ = true;                                // 設置状態フラグ
-	static inline const float kGravityAcceleration = 0.03f; // 重力加速度(下方向)
-	static inline const float kLimitFallSpeed = 0.4f;      // 最大落下速度(下方向)
-	static inline const float kJumpAcceleration = 0.6f;    // ジャンプ初速(上方向）
+	static inline const float kGravityAcceleration = 0.04f; // 重力加速度(下方向)
+	static inline const float kLimitFallSpeed = 0.5f;      // 最大落下速度(下方向)
+	static inline const float kJumpAcceleration = 0.5f;    // ジャンプ初速(上方向）
 	static inline const float kGroundPos = 2.0f;           // 地面の座標
 	bool landing = false;
-	static inline const float kWidth = 1.8f; // キャラクターの当たり判定サイズ
-	static inline const float kHeight = 1.8f;
+	static inline const float kWidth = 2.0f; // キャラクターの当たり判定サイズ
+	static inline const float kHeight = 2.0f;
 	static inline const float kAttenuationLanding = 0.2f; // 着地時の速度減衰率
 };

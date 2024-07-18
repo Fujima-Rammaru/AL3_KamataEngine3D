@@ -26,6 +26,8 @@ void Player::Update() {
 
 	Move(); // 移動入力
 
+	CollisionMapCheckAllDirection(info_);
+
 	//  地面との当たり判定
 	if (velocity_.y < 0) {
 		// Y座標が地面以下になったら着地
@@ -248,6 +250,13 @@ void Player::CollisionMapCheckDown(CollisionMapInfo& info) {
 	}
 }
 
+void Player::CollisionMapCheckAllDirection(CollisionMapInfo& info) {
+	CollisionMapCheckUp(info);
+	CollisionMapCheckDown(info);
+	CollisionMapCheckLeft(info);
+	CollisionMapCheckRight(info);
+}
+
 void Player::CollisionMapCheckLeft(CollisionMapInfo& info) {
 	if (info.move.x >= 0) {
 		return;
@@ -409,8 +418,6 @@ void Player::GroundStateChange(const CollisionMapInfo& info) {
 			velocity_.x *= (1.0f - kAttenuationLanding);
 			velocity_.y = 0.0f;
 			onGround_ = true;
-
 		}
 	}
 }
-

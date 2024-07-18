@@ -84,7 +84,7 @@ float MapChipField::GetkBlockHeight() { return kBlockHeight; }
 IndexSet MapChipField::GetMapChipIndexSetByPosition(const Vector3& position) {
 	IndexSet indexSet{};
 	indexSet.xIndex = uint32_t((position.x + kBlockWidth / 2) / kBlockWidth);
-	int beforeReverseYIndex = (position.y + kBlockHeight / 2) / kBlockHeight;
+	int beforeReverseYIndex = int((position.y + kBlockHeight / 2) / kBlockHeight);
 	indexSet.yIndex = uint32_t(kNumBlockVirtical - 1 - beforeReverseYIndex);
 	return indexSet;
 }
