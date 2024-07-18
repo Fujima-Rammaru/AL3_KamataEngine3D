@@ -80,15 +80,14 @@ uint32_t MapChipField::GetNumBlockHorizontal() { return kNumBlockHorizontal; }
 
 float MapChipField::GetkBlockHeight() { return kBlockHeight; }
 
-//座標からマップチップ番号を計算
+// 座標からマップチップ番号を計算
 IndexSet MapChipField::GetMapChipIndexSetByPosition(const Vector3& position) {
 	IndexSet indexSet{};
 	indexSet.xIndex = uint32_t((position.x + kBlockWidth / 2) / kBlockWidth);
-	float beforeReverseYIndex = (position.y + kBlockHeight / 2) / kBlockHeight;
+	int beforeReverseYIndex = (position.y + kBlockHeight / 2) / kBlockHeight;
 	indexSet.yIndex = uint32_t(kNumBlockVirtical - 1 - beforeReverseYIndex);
 	return indexSet;
 }
-
 
 BlockRect MapChipField::GetRectByIndex(uint32_t xIndex, uint32_t yIndex) {
 	Vector3 center = GetMapChipPositionByIndex(xIndex, yIndex); // 指定ブロックの中心座標を取得する

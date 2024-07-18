@@ -62,7 +62,7 @@ private:
 	ViewProjection* viewProjection_ = nullptr;
 
 	Vector3 velocity_ = {0.0f, 0.0f, 0.0f};
-	Vector3 vectorBlank = {0, -2.1f, 0};
+	Vector3 vectorBlank = {0, -0.3f, 0};
 
 	MapChipField* mapChipField_ = nullptr;
 

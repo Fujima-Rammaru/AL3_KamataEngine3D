@@ -243,16 +243,8 @@ void Player::CollisionMapCheckDown(CollisionMapInfo& info) {
 		BlockRect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 
 		info.move.y = std::min(0.0f, (rect.top - worldTransform_.translation_.y) + (0.9f + kBlank)); //
-		// worldTransform_.translation_.y += info.move.y;
-		//  地面に当たったことを記録する
-		//	ImGui::Text("hit=%d", hit);
-		info.landing = true;
-	}
 
-	if (info.landing) {
-		//  めり込み先ブロックの範囲矩形
-		BlockRect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
-		worldTransform_.translation_.y = rect.top - info.move.y + 0.9f;
+		info.landing = true;
 	}
 }
 
@@ -390,7 +382,7 @@ void Player::GroundStateChange(const CollisionMapInfo& info) {
 			IndexSet indexSet;
 
 			positionsNew[kLeftBottom] += vectorBlank;
-			// positionsNew[kLeftBottom].y +=vectorBlank.y;
+
 			indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom]);
 			mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
 			if (mapChipType == MapChipType::kBlock) {
@@ -398,7 +390,7 @@ void Player::GroundStateChange(const CollisionMapInfo& info) {
 			}
 			// 右下点の判定
 			positionsNew[kRightBottom] += vectorBlank;
-			// positionsNew[kRightBottom].y +=vectorBlank.y;
+
 			indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom]);
 			mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
 			if (mapChipType == MapChipType::kBlock) {
@@ -410,7 +402,6 @@ void Player::GroundStateChange(const CollisionMapInfo& info) {
 			if (!hit) {
 				onGround_ = false;
 			}
-			//	ImGui::Text("hit=%d\nPosNewLeftB.y=%3.2f\nPosNewRightT.y=%3.2f\n", hit, positionsNew[kLeftBottom].y, positionsNew[kRightTop].y);
 		}
 
 	} else {
@@ -419,17 +410,7 @@ void Player::GroundStateChange(const CollisionMapInfo& info) {
 			velocity_.y = 0.0f;
 			onGround_ = true;
 
-			// 着地状態に切り替える
 		}
 	}
 }
 
-//
-// void Player::cornerDetect(const MapChipType& mapChipType,const int& corner) {
-//	IndexSet indexSet;
-//	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom]);//指定した角の座標からマップチップ番号を取得
-//	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
-//	if (mapChipType == MapChipType::kBlock) {
-//		hit = true;//ブロックが当たったとき
-//	}
-// }
