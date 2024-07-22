@@ -41,18 +41,17 @@ public:
 	const Vector3& GetVelocity() const { return velocity_; };                          // 自キャラの速度を取得するためのgetter
 	void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; } // setter
 	void Move();
-	//	void CollisionMapCheck(CollisionMapInfo& info); // マップ衝突判定
+
 	void CollisionMapCheckUp(CollisionMapInfo& info); // 衝突判定上方向
 	void CollisionMapCheckDown(CollisionMapInfo& info);
-		void CollisionMapCheckLeft(CollisionMapInfo& info);
-		void CollisionMapCheckRight(CollisionMapInfo& info);
-	    void CollisionMapCheckAllDirection(CollisionMapInfo& info);
+	void CollisionMapCheckLeft(CollisionMapInfo& info);
+	void CollisionMapCheckRight(CollisionMapInfo& info);
+	void CollisionMapCheckAllDirection(CollisionMapInfo& info);
 	Vector3 CornerPosition(const Vector3& center, Corner corner);
 	void MoveByCollisionResult(const CollisionMapInfo& info);
 	void CollisionCeilingCase(const CollisionMapInfo& info); // 天井に接触している場合の処理
-	void CollisionHitWallCase(const CollisionMapInfo& info);//壁に接触している場合の処理
+	void CollisionHitWallCase(const CollisionMapInfo& info); // 壁に接触している場合の処理
 	void GroundStateChange(const CollisionMapInfo& info);    // 接地状態の処理
-	//	void cornerDetect(const MapChipType& mapChipType,const int& corner);//4角の判定
 
 private:
 	WorldTransform worldTransform_;
@@ -63,7 +62,7 @@ private:
 	ViewProjection* viewProjection_ = nullptr;
 
 	Vector3 velocity_ = {0.0f, 0.0f, 0.0f};
-	Vector3 vectorBlank = {0, -0.3f, 0};
+	Vector3 vectorBlank = {0, -0.2f, 0};
 
 	MapChipField* mapChipField_ = nullptr;
 
@@ -76,17 +75,17 @@ private:
 	static inline const float kAcceleration = 0.05f;
 	static inline const float kAttenuation = 0.2f;    // 速度減衰率
 	static inline const float kLimitRunSpeed = 0.25f; // 最大速度制限
-	static inline const float kBlank = 0.2f;
-	float turnFirstRotationY_ = 0.0f;                      // 旋回開始時の角度
-	float turnTimer_ = 0.0f;                               // 旋回タイマー
-	static inline const float kTimeTurn = 0.3f;            // 旋回時間<秒>
-	bool onGround_ = true;                                // 設置状態フラグ
-	static inline const float kGravityAcceleration = 0.04f; // 重力加速度(下方向)
-	static inline const float kLimitFallSpeed = 0.5f;      // 最大落下速度(下方向)
-	static inline const float kJumpAcceleration = 0.5f;    // ジャンプ初速(上方向）
-	static inline const float kGroundPos = 2.0f;           // 地面の座標
+	static inline const float kBlank = 0.1f;
+	float turnFirstRotationY_ = 0.0f;                       // 旋回開始時の角度
+	float turnTimer_ = 0.0f;                                // 旋回タイマー
+	static inline const float kTimeTurn = 0.3f;             // 旋回時間<秒>
+	bool onGround_ = true;                                  // 設置状態フラグ
+	static inline const float kGravityAcceleration = 0.05f; // 重力加速度(下方向)
+	static inline const float kLimitFallSpeed = 0.4f;       // 最大落下速度(下方向)
+	static inline const float kJumpAcceleration = 0.6f;    // ジャンプ初速(上方向）
+	static inline const float kGroundPos = 2.0f;            // 地面の座標
 	bool landing = false;
-	static inline const float kWidth = 2.0f; // キャラクターの当たり判定サイズ
-	static inline const float kHeight = 2.0f;
-	static inline const float kAttenuationLanding = 0.2f; // 着地時の速度減衰率
+	static inline const float kWidth = 1.8f; // キャラクターの当たり判定サイズ
+	static inline const float kHeight = 1.8f;
+	static inline const float kAttenuationLanding = 0.3f; // 着地時の速度減衰率
 };
