@@ -131,7 +131,7 @@ void Player::Move() { // 移動入力
 			velocity_.x += acceleration.x;
 			velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed); // 最大速度制限
 			                                                                        // 移動
-			worldTransform_.translation_.x += velocity_.x;
+
 			ImGui::Text("acceleration.x=%3.2f", acceleration.x);
 		} else {
 			velocity_.x *= (1.0f - kAttenuation); // 非入力時は移動減衰する
@@ -153,6 +153,7 @@ void Player::Move() { // 移動入力
 		velocity_.y += -kGravityAcceleration; // 落下速度
 		worldTransform_.translation_.y += velocity_.y;
 	}
+	worldTransform_.translation_.x += velocity_.x;
 }
 
 void Player::CollisionMapCheckUp(CollisionMapInfo& info) {
@@ -243,10 +244,10 @@ void Player::CollisionMapCheckDown(CollisionMapInfo& info) {
 }
 
 void Player::CollisionMapCheckAllDirection(CollisionMapInfo& info) {
-	CollisionMapCheckUp(info);
-	CollisionMapCheckDown(info);
 	CollisionMapCheckLeft(info);
 	CollisionMapCheckRight(info);
+	CollisionMapCheckUp(info);
+	CollisionMapCheckDown(info);
 }
 
 void Player::CollisionMapCheckLeft(CollisionMapInfo& info) {
@@ -276,7 +277,8 @@ void Player::CollisionMapCheckLeft(CollisionMapInfo& info) {
 	}
 	if (hit) {
 		// めり込みを排除する方向に移動量を設定する
-		indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom] + Vector3(0.9f, 0.9f, 0.0f));
+		//+Vector3(0.9f, 0.9f, 0.0f)
+		indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom]);
 		//  めり込み先ブロックの範囲矩形
 		BlockRect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 
@@ -312,8 +314,9 @@ void Player::CollisionMapCheckRight(CollisionMapInfo& info) {
 		hit = true;
 	}
 	if (hit) {
+		// + Vector3(-0.9f, 0.9f, 0.0f)
 		// めり込みを排除する方向に移動量を設定する
-		indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom] + Vector3(-0.9f, 0.9f, 0.0f));
+		indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom]);
 		//  めり込み先ブロックの範囲矩形
 		BlockRect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 
