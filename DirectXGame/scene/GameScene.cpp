@@ -50,7 +50,7 @@ void GameScene::Initialize() {
 	GenerateBlocks();
 
 	player_ = new Player(); // 自キャラの生成
-	Vector3 playerposition = mapChipField_->GetMapChipPositionByIndex(3, 18);
+	Vector3 playerposition = mapChipField_->GetMapChipPositionByIndex(43, 18);
 	player_->initialize(modelPlayer_, playerTxHandle_, &cameraViewProjection_, playerposition); // 自キャラの初期化
 	player_->SetMapChipField(mapChipField_);
 
@@ -93,10 +93,10 @@ void GameScene::Update() {
 	skyDome_->Update();
 	enemy_->Update();
 
-#ifdef _DEBUG
-	if (input_->TriggerKey(DIK_BACK)) {
+
+	/*if (input_->TriggerKey(DIK_BACK)) {
 		isDebugCameraactive_ ^= true;
-	}
+	}*/
 	if (isDebugCameraactive_) {
 		cameraController_->Update();
 		cameraViewProjection_.matView = cameraController_->GetMatView();
@@ -108,7 +108,7 @@ void GameScene::Update() {
 		cameraViewProjection_.UpdateMatrix();
 	}
 
-#endif
+
 }
 
 void GameScene::Draw() {

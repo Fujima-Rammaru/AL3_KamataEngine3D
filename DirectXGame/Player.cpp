@@ -1,6 +1,8 @@
 #define NOMINMAX
 #include "Player.h"
+#ifdef _DEBUG
 #include "Imgui.h"
+#endif
 #include "Input.h"
 #include "MapChipField.h"
 #include <algorithm>
@@ -31,10 +33,9 @@ void Player::Update() {
 
 	info.move = velocity_;
 
+	// マップ衝突チェック
 	CollisionMapCheckAllDirection(info);
 
-	// マップ衝突チェック
-	// 着地
 	//  地面との当たり判定
 	if (velocity_.y <= 0) {
 		// Y座標が地面以下になったら着地
@@ -47,7 +48,7 @@ void Player::Update() {
 		// 摩擦で横方向速度が減衰する
 		onGround_ = true;
 		velocity_.x *= (1.0f - kAttenuation);
-		// 下方向速度をリセット
+		//  下方向速度をリセット
 		velocity_.y = 0.0f;
 		// 接地状態に移行
 		worldTransform_.translation_.y = kGroundPos;
@@ -60,8 +61,9 @@ void Player::Update() {
 	CollisionCeilingCase(info);
 
 	// 壁に接触している場合の処理
+	CollisionHitWallCase(info);
 
-	//
+	// 接地状態の切り替え
 	GroundStateChange(info);
 
 	// 旋回制御
@@ -82,9 +84,8 @@ void Player::Update() {
 	}
 
 #ifdef _DEBUG
-	ImGui::Text("info.move.y=%3.2f", info.move.y);
-	ImGui::Text(
-	    "velocity.y=%3.2f\ninfo.landing=%d\nonground=%d\nlanding=%d\ninfo.hitWall=%d\ntransY=%3.2f", velocity_.y, info.landing, onGround_, landing, info.hitWall, worldTransform_.translation_.y);
+	ImGui::Text("info.move.x=%3.2f", info.move.x);
+	ImGui::Text("velocity.x=%3.2f\ninfo.hitWall=%d", velocity_.x, info.hitWall);
 #endif
 	worldTransform_.UpdateMatrix();
 }
@@ -128,6 +129,10 @@ void Player::Move() { // 移動入力
 			}
 			// 加速/減速
 			velocity_.x += acceleration.x;
+			velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed); // 最大速度制限
+			                                                                        // 移動
+			worldTransform_.translation_.x += velocity_.x;
+			ImGui::Text("acceleration.x=%3.2f", acceleration.x);
 		} else {
 			velocity_.x *= (1.0f - kAttenuation); // 非入力時は移動減衰する
 		}
@@ -142,18 +147,12 @@ void Player::Move() { // 移動入力
 			// 空中状態に移行
 			onGround_ = false;
 		}
+
 		// 空中
 	} else {
-		// velocity_.y = std::max(velocity_.y, -kLimitFallSpeed); // 落下速度制限
 		velocity_.y += -kGravityAcceleration; // 落下速度
-
 		worldTransform_.translation_.y += velocity_.y;
 	}
-
-	// 移動
-	worldTransform_.translation_.x += velocity_.x;
-
-	velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed); // 最大速度制限
 }
 
 void Player::CollisionMapCheckUp(CollisionMapInfo& info) {
@@ -189,7 +188,7 @@ void Player::CollisionMapCheckUp(CollisionMapInfo& info) {
 	if (hit) {
 
 		// めり込みを排除する方向に移動量を設定する
-		indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop] + Vector3(kWidth / 2.0f, -kHeight / 2.0f, 0));
+		indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop]);
 		//  めり込み先ブロックの範囲矩形
 		BlockRect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 
@@ -246,8 +245,8 @@ void Player::CollisionMapCheckDown(CollisionMapInfo& info) {
 void Player::CollisionMapCheckAllDirection(CollisionMapInfo& info) {
 	CollisionMapCheckUp(info);
 	CollisionMapCheckDown(info);
-	// CollisionMapCheckLeft(info);
-	// CollisionMapCheckRight(info);
+	CollisionMapCheckLeft(info);
+	CollisionMapCheckRight(info);
 }
 
 void Player::CollisionMapCheckLeft(CollisionMapInfo& info) {
@@ -277,11 +276,12 @@ void Player::CollisionMapCheckLeft(CollisionMapInfo& info) {
 	}
 	if (hit) {
 		// めり込みを排除する方向に移動量を設定する
-		indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom]);
+		indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom] + Vector3(0.9f, 0.9f, 0.0f));
 		//  めり込み先ブロックの範囲矩形
 		BlockRect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 
-		info.move.x = std::min(0.0f, (rect.right - worldTransform_.translation_.x) + (1.0f + kBlank)); //\\
+		info.move.x = std::min(0.0f, (rect.right - worldTransform_.translation_.x) + (kWidth / 2.0f + kBlank));
+
 		// 壁に当たったことを記録する
 		info.hitWall = true;
 	}
@@ -313,11 +313,11 @@ void Player::CollisionMapCheckRight(CollisionMapInfo& info) {
 	}
 	if (hit) {
 		// めり込みを排除する方向に移動量を設定する
-		indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom]);
+		indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom] + Vector3(-0.9f, 0.9f, 0.0f));
 		//  めり込み先ブロックの範囲矩形
 		BlockRect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
-		// float radius = (positionsNew[kRightBottom].x - positionsNew[kLeftBottom].x) / 2;
-		info.move.x = std::max(0.0f, (rect.left - worldTransform_.translation_.x) - (1.0f + kBlank)); //\\
+
+		info.move.x = std::max(0.0f, (rect.left - worldTransform_.translation_.x) - (kWidth / 2.0f + kBlank)); //\\
 		// 壁に当たったことを記録する
 		info.hitWall = true;
 	}
@@ -353,7 +353,8 @@ void Player::CollisionCeilingCase(const CollisionMapInfo& info) {
 
 void Player::CollisionHitWallCase(const CollisionMapInfo& info) {
 	if (info.hitWall) {
-		velocity_.x *= (1.0f - kAttenuation);
+		// velocity_.x *= (1.0f - kAttenuationWall);
+		velocity_.x = 0.0f;
 	}
 }
 

@@ -72,9 +72,10 @@ private:
 	};
 	LRDirection lrDirection_ = LRDirection::kRight; // 右向きで初期化
 
-	static inline const float kAcceleration = 0.05f;
-	static inline const float kAttenuation = 0.2f;    // 速度減衰率
-	static inline const float kLimitRunSpeed = 0.25f; // 最大速度制限
+	static inline const float kAcceleration = 0.04f;
+	static inline const float kAttenuation = 0.2f;     // 速度減衰率
+	static inline const float kAttenuationWall = 0.4f; // 速度減衰率(壁)
+	static inline const float kLimitRunSpeed = 0.2f;   // 最大速度制限
 	static inline const float kBlank = 0.1f;
 	float turnFirstRotationY_ = 0.0f;                       // 旋回開始時の角度
 	float turnTimer_ = 0.0f;                                // 旋回タイマー
@@ -87,5 +88,5 @@ private:
 	bool landing = false;
 	static inline const float kWidth = 1.8f; // キャラクターの当たり判定サイズ
 	static inline const float kHeight = 1.8f;
-	static inline const float kAttenuationLanding = 0.3f; // 着地時の速度減衰率
+	static inline const float kAttenuationLanding = 0.4f; // 着地時の速度減衰率
 };
