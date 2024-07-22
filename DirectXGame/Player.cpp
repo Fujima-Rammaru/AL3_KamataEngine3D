@@ -24,10 +24,10 @@ Player::~Player() {}
 
 void Player::Update() {
 
+	Move(); // 移動入力
+
 	// 衝突情報を初期化
 	CollisionMapInfo info;
-
-	Move(); // 移動入力
 
 	info.move = velocity_;
 
@@ -60,6 +60,8 @@ void Player::Update() {
 	CollisionCeilingCase(info);
 
 	// 壁に接触している場合の処理
+
+	//
 	GroundStateChange(info);
 
 	// 旋回制御
@@ -80,7 +82,6 @@ void Player::Update() {
 	}
 
 #ifdef _DEBUG
-	//	ImGui::Text("info.move.y=%3.2f",);
 	ImGui::Text("info.move.y=%3.2f", info.move.y);
 	ImGui::Text(
 	    "velocity.y=%3.2f\ninfo.landing=%d\nonground=%d\nlanding=%d\ninfo.hitWall=%d\ntransY=%3.2f", velocity_.y, info.landing, onGround_, landing, info.hitWall, worldTransform_.translation_.y);
@@ -143,8 +144,8 @@ void Player::Move() { // 移動入力
 		}
 		// 空中
 	} else {
-		velocity_.y += -kGravityAcceleration;                  // 落下速度
-		velocity_.y = std::max(velocity_.y, -kLimitFallSpeed); // 落下速度制限
+		// velocity_.y = std::max(velocity_.y, -kLimitFallSpeed); // 落下速度制限
+		velocity_.y += -kGravityAcceleration; // 落下速度
 
 		worldTransform_.translation_.y += velocity_.y;
 	}
