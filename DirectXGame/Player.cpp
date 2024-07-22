@@ -2,9 +2,9 @@
 #include "Player.h"
 #include "Input.h"
 #include "MapChipField.h"
+#include "imgui.h"
 #include <algorithm>
 #include <numbers>
-#include"imgui.h"
 
 void Player::initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection, const Vector3& position) {
 
@@ -74,7 +74,7 @@ void Player::Update() {
 	CR = CornerPosition(worldTransform_.translation_, kRightTop);*/
 	// 行列計算
 	worldTransform_.UpdateMatrix();
-	ImGui::Text("onground=%d",onGround_);
+	ImGui::Text("onground=%d", onGround_);
 }
 
 void Player::Draw() { model_->Draw(worldTransform_, *viewProjection_, txHandle_); }
@@ -180,14 +180,14 @@ void Player::CollisionMapCheckUp(CollisionMapInfo& info) {
 	}
 
 	if (hit) {
-	
+
 		// めり込みを排除する方向に移動量を設定する
-	//	indexSet = mapChipField_->GetMapChipIndexSetByPosition(playerTop);
-		 indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop]);
+		//	indexSet = mapChipField_->GetMapChipIndexSetByPosition(playerTop);
+		indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop]);
 		//  めり込み先ブロックの範囲矩形
 		BlockRect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 
-		info.move.y = std::max(0.0f, (rect.bottom - worldTransform_.translation_.y) - (1.0f + kBlank)); //\\
+		info.move.y = std::max(0.0f, (rect.bottom - worldTransform_.translation_.y) - (kHeight / 2.0f + kBlank)); //\\
 		// 天井に当たったことを記録する
 		info.ceiling = true;
 	}
@@ -235,7 +235,6 @@ void Player::CollisionMapCheckDown(CollisionMapInfo& info) {
 	}
 }
 
-
 Vector3 Player::CornerPosition(const Vector3& center, Corner corner) {
 	Vector3 offSetTable[kNumCorner] = {
 	    {kWidth / 2.0f,  -kHeight / 2.0f, 0}, //  kRightBottom
@@ -260,6 +259,6 @@ void Player::MoveByCollisionResult(const CollisionMapInfo& info) {
 void Player::CollisionCeilingCase(const CollisionMapInfo& info) {
 	// 天井に当たった?
 	if (info.ceiling) {
-		velocity_.y = 0;
+		velocity_.y = 0.0f;
 	}
 }
