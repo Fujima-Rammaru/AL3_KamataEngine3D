@@ -278,7 +278,7 @@ void Player::CollisionMapCheckLeft(CollisionMapInfo& info) {
 	if (hit) {
 		// めり込みを排除する方向に移動量を設定する
 		//+Vector3(0.9f, 0.9f, 0.0f)
-		indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom]);
+		indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom] + Vector3(-0.9f, 0.9f, 0.0f));
 		//  めり込み先ブロックの範囲矩形
 		BlockRect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 
@@ -314,7 +314,7 @@ void Player::CollisionMapCheckRight(CollisionMapInfo& info) {
 		hit = true;
 	}
 	if (hit) {
-		// + Vector3(-0.9f, 0.9f, 0.0f)
+		// 
 		// めり込みを排除する方向に移動量を設定する
 		indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom]);
 		//  めり込み先ブロックの範囲矩形
