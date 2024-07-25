@@ -62,7 +62,7 @@ void Player::Update() {
 
 	// 壁に接触している場合の処理
 	CollisionHitWallCase(info);
-
+	worldTransform_.translation_.x += velocity_.x;
 	// 接地状態の切り替え
 	GroundStateChange(info);
 
@@ -153,7 +153,7 @@ void Player::Move() { // 移動入力
 		velocity_.y += -kGravityAcceleration; // 落下速度
 		worldTransform_.translation_.y += velocity_.y;
 	}
-	worldTransform_.translation_.x += velocity_.x;
+	
 }
 
 void Player::CollisionMapCheckUp(CollisionMapInfo& info) {
@@ -278,7 +278,7 @@ void Player::CollisionMapCheckLeft(CollisionMapInfo& info) {
 	if (hit) {
 		// めり込みを排除する方向に移動量を設定する
 		//+Vector3(0.9f, 0.9f, 0.0f)
-		indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom] + Vector3(-0.9f, 0.9f, 0.0f));
+		indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom]);
 		//  めり込み先ブロックの範囲矩形
 		BlockRect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 
