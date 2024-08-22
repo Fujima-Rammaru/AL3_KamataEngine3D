@@ -37,6 +37,25 @@ void Player::Update() {
 	CollisionMapCheckLeft(info);
 	CollisionMapCheckRight(info);
 
+	if (velocity_.y <= 0) {
+		// Y座標が地面以下になったら着地
+		if (worldTransform_.translation_.y <= kGroundPos) {
+			landing = true;
+		}
+	}
+
+		// 着地
+	if (landing) {
+		// 接地状態に移行
+		onGround_ = true;
+		// 摩擦で横方向速度が減衰する
+		velocity_.x *= (1.0f - kAttenuation);
+		// 下方向速度をリセット
+		velocity_.y = 0.0f;
+
+		worldTransform_.translation_.y = kGroundPos;
+	}
+
 	// 判定結果を反映して移動する
 	MoveByCollisionResult(info);
 
@@ -45,16 +64,17 @@ void Player::Update() {
 
 	// 壁に接触している場合の処理
 	CollisionHitWallCase(info);
+	// 移動
+	worldTransform_.translation_.x += velocity_.x;
+
 	// 接地状態の切り替え
 	//	info.landing = landing;
 	//  地面との当たり判定
 	GroundStateChange(info);
 
-	// 移動
-	worldTransform_.translation_.x += velocity_.x;
+	
 
-	velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed); // 最大速度制限
-
+	
 	// 旋回制御
 	if (turnTimer_ > 0.0f) {
 		turnTimer_ -= 1.0f / 60.0f; // 1/60秒
@@ -120,6 +140,8 @@ void Player::Move() { // 移動入力
 			}
 			// 加速/減速
 			velocity_.x += acceleration.x;
+			velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed); // 最大速度制限
+
 		} else {
 			velocity_.x *= (1.0f - kAttenuation); // 非入力時は移動減衰する
 		}
@@ -136,27 +158,12 @@ void Player::Move() { // 移動入力
 		}
 		// 空中
 	} else {
-		velocity_ += Vector3(0, -kGravityAcceleration, 0);     // 落下速度
-		velocity_.y = std::max(velocity_.y, -kLimitFallSpeed); // 落下速度制限
+		velocity_.y +=-kGravityAcceleration;     // 落下速度
+		//velocity_.y = std::max(velocity_.y, -kLimitFallSpeed); // 落下速度制限
 
 		worldTransform_.translation_.y += velocity_.y;
-		// 着地
-		if (landing) {
-
-			// 摩擦で横方向速度が減衰する
-			velocity_.x *= (1.0f - kAttenuation);
-			// 下方向速度をリセット
-			velocity_.y = 0.0f;
-			// 接地状態に移行
-			onGround_ = true;
-			worldTransform_.translation_.y = kGroundPos;
-		}
-		if (velocity_.y <= 0) {
-			// Y座標が地面以下になったら着地
-			if (worldTransform_.translation_.y <= kGroundPos) {
-				landing = true;
-			}
-		}
+	
+		
 	}
 }
 
@@ -334,7 +341,11 @@ Vector3 Player::CornerPosition(const Vector3& center, Corner corner) {
 	return result;
 }
 
-void Player::MoveByCollisionResult(const CollisionMapInfo& info) { worldTransform_.translation_ += info.move; }
+void Player::MoveByCollisionResult(const CollisionMapInfo& info) { 
+	worldTransform_.translation_.x += info.move.x;
+	worldTransform_.translation_.y += info.move.y;
+	worldTransform_.translation_.z += info.move.z;
+}
 
 void Player::CollisionCeilingCase(const CollisionMapInfo& info) {
 	// 天井に当たった?
@@ -345,7 +356,7 @@ void Player::CollisionCeilingCase(const CollisionMapInfo& info) {
 
 void Player::CollisionHitWallCase(const CollisionMapInfo& info) {
 	if (info.hitWall) {
-		velocity_.x *= (1.0f - kAttenuation);
+		velocity_.x =0.0f;
 	}
 }
 
@@ -393,11 +404,11 @@ void Player::GroundStateChange(const CollisionMapInfo& info) {
 		}
 	} else {
 		if (info.landing) {
-			velocity_.y = 0.0f;
+			// 着地状態に切り替える
 			onGround_ = true;
 			velocity_.x *= (1.0f - kAttenuationLanding);
-
-			// 着地状態に切り替える
+			velocity_.y = 0.0f;
+		
 		}
 	}
 }
