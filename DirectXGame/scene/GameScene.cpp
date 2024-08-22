@@ -50,7 +50,7 @@ void GameScene::Initialize() {
 	GenerateBlocks();
 
 	player_ = new Player(); // 自キャラの生成
-	Vector3 playerposition = mapChipField_->GetMapChipPositionByIndex(43, 18);
+	Vector3 playerposition = mapChipField_->GetMapChipPositionByIndex(5, 18);
 	player_->initialize(modelPlayer_, playerTxHandle_, &cameraViewProjection_, playerposition); // 自キャラの初期化
 	player_->SetMapChipField(mapChipField_);
 
