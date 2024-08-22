@@ -1,7 +1,7 @@
 #include "GameScene.h"
 #include "DebugCamera.h"
+#include "PrimitiveDrawer.h"
 #include "TextureManager.h"
-#include"PrimitiveDrawer.h"
 
 GameScene::GameScene() {}
 
@@ -94,8 +94,8 @@ void GameScene::Draw() {
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
 	Sprite::
-	// スプライト描画後処理
-	Sprite::PostDraw();
+	    // スプライト描画後処理
+	    Sprite::PostDraw();
 	// 深度バッファクリア
 	dxCommon_->ClearDepthBuffer();
 #pragma endregion
@@ -197,7 +197,6 @@ void GameScene::ChangePhase() {
 		skyDome_->Update();
 		enemy_->Update();
 
-
 		CameraUpdate();
 
 		CheckAllCollisions();
@@ -215,7 +214,6 @@ void GameScene::ChangePhase() {
 		BlocksUpdate();
 		skyDome_->Update();
 		enemy_->Update();
-
 
 		CameraUpdate();
 
