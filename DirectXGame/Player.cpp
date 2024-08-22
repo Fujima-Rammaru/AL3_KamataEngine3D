@@ -132,7 +132,7 @@ void Player::Move() { // 移動入力
 			velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed); // 最大速度制限
 			                                                                        // 移動
 
-			ImGui::Text("acceleration.x=%3.2f", acceleration.x);
+		
 		} else {
 			velocity_.x *= (1.0f - kAttenuation); // 非入力時は移動減衰する
 		}
