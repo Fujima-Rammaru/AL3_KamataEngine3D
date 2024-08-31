@@ -49,7 +49,7 @@ void GameScene::Initialize() {
 	playerTxHandle_ = TextureManager::Load("sample.png"); // テクスチャの読み込み
 	modelPlayer_ = Model::Create();                       // 3Dモデルの生成
 	player_ = new Player();                               // 自キャラの生成
-	Vector3 playerposition = mapChipField_->GetMapChipPositionByIndex(3, 18);
+	Vector3 playerposition = mapChipField_->GetMapChipPositionByIndex(3, 17);
 	player_->initialize(modelPlayer_, playerTxHandle_, &cameraViewProjection_, playerposition); // 自キャラの初期化
 	player_->SetMapChipField(mapChipField_);
 

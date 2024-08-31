@@ -37,12 +37,12 @@ void Player::Update() {
 	CollisionMapCheckLeft(info);
 	CollisionMapCheckRight(info);
 
-	if (velocity_.y <= 0) {
-		// Y座標が地面以下になったら着地
-		if (worldTransform_.translation_.y <= kGroundPos) {
-			landing = true;
-		}
-	}
+	//if (velocity_.y <= 0) {
+	//	// Y座標が地面以下になったら着地
+	//	if (worldTransform_.translation_.y <= kGroundPos) {
+	//		landing = true;
+	//	}
+	//}
 
 		// 着地
 	if (landing) {
@@ -159,7 +159,7 @@ void Player::Move() { // 移動入力
 		// 空中
 	} else {
 		velocity_.y +=-kGravityAcceleration;     // 落下速度
-		//velocity_.y = std::max(velocity_.y, -kLimitFallSpeed); // 落下速度制限
+		velocity_.y = std::max(velocity_.y, -kLimitFallSpeed); // 落下速度制限
 
 		worldTransform_.translation_.y += velocity_.y;
 	
@@ -179,7 +179,7 @@ void Player::CollisionMapCheckUp(CollisionMapInfo& info) {
 
 	MapChipType mapChipType;
 
-	bool hitCeiling = false;
+	bool hit = false;
 
 	// 左上点の判定
 	IndexSet indexSet;
@@ -187,17 +187,17 @@ void Player::CollisionMapCheckUp(CollisionMapInfo& info) {
 	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop]);
 	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
 	if (mapChipType == MapChipType::kBlock) {
-		hitCeiling = true;
+		hit = true;
 	}
 
 	// 右上点の判定
 	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightTop]);
 	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
 	if (mapChipType == MapChipType::kBlock) {
-		hitCeiling = true;
+		hit = true;
 	}
 
-	if (hitCeiling) {
+	if (hit) {
 
 		// めり込みを排除する方向に移動量を設定する
 		indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop]);
