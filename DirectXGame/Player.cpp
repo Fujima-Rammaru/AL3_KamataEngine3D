@@ -29,23 +29,27 @@ void Player::Update() {
 
 	// 衝突情報を初期化
 	CollisionMapInfo info;
-	// 移動量に速度の値をコピー
+
 	info.move = velocity_;
+
 	// マップ衝突チェック
-	CollisionMapCheckUp(info);   // 天井のみ
-	CollisionMapCheckDown(info); // 下方向
-	CollisionMapCheckLeft(info);
-	CollisionMapCheckRight(info);
+	CollisionMapCheckAllDirection(info);
 
-		// 着地
+	//  地面との当たり判定
+	if (velocity_.y <= 0) {
+		// Y座標が地面以下になったら着地
+		if (worldTransform_.translation_.y <= kGroundPos) {
+			landing = true;
+		}
+	}
+
 	if (landing) {
-		// 接地状態に移行
-		onGround_ = true;
 		// 摩擦で横方向速度が減衰する
+		onGround_ = true;
 		velocity_.x *= (1.0f - kAttenuation);
-		// 下方向速度をリセット
+		//  下方向速度をリセット
 		velocity_.y = 0.0f;
-
+		// 接地状態に移行
 		worldTransform_.translation_.y = kGroundPos;
 	}
 
@@ -57,19 +61,16 @@ void Player::Update() {
 
 	// 壁に接触している場合の処理
 	CollisionHitWallCase(info);
-	
-
+	worldTransform_.translation_.x += velocity_.x;
 	// 接地状態の切り替え
-	//	info.landing = landing;
-	//  地面との当たり判定
 	GroundStateChange(info);
 
 	// 旋回制御
 	if (turnTimer_ > 0.0f) {
-		turnTimer_ -= 1.0f / 60.0f; // 1/60秒
+		turnTimer_ -= 0.0166f; // 1/60秒
 
 		// 左右の自キャラ角度テーブル
-		float destinationRotationYTable[] = {std::numbers::pi_v<float> * 0.0f, std::numbers::pi_v<float> / 2.0f};
+		float destinationRotationYTable[] = {std::numbers::pi_v<float> * 5.0f / 2.0f, std::numbers::pi_v<float> * 3.0f / 2.0f};
 
 		// 状況に応じた角度を取得する
 		float destinationRotationY = destinationRotationYTable[static_cast<uint32_t>(lrDirection_)];
@@ -81,16 +82,11 @@ void Player::Update() {
 		worldTransform_.rotation_.y = nowRotationY;
 	}
 
-	// 移動
-	worldTransform_.translation_.x += velocity_.x;
-	worldTransform_.UpdateMatrix();
-
 #ifdef _DEBUG
-	ImGui::Text(
-	    "onGround=%d\ninfo.landing=%d\nlanding=%d\nvelocity.y=%4.2f\ntransform.y=%4.2f\ntransform.x=%5.2f", onGround_, info.landing, landing, velocity_.y, worldTransform_.translation_.y,
-	    worldTransform_.translation_.x);
-
-#endif // DEBUG
+	ImGui::Text("info.move.x=%3.2f", info.move.x);
+	ImGui::Text("velocity.x=%3.2f\ninfo.hitWall=%d", velocity_.x, info.hitWall);
+#endif
+	worldTransform_.UpdateMatrix();
 }
 
 void Player::Draw() { model_->Draw(worldTransform_, *viewProjection_, txHandle_); }
@@ -338,7 +334,7 @@ Vector3 Player::CornerPosition(const Vector3& center, Corner corner) {
 	return result;
 }
 
-void Player::MoveByCollisionResult(const CollisionMapInfo& info) { 
+void Player::MoveByCollisionResult(const CollisionMapInfo& info) {
 	worldTransform_.translation_.x += info.move.x;
 	worldTransform_.translation_.y += info.move.y;
 	worldTransform_.translation_.z += info.move.z;
@@ -353,7 +349,7 @@ void Player::CollisionCeilingCase(const CollisionMapInfo& info) {
 
 void Player::CollisionHitWallCase(const CollisionMapInfo& info) {
 	if (info.hitWall) {
-		velocity_.x =0.0f;
+		velocity_.x = 0.0f;
 	}
 }
 
@@ -405,7 +401,6 @@ void Player::GroundStateChange(const CollisionMapInfo& info) {
 			onGround_ = true;
 			velocity_.x *= (1.0f - kAttenuationLanding);
 			velocity_.y = 0.0f;
-		
 		}
 	}
 }
@@ -438,3 +433,10 @@ void Player::OnCollision(const Enemy* enemy) {
 }
 
 bool Player::IsDeadGetter() { return isDead_; }
+
+void Player::CollisionMapCheckAllDirection(CollisionMapInfo& info) {
+	CollisionMapCheckUp(info);
+	CollisionMapCheckDown(info);
+	CollisionMapCheckRight(info);
+	CollisionMapCheckLeft(info);
+}

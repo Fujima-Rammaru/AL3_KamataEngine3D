@@ -60,6 +60,7 @@ public:
 	void OnCollision(const Enemy* enemy); // 衝突応答
 	// デスフラグのgetter
 	bool IsDeadGetter();
+	void CollisionMapCheckAllDirection( CollisionMapInfo& info);//全ての衝突判定関数を呼び出す
 
 private:
 	WorldTransform worldTransform_;
