@@ -37,13 +37,6 @@ void Player::Update() {
 	CollisionMapCheckLeft(info);
 	CollisionMapCheckRight(info);
 
-	//if (velocity_.y <= 0) {
-	//	// Y座標が地面以下になったら着地
-	//	if (worldTransform_.translation_.y <= kGroundPos) {
-	//		landing = true;
-	//	}
-	//}
-
 		// 着地
 	if (landing) {
 		// 接地状態に移行
@@ -64,17 +57,13 @@ void Player::Update() {
 
 	// 壁に接触している場合の処理
 	CollisionHitWallCase(info);
-	// 移動
-	worldTransform_.translation_.x += velocity_.x;
+	
 
 	// 接地状態の切り替え
 	//	info.landing = landing;
 	//  地面との当たり判定
 	GroundStateChange(info);
 
-	
-
-	
 	// 旋回制御
 	if (turnTimer_ > 0.0f) {
 		turnTimer_ -= 1.0f / 60.0f; // 1/60秒
@@ -91,6 +80,9 @@ void Player::Update() {
 		// 自キャラの角度を設定する
 		worldTransform_.rotation_.y = nowRotationY;
 	}
+
+	// 移動
+	worldTransform_.translation_.x += velocity_.x;
 	worldTransform_.UpdateMatrix();
 
 #ifdef _DEBUG
@@ -117,26 +109,28 @@ void Player::Move() { // 移動入力
 				if (velocity_.x < 0.0f) {
 					velocity_.x *= (1.0f - kAttenuation);
 				}
-				acceleration.x += kAcceleration;
+				
 
 				if (lrDirection_ != LRDirection::kRight) {
 					lrDirection_ = LRDirection::kRight;
 					turnFirstRotationY_ = worldTransform_.rotation_.y;
 					turnTimer_ = kTimeTurn;
 				}
+				acceleration.x += kAcceleration;
 
 			} else if (Input::GetInstance()->PushKey(DIK_LEFT)) {
 
 				if (velocity_.x > 0.0f) {
 					velocity_.x *= (1.0f - kAttenuation);
 				}
-				acceleration.x -= kAcceleration;
+				
 
 				if (lrDirection_ != LRDirection::kLeft) {
 					lrDirection_ = LRDirection::kLeft;
 					turnFirstRotationY_ = worldTransform_.rotation_.y;
 					turnTimer_ = kTimeTurn;
 				}
+				acceleration.x -= kAcceleration;
 			}
 			// 加速/減速
 			velocity_.x += acceleration.x;
