@@ -109,32 +109,31 @@ void Player::Move() { // 移動入力
 				if (velocity_.x < 0.0f) {
 					velocity_.x *= (1.0f - kAttenuation);
 				}
-				
+				acceleration.x += kAcceleration;
 
 				if (lrDirection_ != LRDirection::kRight) {
 					lrDirection_ = LRDirection::kRight;
 					turnFirstRotationY_ = worldTransform_.rotation_.y;
 					turnTimer_ = kTimeTurn;
 				}
-				acceleration.x += kAcceleration;
 
 			} else if (Input::GetInstance()->PushKey(DIK_LEFT)) {
 
 				if (velocity_.x > 0.0f) {
 					velocity_.x *= (1.0f - kAttenuation);
 				}
-				
+				acceleration.x -= kAcceleration;
 
 				if (lrDirection_ != LRDirection::kLeft) {
 					lrDirection_ = LRDirection::kLeft;
 					turnFirstRotationY_ = worldTransform_.rotation_.y;
 					turnTimer_ = kTimeTurn;
 				}
-				acceleration.x -= kAcceleration;
 			}
 			// 加速/減速
 			velocity_.x += acceleration.x;
 			velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed); // 最大速度制限
+			                                                                        // 移動
 
 		} else {
 			velocity_.x *= (1.0f - kAttenuation); // 非入力時は移動減衰する
@@ -150,14 +149,11 @@ void Player::Move() { // 移動入力
 			// 空中状態に移行
 			onGround_ = false;
 		}
+
 		// 空中
 	} else {
-		velocity_.y +=-kGravityAcceleration;     // 落下速度
-		velocity_.y = std::max(velocity_.y, -kLimitFallSpeed); // 落下速度制限
-
+		velocity_.y += -kGravityAcceleration; // 落下速度
 		worldTransform_.translation_.y += velocity_.y;
-	
-		
 	}
 }
 
