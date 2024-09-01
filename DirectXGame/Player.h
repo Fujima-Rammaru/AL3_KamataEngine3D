@@ -77,6 +77,7 @@ private:
 	//サウンドデータ
 	Audio* audio_ = nullptr;
 	uint32_t jumpSound =0;
+	
 
 	MapChipField* mapChipField_ = nullptr;
 

@@ -18,6 +18,7 @@ void Player::initialize(Model* model, uint32_t textureHandle, ViewProjection* vi
 	worldTransform_.translation_ = position;
 	worldTransform_.rotation_.y = std::numbers::pi_v<float> * 0.0f; // 450度
 	jumpSound = audio_->LoadWave("sound/jump.mp3");
+
 }
 
 Player::Player() {}
@@ -25,13 +26,15 @@ Player::Player() {}
 Player::~Player() {}
 
 void Player::Update() {
-
+	
 	Move(); // 移動入力
 	        //  地面との当たり判定
 
 	// Y座標が地面以下になったら着地
 	if (worldTransform_.translation_.y <= -18.0f) {
 		isDead_ = true;
+	
+		
 	}
 
 	// 衝突情報を初期化
@@ -135,7 +138,7 @@ void Player::Move() { // 移動入力
 		}
 		// ジャンプ処理
 		if (Input::GetInstance()->TriggerKey(DIK_UP)) { // 上キーを押した瞬間だけtrue
-			audio_->PlayWave(jumpSound, false, 0.02f);
+			audio_->PlayWave(jumpSound, false, 0.05f);
 			landing = false;
 			// ジャンプ初速
 			velocity_.y += kJumpAcceleration;

@@ -50,7 +50,7 @@ void GameScene::Initialize() {
 	modelPlayer_ = Model::Create();                       // 3Dモデルの生成
 	player_ = new Player();                               // 自キャラの生成
 	Vector3 playerposition = mapChipField_->GetMapChipPositionByIndex(3, 17);
-	player_->initialize(modelPlayer_, playerTxHandle_, &cameraViewProjection_, playerposition,audio_); // 自キャラの初期化
+	player_->initialize(modelPlayer_, playerTxHandle_, &cameraViewProjection_, playerposition, audio_); // 自キャラの初期化
 	player_->SetMapChipField(mapChipField_);
 
 	phase_ = Phase::kPlay;
@@ -71,12 +71,17 @@ void GameScene::Initialize() {
 	enemy_->Initialize(modelEnemy, enemyTxhandle, &cameraViewProjection_, enemyPosition);
 
 	// カメラコントローラー初期化
-	Rect area_ = {30.0f, 170.0f, 0.0f, 100.0f};
+	Rect area_ = {30.0f, 300.0f, 0.0f, 100.0f};
 	cameraController_ = new CameraController;
 	cameraController_->Initialize();
 	cameraController_->SetTarget(player_);
 	cameraController_->Reset();
 	cameraController_->SetMovableArea(area_);
+
+	BGM = audio_->LoadWave("sound/BGM.mp3");
+	if (audio_->IsPlaying(BGM) == false) {
+		BGM = audio_->PlayWave(BGM, true, 0.07f);
+	}
 }
 
 void GameScene::Update() { ChangePhase(); }
@@ -123,7 +128,7 @@ void GameScene::Draw() {
 	if (deathParticles_) {
 		deathParticles_->Draw();
 	}
-	PrimitiveDrawer::GetInstance()->DrawLine3d({0, 0, 0}, {0, -40, 0}, {1.0f, 0.0f, 0.0f, 1.0f});
+//	PrimitiveDrawer::GetInstance()->DrawLine3d({0, 0, 0}, {0, -40, 0}, {1.0f, 0.0f, 0.0f, 1.0f});
 	/// </summary>
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
@@ -181,7 +186,6 @@ void GameScene::CheckAllCollisions() {
 		enemy_->OnCollision(player_); // 敵の衝突時コールバックを呼び出す
 	}
 
-
 #pragma endregion
 }
 
@@ -206,7 +210,7 @@ void GameScene::ChangePhase() {
 		// 自キャラがやられたら
 		if (player_->IsDeadGetter()) {
 			phase_ = Phase::kDeath;
-
+			audio_->StopWave(BGM);
 			const Vector3& deathParticlePosition = player_->GetWorldPosition();
 			deathParticles_->Initialize(modelParticles_, &cameraViewProjection_, deathParticlePosition);
 		}
@@ -245,9 +249,9 @@ void GameScene::BlocksUpdate() {
 }
 
 void GameScene::CameraUpdate() {
-	
-		isDebugCameraactive_= true;
-	
+
+	isDebugCameraactive_ = true;
+
 	if (isDebugCameraactive_) {
 		cameraController_->Update();
 		cameraViewProjection_.matView = cameraController_->GetMatView();

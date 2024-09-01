@@ -85,7 +85,7 @@ private: // メンバ変数
 	Model* modelEnemy = nullptr;
 	uint32_t enemyTxhandle = 0u;
 	
-
+	uint32_t BGM = 0;
 	Model* modelBlock_ = nullptr;                                    // ブロック
 	uint32_t blockTxHandle_ = 0u;                                    // ブロックテクスチャハンドル
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_; // 可変個配列
