@@ -84,7 +84,7 @@ private:
 	static inline const float kAcceleration = 0.04f;
 	static inline const float kAttenuation = 0.2f;     // 速度減衰率
 	static inline const float kWallAttenuation = 0.5f; // 速度減衰率(wall)
-	static inline const float kLimitRunSpeed = 0.2f;  // 最大速度制限
+	static inline const float kLimitRunSpeed = 0.1f;  // 最大速度制限
 	static inline const float kBlank = 0.1f;
 	float turnFirstRotationY_ = 0.0f;                      // 旋回開始時の角度
 	float turnTimer_ = 0.0f;                               // 旋回タイマー
@@ -92,7 +92,7 @@ private:
 	bool onGround_ = true;                                 // 設置状態フラグ
 	static inline const float kGravityAcceleration = 0.04f; // 重力加速度(下方向)
 	static inline const float kLimitFallSpeed = 0.4f;      // 最大落下速度(下方向)
-	static inline const float kJumpAcceleration = 0.6f;    // ジャンプ初速(上方向）
+	static inline const float kJumpAcceleration = 0.7f;    // ジャンプ初速(上方向）
 	static inline const float kGroundPos = 2.0f;           // 地面の座標
 	bool landing = false;
 	static inline const float kWidth = 1.8f; // キャラクターの当たり判定サイズ
