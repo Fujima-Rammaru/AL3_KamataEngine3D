@@ -145,11 +145,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 void ChangeScene() {
 
-	uint32_t count = 0;
 	switch (scene) {
-		count = 0;
+
 	case Scene::kTitle:
-		
+
 		if (titleScene->IsFinished()) {
 			// シーン変更
 			scene = Scene::kGame;
@@ -164,7 +163,7 @@ void ChangeScene() {
 		break;
 
 	case Scene::kGame:
-		count++;
+
 		if (gameScene->IsFinished()) {
 			// シーン変更
 			scene = Scene::kTitle;
@@ -175,18 +174,14 @@ void ChangeScene() {
 			titleScene = new TitleScene();
 			titleScene->Initialize();
 
-			if (count>=3000) {
-				// シーン変更
-				scene = Scene::kClear;
-				// 旧シーンの開放
-				delete gameScene;
-				gameScene = nullptr;
-				// 新シーンの生成と初期化
-				clearScene = new ClearScene();
-				clearScene->Initialize();
-			
-			}
-			
+			// シーン変更
+			scene = Scene::kClear;
+			// 旧シーンの開放
+			delete gameScene;
+			gameScene = nullptr;
+			// 新シーンの生成と初期化
+			clearScene = new ClearScene();
+			clearScene->Initialize();
 		}
 		break;
 
