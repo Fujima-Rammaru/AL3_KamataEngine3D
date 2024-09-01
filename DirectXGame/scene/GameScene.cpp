@@ -49,7 +49,7 @@ void GameScene::Initialize() {
 	playerTxHandle_ = TextureManager::Load("sample.png"); // テクスチャの読み込み
 	modelPlayer_ = Model::Create();                       // 3Dモデルの生成
 	player_ = new Player();                               // 自キャラの生成
-	Vector3 playerposition = mapChipField_->GetMapChipPositionByIndex(3, 17);
+	Vector3 playerposition = mapChipField_->GetMapChipPositionByIndex(3, 8);
 	player_->initialize(modelPlayer_, playerTxHandle_, &cameraViewProjection_, playerposition, audio_); // 自キャラの初期化
 	player_->SetMapChipField(mapChipField_);
 
@@ -67,7 +67,7 @@ void GameScene::Initialize() {
 	enemyTxhandle = TextureManager::Load("sample.png"); // テクスチャの読み込み
 	modelEnemy = Model::Create();
 	enemy_ = new Enemy();
-	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(20, 18);
+	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(148, 18);
 	enemy_->Initialize(modelEnemy, enemyTxhandle, &cameraViewProjection_, enemyPosition);
 
 	// カメラコントローラー初期化
@@ -128,7 +128,7 @@ void GameScene::Draw() {
 	if (deathParticles_) {
 		deathParticles_->Draw();
 	}
-//	PrimitiveDrawer::GetInstance()->DrawLine3d({0, 0, 0}, {0, -40, 0}, {1.0f, 0.0f, 0.0f, 1.0f});
+	//	PrimitiveDrawer::GetInstance()->DrawLine3d({0, 0, 0}, {0, -40, 0}, {1.0f, 0.0f, 0.0f, 1.0f});
 	/// </summary>
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

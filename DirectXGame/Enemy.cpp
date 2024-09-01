@@ -16,10 +16,11 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle, ViewProjection* vie
 
 void Enemy::Update() {
 	walkTimer_ += 1.0f / 60.0f;
-	float param = std::sin(std::numbers::pi_v<float> * 2.0f * walkTimer_ / kWalkMotionTime);
-	float radian = kWalkMotionAngleStart + kWalkMotionAngleEnd * (param);
-	worldTransform_.rotation_.x = std::numbers::pi_v<float> / 180.0f * radian;
-	worldTransform_.translation_ += velocity_;
+	/*float param = std::sin(std::numbers::pi_v<float> * 2.0f * walkTimer_ / kWalkMotionTime);
+	float radian = kWalkMotionAngleStart + kWalkMotionAngleEnd * (param);*/
+	//worldTransform_.rotation_.x = std::numbers::pi_v<float> / 180.0f * radian;
+	//worldTransform_.translation_ += velocity_;
+	worldTransform_.rotation_.x += 0.1f;
 	worldTransform_.UpdateMatrix();
 }
 
