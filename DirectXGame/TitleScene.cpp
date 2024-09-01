@@ -8,8 +8,8 @@ void TitleScene::Initialize() {
 	modelTitle_ = Model::CreateFromOBJ("title", true);
 	viewProjection_.Initialize();
 	worldTransform.Initialize();
-	worldTransform.translation_ = {-10, 0, 0};
-	worldTransform.rotation_ = {4.3f,0,0};
+	worldTransform.translation_ = {0, 10, 0};
+	worldTransform.rotation_ = {-4.4f,3.2f,0};
 	worldTransform.scale_ = {10, 10, 10};
 }
 
