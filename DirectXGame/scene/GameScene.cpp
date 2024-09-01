@@ -245,9 +245,9 @@ void GameScene::BlocksUpdate() {
 }
 
 void GameScene::CameraUpdate() {
-	if (input_->TriggerKey(DIK_BACK)) {
-		isDebugCameraactive_ ^= true;
-	}
+	
+		isDebugCameraactive_= true;
+	
 	if (isDebugCameraactive_) {
 		cameraController_->Update();
 		cameraViewProjection_.matView = cameraController_->GetMatView();
