@@ -50,7 +50,7 @@ void GameScene::Initialize() {
 	modelPlayer_ = Model::Create();                       // 3Dモデルの生成
 	player_ = new Player();                               // 自キャラの生成
 	Vector3 playerposition = mapChipField_->GetMapChipPositionByIndex(3, 17);
-	player_->initialize(modelPlayer_, playerTxHandle_, &cameraViewProjection_, playerposition); // 自キャラの初期化
+	player_->initialize(modelPlayer_, playerTxHandle_, &cameraViewProjection_, playerposition,audio_); // 自キャラの初期化
 	player_->SetMapChipField(mapChipField_);
 
 	phase_ = Phase::kPlay;

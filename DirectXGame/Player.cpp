@@ -7,16 +7,17 @@
 #include <algorithm>
 #include <numbers>
 
-void Player::initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection, const Vector3& position) {
+void Player::initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection, const Vector3& position,Audio* audio) {
 
 	assert(model);
 	model_ = model;
-
+	audio_ = audio;
 	txHandle_ = textureHandle;
 	viewProjection_ = viewProjection;
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = position;
 	worldTransform_.rotation_.y = std::numbers::pi_v<float> * 0.0f; // 450度
+	jumpSound = audio_->LoadWave("sound/jump.mp3");
 }
 
 Player::Player() {}
@@ -26,13 +27,13 @@ Player::~Player() {}
 void Player::Update() {
 
 	Move(); // 移動入力
-	//  地面との当たり判定
-	
-		// Y座標が地面以下になったら着地
-		if (worldTransform_.translation_.y <=-18.0f) {
+	        //  地面との当たり判定
+
+	// Y座標が地面以下になったら着地
+	if (worldTransform_.translation_.y <= -18.0f) {
 		isDead_ = true;
-		}
-	
+	}
+
 	// 衝突情報を初期化
 	CollisionMapInfo info;
 
@@ -40,8 +41,6 @@ void Player::Update() {
 
 	// マップ衝突チェック
 	CollisionMapCheckAllDirection(info);
-
-	
 
 	if (landing) {
 		// 摩擦で横方向速度が減衰する
@@ -136,6 +135,7 @@ void Player::Move() { // 移動入力
 		}
 		// ジャンプ処理
 		if (Input::GetInstance()->TriggerKey(DIK_UP)) { // 上キーを押した瞬間だけtrue
+			audio_->PlayWave(jumpSound, false, 0.02f);
 			landing = false;
 			// ジャンプ初速
 			velocity_.y += kJumpAcceleration;
@@ -150,7 +150,6 @@ void Player::Move() { // 移動入力
 	} else {
 		velocity_.y += -kGravityAcceleration; // 落下速度
 		velocity_.y = std::max(velocity_.y, -kLimitFallSpeed);
-		
 	}
 }
 
@@ -224,24 +223,22 @@ void Player::CollisionMapCheckDown(CollisionMapInfo& info) {
 	// 右下点の判定
 	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom]);
 	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
-	
+
 	if (mapChipType == MapChipType::kBlock) {
 		hit = true;
 	}
 
 	if (hit) { // ブロックにヒット?
-	
-		indexSet= mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom]);
 
-	
-			//  めり込みを排除する方向に移動量を設定する
-			indexSet = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_ + info.move + Vector3(0, -kHeight / 2.0f, 0));
-			//  めり込み先ブロックの範囲矩形
-			BlockRect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
+		indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom]);
 
-			info.move.y = std::min(0.0f, (rect.top - worldTransform_.translation_.y) + (kHeight / 2.0f + kBlank));
-			info.landing = true;
-		
+		//  めり込みを排除する方向に移動量を設定する
+		indexSet = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_ + info.move + Vector3(0, -kHeight / 2.0f, 0));
+		//  めり込み先ブロックの範囲矩形
+		BlockRect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
+
+		info.move.y = std::min(0.0f, (rect.top - worldTransform_.translation_.y) + (kHeight / 2.0f + kBlank));
+		info.landing = true;
 	}
 }
 

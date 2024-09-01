@@ -84,6 +84,7 @@ private: // メンバ変数
 	Enemy* enemy_ = nullptr;
 	Model* modelEnemy = nullptr;
 	uint32_t enemyTxhandle = 0u;
+	
 
 	Model* modelBlock_ = nullptr;                                    // ブロック
 	uint32_t blockTxHandle_ = 0u;                                    // ブロックテクスチャハンドル
@@ -98,7 +99,7 @@ private: // メンバ変数
 
 	MatrixFunction* matrixFunction = nullptr;
 	Phase phase_;
-	
+
 	// 終了フラグ
 	bool IsFinished_ = false;
 };
