@@ -55,5 +55,5 @@ private:
 	static inline const float kBlockHeight = 2.0f;
 
 	static inline const uint32_t kNumBlockVirtical = 20;    // 縦幅
-	static inline const uint32_t kNumBlockHorizontal = 100; // 横幅
+	static inline const uint32_t kNumBlockHorizontal = 126; // 横幅
 };

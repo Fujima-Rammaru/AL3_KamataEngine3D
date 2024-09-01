@@ -88,7 +88,7 @@ private:
 	LRDirection lrDirection_ = LRDirection::kRight; // 右向きで初期化
 
 	static inline const float kAcceleration = 0.04f;
-	static inline const float kAttenuation = 0.2f;     // 速度減衰率
+	static inline const float kAttenuation = 0.4f;     // 速度減衰率
 	static inline const float kWallAttenuation = 0.5f; // 速度減衰率(wall)
 	static inline const float kLimitRunSpeed = 0.1f;   // 最大速度制限
 	static inline const float kBlank = 0.1f;
