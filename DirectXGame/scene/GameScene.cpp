@@ -46,11 +46,11 @@ void GameScene::Initialize() {
 	modelBlock_ = Model::Create();
 	GenerateBlocks();
 
-	playerTxHandle_ = TextureManager::Load("sample.png"); // テクスチャの読み込み
-	modelPlayer_ = Model::Create();                       // 3Dモデルの生成
+	//playerTxHandle_ = TextureManager::Load("sample.png"); // テクスチャの読み込み
+	modelPlayer_ = Model::CreateFromOBJ("player",true); // 3Dモデルの生成
 	player_ = new Player();                               // 自キャラの生成
 	Vector3 playerposition = mapChipField_->GetMapChipPositionByIndex(3, 8);
-	player_->initialize(modelPlayer_, playerTxHandle_, &cameraViewProjection_, playerposition, audio_); // 自キャラの初期化
+	player_->initialize(modelPlayer_, &cameraViewProjection_, playerposition, audio_); // 自キャラの初期化
 	player_->SetMapChipField(mapChipField_);
 
 	phase_ = Phase::kPlay;
@@ -182,8 +182,10 @@ void GameScene::CheckAllCollisions() {
 
 	// AABB同士の交差判定
 	if (aabb1.isHit(aabb2)) {
+		IsFinished_ = true;
 		player_->OnCollision(enemy_); // 自キャラの衝突時コールバックを呼び出す
 		enemy_->OnCollision(player_); // 敵の衝突時コールバックを呼び出す
+		
 	}
 
 #pragma endregion

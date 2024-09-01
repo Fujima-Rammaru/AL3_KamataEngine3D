@@ -1,5 +1,6 @@
 #include "Audio.h"
 #include "AxisIndicator.h"
+#include "ClearScene.h"
 #include "DirectXCommon.h"
 #include "GameScene.h"
 #include "ImGuiManager.h"
@@ -10,11 +11,13 @@
 
 GameScene* gameScene = nullptr;
 TitleScene* titleScene = nullptr;
+ClearScene* clearScene = nullptr;
 
 enum class Scene {
 	kUnknown = 0,
 	kTitle,
 	kGame,
+	kClear,
 };
 
 // 現在シーン（型）
@@ -80,14 +83,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	titleScene = new TitleScene();
 	titleScene->Initialize();
 
-	#ifdef _DEBUG
+#ifdef _DEBUG
 	scene = Scene::kGame;
 	gameScene = new GameScene();
 	gameScene->Initialize();
 
 #endif // _DEBUG
-
-
 
 #pragma endregion
 
@@ -143,14 +144,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 }
 
 void ChangeScene() {
-	switch (scene) {
 
+	uint32_t count = 0;
+	switch (scene) {
+		count = 0;
 	case Scene::kTitle:
+		
 		if (titleScene->IsFinished()) {
 			// シーン変更
 			scene = Scene::kGame;
 			// 旧シーンの開放
 			delete titleScene;
+			delete clearScene;
 			titleScene = nullptr;
 			// 新シーンの生成と初期化
 			gameScene = new GameScene();
@@ -159,6 +164,33 @@ void ChangeScene() {
 		break;
 
 	case Scene::kGame:
+		count++;
+		if (gameScene->IsFinished()) {
+			// シーン変更
+			scene = Scene::kTitle;
+			// 旧シーンの開放
+			delete gameScene;
+			gameScene = nullptr;
+			// 新シーンの生成と初期化
+			titleScene = new TitleScene();
+			titleScene->Initialize();
+
+			if (count>=3000) {
+				// シーン変更
+				scene = Scene::kClear;
+				// 旧シーンの開放
+				delete gameScene;
+				gameScene = nullptr;
+				// 新シーンの生成と初期化
+				clearScene = new ClearScene();
+				clearScene->Initialize();
+			
+			}
+			
+		}
+		break;
+
+	case Scene::kClear:
 		if (gameScene->IsFinished()) {
 			// シーン変更
 			scene = Scene::kTitle;
@@ -183,6 +215,10 @@ void UpdateScene() {
 	case Scene::kGame:
 		gameScene->Update();
 		break;
+
+	case Scene::kClear:
+		gameScene->Update();
+		break;
 	}
 }
 
@@ -195,6 +231,10 @@ void DrawScene() {
 
 	case Scene::kGame:
 		gameScene->Draw();
+		break;
+
+	case Scene::kClear:
+		clearScene->Draw();
 		break;
 	}
 }

@@ -35,7 +35,7 @@ private:
 	// CollisionMapInfo info_;
 
 public:
-	void initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection, const Vector3& position,Audio* audio);
+	void initialize(Model* model,  ViewProjection* viewProjection, const Vector3& position,Audio* audio);
 	Player();
 	~Player();
 	void Update();

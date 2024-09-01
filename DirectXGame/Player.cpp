@@ -7,18 +7,17 @@
 #include <algorithm>
 #include <numbers>
 
-void Player::initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection, const Vector3& position,Audio* audio) {
+void Player::initialize(Model* model,  ViewProjection* viewProjection, const Vector3& position, Audio* audio) {
 
 	assert(model);
 	model_ = model;
 	audio_ = audio;
-	txHandle_ = textureHandle;
+
 	viewProjection_ = viewProjection;
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = position;
 	worldTransform_.rotation_.y = std::numbers::pi_v<float> * 0.0f; // 450度
 	jumpSound = audio_->LoadWave("sound/jump.mp3");
-
 }
 
 Player::Player() {}
@@ -26,17 +25,13 @@ Player::Player() {}
 Player::~Player() {}
 
 void Player::Update() {
-	
+
 	Move(); // 移動入力
 	        //  地面との当たり判定
-	if (worldTransform_.translation_.y <= -2) {
-		worldTransform_.translation_.y = 40;
-	}
+
 	// Y座標が地面以下になったら着地
 	if (worldTransform_.translation_.y <= -18.0f) {
 		isDead_ = true;
-	
-		
 	}
 
 	// 衝突情報を初期化
