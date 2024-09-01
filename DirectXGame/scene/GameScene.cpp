@@ -113,7 +113,7 @@ void GameScene::Draw() {
 		}
 	}
 
-	modelSkyDome_->Draw(worldTransform_, cameraViewProjection_);
+	skyDome_->Draw();
 
 	if (player_->IsDeadGetter() == false) {
 		player_->Draw();
