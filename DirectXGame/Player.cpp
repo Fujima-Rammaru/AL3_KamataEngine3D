@@ -27,12 +27,12 @@ void Player::Update() {
 
 	Move(); // 移動入力
 	//  地面との当たり判定
-	if (velocity_.y < 0) {
+	
 		// Y座標が地面以下になったら着地
-		if (worldTransform_.translation_.y <= kGroundPos) {
-			landing = true;
+		if (worldTransform_.translation_.y <=-18.0f) {
+		isDead_ = true;
 		}
-	}
+	
 	// 衝突情報を初期化
 	CollisionMapInfo info;
 

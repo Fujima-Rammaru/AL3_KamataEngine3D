@@ -180,6 +180,8 @@ void GameScene::CheckAllCollisions() {
 		player_->OnCollision(enemy_); // 自キャラの衝突時コールバックを呼び出す
 		enemy_->OnCollision(player_); // 敵の衝突時コールバックを呼び出す
 	}
+
+
 #pragma endregion
 }
 

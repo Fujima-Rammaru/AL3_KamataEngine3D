@@ -9,6 +9,7 @@
 class TitleScene {
 
 public:
+	~TitleScene();
 	void Initialize();
 	void Update();
 	void Draw();
@@ -18,5 +19,7 @@ public:
 private:
 	// 終了フラグ
 	bool IsFinished_ = false;
-	
+	ViewProjection viewProjection_;
+	WorldTransform worldTransform;
+	Model* modelTitle_ = nullptr;
 };
