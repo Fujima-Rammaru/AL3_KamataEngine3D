@@ -22,6 +22,9 @@ void Enemy::Update() {
 	//worldTransform_.translation_ += velocity_;
 	worldTransform_.rotation_.x += 0.1f;
 	worldTransform_.UpdateMatrix();
+
+	//homming
+
 }
 
 void Enemy::Draw() { model_->Draw(worldTransform_, *viewProjection_, txHandle_); }

@@ -118,6 +118,7 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MapChipField.cpp" />
+    <ClCompile Include="math.cpp" />
     <ClCompile Include="math\Vector3.cpp" />
     <ClCompile Include="MatrixFunction.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -157,6 +158,7 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="input\Input.h" />
     <ClInclude Include="MapChipField.h" />
+    <ClInclude Include="math.h" />
     <ClInclude Include="math\Matrix4x4.h" />
     <ClInclude Include="math\Vector2.h" />
     <ClInclude Include="math\Vector3.h" />
