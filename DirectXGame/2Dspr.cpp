@@ -12,7 +12,7 @@ void Box::Initialize() {
 	sprite_->SetColor(Vector4(1, 1, 1, 1));
 }
 
-void Box::Update() {}
+void Box::Update() {  }
 
 void Box::Draw(ID3D12GraphicsCommandList* commandList) {
 	// DirectXCommon* dxCommon_ = DirectXCommon::GetInstance();

@@ -3,6 +3,7 @@
 #include "Sprite.h"
 #include "TextureManager.h"
 #include "Vector2.h"
+
 class Box {
 public:
 	Box();
@@ -20,4 +21,6 @@ private:
 	Vector2 size = {100.0f, 100.0f};
 	Sprite* sprite_ = nullptr;
 	uint32_t textuteHandle = 0u;
+
+	
 };

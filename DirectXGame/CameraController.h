@@ -3,7 +3,8 @@
 class Player;
 #include "ViewProjection.h"
 #include "WorldTransform.h"
-
+#include "stdlib.h"
+#include "time.h"
 // 矩形
 struct Rect {
 	float left = 0.0f;
@@ -40,6 +41,8 @@ public:
 
 	Vector3 LerpVector3();
 
+	void CameraShake();
+
 private:
 	ViewProjection viewProjection_;
 	Player* target_ = nullptr;              // 追従対象のポインタ
@@ -51,4 +54,11 @@ private:
 	static inline const float kVelocityBias = 20.0f;                  // 速度掛け率
 	static inline const Rect kTargetMovableArea = {-10, 10, -10, 10}; // 追従対象の各方向へのカメラ移動範囲
 	Vector3 targetVelocity = {0, 0, 0};                               // 追従対象の加速度を受け取るためのメンバ変数
+	unsigned int currentTime = int(time(nullptr));
+	Vector3 shakeRange ={0,0,0}; // カメラの揺れ幅
+	int shakeTimer = 120;    // シェイクの時間
+	float offSet = 0;
+	bool isShaking = false;
+	bool isCountingTimer = false;
+	Vector3 shakePosition = {0, 0, 0};
 };
