@@ -25,6 +25,7 @@ GameScene::~GameScene() {
 	delete modelParticles_;
 	delete deathParticles_;
 	delete matrixFunction;
+	delete box_;
 }
 
 void GameScene::Initialize() {
@@ -78,6 +79,11 @@ void GameScene::Initialize() {
 	cameraController_->Reset();
 	cameraController_->SetMovableArea(area_);
 
+	// スプライト初期化
+	box_ = new Box();
+	box_->Initialize();
+
+	// サウンド
 	BGM = audio_->LoadWave("sound/BGM.mp3");
 	if (audio_->IsPlaying(BGM) == false) {
 		BGM = audio_->PlayWave(BGM, true, 0.07f);
@@ -93,14 +99,17 @@ void GameScene::Draw() {
 
 #pragma region 背景スプライト描画
 	// 背景スプライト描画前処理
-	Sprite::PreDraw(commandList);
+	//Sprite::PreDraw(commandList);
 
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる
+
+	
+
 	/// </summary>
-	Sprite::
-	    // スプライト描画後処理
-	    Sprite::PostDraw();
+
+	// スプライト描画後処理
+	//Sprite::PostDraw();
 	// 深度バッファクリア
 	dxCommon_->ClearDepthBuffer();
 #pragma endregion
@@ -144,7 +153,7 @@ void GameScene::Draw() {
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
-
+	box_->Draw(commandList);
 #pragma endregion
 }
 
@@ -196,10 +205,7 @@ void GameScene::ChangePhase() {
 
 	case Phase::kPlay:
 
-		
 		BlocksUpdate();
-		
-
 
 		if (player_->IsDeadGetter() == false) {
 			player_->Update();
@@ -220,6 +226,9 @@ void GameScene::ChangePhase() {
 			const Vector3& deathParticlePosition = player_->GetWorldPosition();
 			deathParticles_->Initialize(modelParticles_, &cameraViewProjection_, deathParticlePosition);
 		}
+
+		box_->Update();
+
 		break;
 
 	case Phase::kDeath:

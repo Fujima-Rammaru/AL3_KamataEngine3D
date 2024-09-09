@@ -7,6 +7,7 @@
 #include "WorldTransform.h"
 #include "cassert"
 #include <Audio.h>
+#include"Novice.h"
 
 class MapChipField;
 
@@ -35,7 +36,7 @@ private:
 	// CollisionMapInfo info_;
 
 public:
-	void initialize(Model* model,  ViewProjection* viewProjection, const Vector3& position,Audio* audio);
+	void initialize(Model* model, ViewProjection* viewProjection, const Vector3& position, Audio* audio);
 	Player();
 	~Player();
 	void Update();
@@ -74,10 +75,9 @@ private:
 	Vector3 velocity_ = {0.0f, 0.0f, 0.0f};
 	Vector3 vectorBlank = {0, -0.3f, 0};
 
-	//サウンドデータ
+	// サウンドデータ
 	Audio* audio_ = nullptr;
-	uint32_t jumpSound =0;
-	
+	uint32_t jumpSound = 0;
 
 	MapChipField* mapChipField_ = nullptr;
 
