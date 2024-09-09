@@ -46,10 +46,10 @@ void GameScene::Initialize() {
 	modelBlock_ = Model::Create();
 	GenerateBlocks();
 
-	//playerTxHandle_ = TextureManager::Load("sample.png"); // テクスチャの読み込み
-	modelPlayer_ = Model::CreateFromOBJ("player",true); // 3Dモデルの生成
-	player_ = new Player();                               // 自キャラの生成
-	Vector3 playerposition = mapChipField_->GetMapChipPositionByIndex(3, 8);
+	// playerTxHandle_ = TextureManager::Load("sample.png"); // テクスチャの読み込み
+	modelPlayer_ = Model::CreateFromOBJ("player", true); // 3Dモデルの生成
+	player_ = new Player();                              // 自キャラの生成
+	Vector3 playerposition = mapChipField_->GetMapChipPositionByIndex(2, 17);
 	player_->initialize(modelPlayer_, &cameraViewProjection_, playerposition, audio_); // 自キャラの初期化
 	player_->SetMapChipField(mapChipField_);
 
@@ -185,7 +185,6 @@ void GameScene::CheckAllCollisions() {
 		IsFinished_ = true;
 		player_->OnCollision(enemy_); // 自キャラの衝突時コールバックを呼び出す
 		enemy_->OnCollision(player_); // 敵の衝突時コールバックを呼び出す
-		
 	}
 
 #pragma endregion
@@ -196,12 +195,17 @@ void GameScene::ChangePhase() {
 	switch (phase_) {
 
 	case Phase::kPlay:
+
+		
 		BlocksUpdate();
+		
+
 
 		if (player_->IsDeadGetter() == false) {
 			player_->Update();
 		}
-
+		worldTransformBlocks_[18][1]->translation_.y += 0.05f;
+		worldTransformBlocks_[18][1]->UpdateMatrix();
 		skyDome_->Update();
 		enemy_->Update();
 
@@ -242,9 +246,10 @@ void GameScene::BlocksUpdate() {
 			if (!worldTransformBlock) {
 				continue;
 			}
+
 			worldTransformBlock->matWorld_ = matrixFunction->MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
 			// 定数バッファに転送する
-			worldTransformBlock->TransferMatrix();
+			worldTransformBlock->UpdateMatrix();
 			// ImGui::Text("BlocksPos=%5.2f",worldTransformBlock->translation_.y );
 		}
 	}
