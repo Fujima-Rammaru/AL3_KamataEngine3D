@@ -41,7 +41,7 @@ void GameScene::Initialize() {
 	matrixFunction = new MatrixFunction;
 
 	mapChipField_ = new MapChipField;
-	mapChipField_->LoadMapChipCsv("Resources/MapChip.csv"); // CSVファイル読み込み
+	mapChipField_->LoadMapChipCsv("Resources/stage1.csv"); // CSVファイル読み込み
 
 	blockTxHandle_ = TextureManager::Load("cube/cube.jpg");
 	modelBlock_ = Model::Create();
@@ -99,17 +99,15 @@ void GameScene::Draw() {
 
 #pragma region 背景スプライト描画
 	// 背景スプライト描画前処理
-	//Sprite::PreDraw(commandList);
+	// Sprite::PreDraw(commandList);
 
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる
 
-	
-
 	/// </summary>
 
 	// スプライト描画後処理
-	//Sprite::PostDraw();
+	// Sprite::PostDraw();
 	// 深度バッファクリア
 	dxCommon_->ClearDepthBuffer();
 #pragma endregion

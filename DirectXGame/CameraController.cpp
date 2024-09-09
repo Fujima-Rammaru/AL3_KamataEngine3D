@@ -31,12 +31,17 @@ void CameraController::Update() {
 	viewProjection_.translation_.y = std::min(viewProjection_.translation_.y, targetWorldTransform.translation_.y + kTargetMovableArea.top);
 
 	// 移動範囲制限
-	viewProjection_.translation_.x = std::max(viewProjection_.translation_.x, movableArea_.right);
-	viewProjection_.translation_.x = std::min(viewProjection_.translation_.x, movableArea_.left);
-	viewProjection_.translation_.y = std::max(viewProjection_.translation_.y, movableArea_.bottom);
-	viewProjection_.translation_.y = std::min(viewProjection_.translation_.y, movableArea_.top);
+	//viewProjection_.translation_.x = std::max(viewProjection_.translation_.x, movableArea_.left);
+	//viewProjection_.translation_.x = std::min(viewProjection_.translation_.x, movableArea_.right);
+	//viewProjection_.translation_.y = std::max(viewProjection_.translation_.y, movableArea_.bottom);
+	//viewProjection_.translation_.y = std::min(viewProjection_.translation_.y, movableArea_.top);
 	// 行列を更新
 	viewProjection_.UpdateMatrix();
+
+#ifdef _DEBUG
+	ImGui::Text("shakeRange.x=%3.2f", shakeRange.x);
+	ImGui::Text("shakeRange.y=%3.2f", shakeRange.y);
+#endif
 }
 
 void CameraController::Reset() {
@@ -83,14 +88,14 @@ void CameraController::CameraShake() {
 		shakeTimer--;
 		// 振れ幅を徐々に小さくする
 		if (shakeTimer % 2 == 0) {
-			shakeRange.x-=1.0f;
-			shakeRange.y-=1.0f;
+			shakeRange.x -= 1.0f;
+			shakeRange.y -= 1.0f;
 			offSet = shakeRange.x / 2;
 		}
 	}
 
 	if (shakeRange.x == 0) {
-		shakeRange =Vector3(0, 0, 0);
+		shakeRange = Vector3(0, 0, 0);
 		isShaking = false;
 		isCountingTimer = false;
 	}
