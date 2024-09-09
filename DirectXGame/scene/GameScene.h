@@ -63,9 +63,10 @@ private: // メンバ変数
 	ViewProjection viewProjection_;
 	ViewProjection cameraViewProjection_; // カメラ用
 	Player* player_ = nullptr;
-	Enemy* enemy_ = nullptr;
+	std::vector<Enemy*> enemies_;//敵の複数化
 	Model* modelEnemy = nullptr;
 	uint32_t enemyTxhandle = 0u;
+	int num = 5;
 	//std::list<Enemy*> enemies_;
 	//std::list<Enemy*>::iterator itr;//イテレーター宣言
 	//Enemy* newEnemy = nullptr;

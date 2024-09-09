@@ -18,7 +18,9 @@ GameScene::~GameScene() {
 	delete modelPlayer_;
 	delete modelBlock_;
 	delete modelEnemy;
-	delete enemy_;
+	for (int i = 0; i < num; i++) {
+		delete enemies_[i];
+	}
 	delete player_;
 	delete debugCamera_;
 	delete skyDome_;
@@ -59,9 +61,15 @@ void GameScene::Initialize() {
 	// 敵キャラの生成
 	enemyTxhandle = TextureManager::Load("sample.png"); // テクスチャの読み込み
 	modelEnemy = Model::Create();
-	enemy_ = new Enemy();
-	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(13, 18);
-	enemy_->Initialize(modelEnemy, enemyTxhandle, &cameraViewProjection_, enemyPosition);
+
+	enemies_.resize(num);
+	Vector3 enemyPosition[5];
+
+	for (int i = 0; i < num; i++) {
+		enemyPosition[i] = mapChipField_->GetMapChipPositionByIndex(13, 18 - i);
+		enemies_[i] = new Enemy();
+		enemies_[i]->Initialize(modelEnemy, enemyTxhandle, &cameraViewProjection_, enemyPosition[i]);
+	}
 
 	// カメラコントローラー初期化
 	Rect area_ = {30.0f, 170.0f, 0.0f, 100.0f};
@@ -92,10 +100,13 @@ void GameScene::Update() {
 			worldTransformBlock->TransferMatrix();
 		}
 	}
-	
+
 	player_->Update();
 	skyDome_->Update();
-	enemy_->Update();
+	for (int i = 0; i < num; i++) {
+		enemies_[i]->Update();
+	}
+	//	enemy_->Update();
 
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_BACK)) {
@@ -150,7 +161,10 @@ void GameScene::Draw() {
 
 	modelSkyDome_->Draw(worldTransform_, cameraViewProjection_);
 	player_->Draw();
-	enemy_->Draw();
+	for (int i = 0; i < num; i++) {
+		enemies_[i]->Draw();
+	}
+	// enemy_->Draw();
 
 	/// </summary>
 	// 3Dオブジェクト描画後処理
@@ -200,12 +214,12 @@ void GameScene::CheckAllCollisions() {
 	// 自キャラの座標
 	aabb1 = player_->GetAABB();
 	// 敵の座標
-	aabb2 = enemy_->GetAABB();
+	// aabb2 = enemy_->GetAABB();
 
 	// AABB同士の交差判定
 	if (aabb1.isHit(aabb2)) {
-		player_->OnCollision(enemy_); // 自キャラの衝突時コールバックを呼び出す
-		enemy_->OnCollision(player_); // 敵の衝突時コールバックを呼び出す
+		// player_->OnCollision(enemy_); // 自キャラの衝突時コールバックを呼び出す
+		// enemy_->OnCollision(player_); // 敵の衝突時コールバックを呼び出す
 	}
 #pragma endregion
 }
