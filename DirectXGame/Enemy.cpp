@@ -1,6 +1,7 @@
 #include "Enemy.h"
 #include <algorithm>
 #include <numbers>
+#include"mathFunction.h"
 void Enemy::Initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection, const Vector3& position) {
 	assert(model);
 	model_ = model;
@@ -25,6 +26,15 @@ void Enemy::Update() {
 
 	//homming
 
+	//敵からplayerへのベクトルを計算
+	Vector3 toPlayer =
+
+	    // ベクトルを正規化
+	    Normalize(toPlayer);
+	    Normalize(velocity_);
+	//線形補間
+	    velocity_ = lerp()
+	    //進行方向に見た目の回転を合わせる
 }
 
 void Enemy::Draw() { model_->Draw(worldTransform_, *viewProjection_, txHandle_); }

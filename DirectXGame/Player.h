@@ -2,12 +2,12 @@
 #include "AABB.h"
 #include "MatrixFunction.h"
 #include "Model.h"
+#include "Novice.h"
 #include "Vector3.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "cassert"
 #include <Audio.h>
-#include"Novice.h"
 
 class MapChipField;
 

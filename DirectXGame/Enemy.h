@@ -20,6 +20,7 @@ public:
 	Vector3 GetWorldPosition();
 	// 衝突応答
 	void OnCollision(const Player* player);
+	void SetPlayer(Player* player) { player_ = player; }
 
 private:
 	WorldTransform worldTransform_;
@@ -34,4 +35,5 @@ private:
 	float walkTimer_ = 0.0f;
 	static inline const float kWidth = 1.90f;
 	static inline const float kHeight = 1.90f;
+	Player* player_ = nullptr;
 };
