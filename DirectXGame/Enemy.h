@@ -27,7 +27,7 @@ private:
 	Model* model_ = nullptr;
 	uint32_t txHandle_ = 0u;
 	ViewProjection* viewProjection_ = nullptr;
-	static inline const float kWalkSpeed = 0.05f;
+	static inline const float kWalkSpeed = 0.1f;
 	Vector3 velocity_ = {};
 	static inline const float kWalkMotionAngleStart = 1.0f;
 	static inline const float kWalkMotionAngleEnd = 20.0f;
