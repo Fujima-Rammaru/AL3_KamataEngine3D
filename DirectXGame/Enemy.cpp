@@ -1,7 +1,8 @@
 #include "Enemy.h"
+#include "Player.h"
+#include "mathFunction.h"
 #include <algorithm>
 #include <numbers>
-#include"mathFunction.h"
 void Enemy::Initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection, const Vector3& position) {
 	assert(model);
 	model_ = model;
@@ -16,25 +17,28 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle, ViewProjection* vie
 }
 
 void Enemy::Update() {
-	walkTimer_ += 1.0f / 60.0f;
+	// walkTimer_ += 1.0f / 60.0f;
 	/*float param = std::sin(std::numbers::pi_v<float> * 2.0f * walkTimer_ / kWalkMotionTime);
 	float radian = kWalkMotionAngleStart + kWalkMotionAngleEnd * (param);*/
-	//worldTransform_.rotation_.x = std::numbers::pi_v<float> / 180.0f * radian;
-	//worldTransform_.translation_ += velocity_;
-	worldTransform_.rotation_.x += 0.1f;
+	// worldTransform_.rotation_.x = std::numbers::pi_v<float> / 180.0f * radian;
+	// worldTransform_.rotation_.x += 0.1f;
+
+	/// ホーミング============================================
+	t += 1.0f / 100.0f;
+	if (t >= 0.05f) {
+		t = 0.0f;
+	}
+
+	// 敵からplayerへのベクトルを計算
+	Vector3 toPlayer = player_->GetWorldPosition();
+	// ベクトルを正規化
+	toPlayer = Normalize(Subtract(toPlayer, worldTransform_.translation_));
+	velocity_=Normalize(velocity_);
+	// 線形補間
+	velocity_ = Multiply(kWalkSpeed, Slerp(velocity_, toPlayer, t));
+	worldTransform_.translation_ += velocity_;
 	worldTransform_.UpdateMatrix();
-
-	//homming
-
-	//敵からplayerへのベクトルを計算
-	Vector3 toPlayer =
-
-	    // ベクトルを正規化
-	    Normalize(toPlayer);
-	    Normalize(velocity_);
-	//線形補間
-	    velocity_ = lerp()
-	    //進行方向に見た目の回転を合わせる
+	///=======================================================
 }
 
 void Enemy::Draw() { model_->Draw(worldTransform_, *viewProjection_, txHandle_); }

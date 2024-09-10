@@ -57,12 +57,13 @@ public:
 	void CollisionHitWallCase(const CollisionMapInfo& info); // 壁に接触している場合の処理
 	void GroundStateChange(const CollisionMapInfo& info);    // 接地状態の処理
 	//	void cornerDetect(const MapChipType& mapChipType,const int& corner);//4角の判定
-	Vector3 GetWorldPosition();
+	
 	AABB GetAABB();                       // AABB取得関数
 	void OnCollision(const Enemy* enemy); // 衝突応答
 	// デスフラグのgetter
 	bool IsDeadGetter();
 	void CollisionMapCheckAllDirection(CollisionMapInfo& info); // 全ての衝突判定関数を呼び出す
+	Vector3 GetWorldPosition();
 
 private:
 	WorldTransform worldTransform_;

@@ -68,8 +68,9 @@ void GameScene::Initialize() {
 	enemyTxhandle = TextureManager::Load("sample.png"); // テクスチャの読み込み
 	modelEnemy = Model::Create();
 	enemy_ = new Enemy();
-	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(148, 18);
+	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(20, 18);
 	enemy_->Initialize(modelEnemy, enemyTxhandle, &cameraViewProjection_, enemyPosition);
+	enemy_->SetPlayer(player_);
 
 	// カメラコントローラー初期化
 	Rect area_ = {30.0f, 300.0f, 0.0f, 100.0f};

@@ -6,6 +6,7 @@
 #include "MapChipField.h"
 #include <algorithm>
 #include <numbers>
+#include"mathFunction.h"
 
 void Player::initialize(Model* model, ViewProjection* viewProjection, const Vector3& position, Audio* audio) {
 

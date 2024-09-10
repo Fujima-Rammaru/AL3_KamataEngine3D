@@ -36,4 +36,6 @@ private:
 	static inline const float kWidth = 1.90f;
 	static inline const float kHeight = 1.90f;
 	Player* player_ = nullptr;
+	//static inline const Vector3 kHomingSpeed = {0.1f, 0.1f, 0.1f};
+	float t = 0.01f;
 };

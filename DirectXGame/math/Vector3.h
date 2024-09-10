@@ -33,4 +33,10 @@ struct Vector3 final {
 		y += a.y;
 		z += a.z;
 	};
+
+	void operator*=(const Vector3& a) {
+		x *= a.x;
+		y *= a.y;
+		z *= a.z;
+	}
 };
