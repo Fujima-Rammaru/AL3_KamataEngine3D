@@ -17,23 +17,17 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle, ViewProjection* vie
 }
 
 void Enemy::Update() {
-	// walkTimer_ += 1.0f / 60.0f;
-	/*float param = std::sin(std::numbers::pi_v<float> * 2.0f * walkTimer_ / kWalkMotionTime);
-	float radian = kWalkMotionAngleStart + kWalkMotionAngleEnd * (param);*/
-	// worldTransform_.rotation_.x = std::numbers::pi_v<float> / 180.0f * radian;
-	// worldTransform_.rotation_.x += 0.1f;
 
 	/// ホーミング============================================
 	t += 1.0f / 100.0f;
 	if (t >= 0.05f) {
 		t = 0.0f;
 	}
-
 	// 敵からplayerへのベクトルを計算
 	Vector3 toPlayer = player_->GetWorldPosition();
 	// ベクトルを正規化
 	toPlayer = Normalize(Subtract(toPlayer, worldTransform_.translation_));
-	velocity_=Normalize(velocity_);
+	velocity_ = Normalize(velocity_);
 	// 線形補間
 	velocity_ = Multiply(kWalkSpeed, Slerp(velocity_, toPlayer, t));
 	worldTransform_.translation_ += velocity_;
