@@ -96,44 +96,47 @@ float Player::EaseInOut(float y) { return -(std::cosf(std::numbers::pi_v<float> 
 WorldTransform* Player::GetWorldTransform() { return &worldTransform_; }
 
 void Player::Move() { // 移動入力
-	if (onGround_) {  // 接地状態
-		if (Input::GetInstance()->PushKey(DIK_RIGHT) || Input::GetInstance()->PushKey(DIK_LEFT)) {
-			// 左右加速
-			Vector3 acceleration(0, 0, 0);
-			if (Input::GetInstance()->PushKey(DIK_RIGHT)) {
 
-				if (velocity_.x < 0.0f) {
-					velocity_.x *= (1.0f - kAttenuation);
-				}
-				acceleration.x += kAcceleration;
+	if (Input::GetInstance()->PushKey(DIK_RIGHT) || Input::GetInstance()->PushKey(DIK_LEFT)) {
+		// 左右加速
+		Vector3 acceleration(0, 0, 0);
+		if (Input::GetInstance()->PushKey(DIK_RIGHT)) {
 
-				if (lrDirection_ != LRDirection::kRight) {
-					lrDirection_ = LRDirection::kRight;
-					turnFirstRotationY_ = worldTransform_.rotation_.y;
-					turnTimer_ = kTimeTurn;
-				}
-
-			} else if (Input::GetInstance()->PushKey(DIK_LEFT)) {
-
-				if (velocity_.x > 0.0f) {
-					velocity_.x *= (1.0f - kAttenuation);
-				}
-				acceleration.x -= kAcceleration;
-
-				if (lrDirection_ != LRDirection::kLeft) {
-					lrDirection_ = LRDirection::kLeft;
-					turnFirstRotationY_ = worldTransform_.rotation_.y;
-					turnTimer_ = kTimeTurn;
-				}
+			if (velocity_.x < 0.0f) {
+				velocity_.x *= (1.0f - kAttenuation);
 			}
-			// 加速/減速
-			velocity_.x += acceleration.x;
-			velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed); // 最大速度制限
-			                                                                        // 移動
+			acceleration.x += kAcceleration;
 
-		} else {
-			velocity_.x *= (1.0f - kAttenuation); // 非入力時は移動減衰する
+			if (lrDirection_ != LRDirection::kRight) {
+				lrDirection_ = LRDirection::kRight;
+				turnFirstRotationY_ = worldTransform_.rotation_.y;
+				turnTimer_ = kTimeTurn;
+			}
+
+		} else if (Input::GetInstance()->PushKey(DIK_LEFT)) {
+
+			if (velocity_.x > 0.0f) {
+				velocity_.x *= (1.0f - kAttenuation);
+			}
+			acceleration.x -= kAcceleration;
+
+			if (lrDirection_ != LRDirection::kLeft) {
+				lrDirection_ = LRDirection::kLeft;
+				turnFirstRotationY_ = worldTransform_.rotation_.y;
+				turnTimer_ = kTimeTurn;
+			}
 		}
+		// 加速/減速
+		velocity_.x += acceleration.x;
+		velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed); // 最大速度制限
+		                                                                        // 移動
+
+	} else {
+		velocity_.x *= (1.0f - kAttenuation); // 非入力時は移動減衰する
+	}
+
+	if (onGround_) {  // 接地状態
+		
 		// ジャンプ処理
 		if (Input::GetInstance()->TriggerKey(DIK_UP)) { // 上キーを押した瞬間だけtrue
 			audio_->PlayWave(jumpSound, false, 0.05f);
