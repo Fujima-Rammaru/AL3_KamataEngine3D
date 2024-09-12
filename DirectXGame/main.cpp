@@ -159,7 +159,6 @@ void ChangeScene() {
 			scene = Scene::kGame;
 			// 旧シーンの開放
 			delete titleScene;
-			delete clearScene;
 			titleScene = nullptr;
 			// 新シーンの生成と初期化
 			gameScene = new GameScene();
@@ -180,17 +179,17 @@ void ChangeScene() {
 			gameOverScene = new GameOverScene();
 			gameOverScene->Initialize();
 		}
-		// ゲームクリア時のシーン遷移処理
-		else if () {
-			// シーン変更
-			scene = Scene::kClear;
-			// 現在シーンの開放
-			delete gameScene;
-			gameScene = nullptr;
-			// 次シーンの生成と初期化
-			clearScene = new ClearScene();
-			clearScene->Initialize();
-		}
+		//// ゲームクリア時のシーン遷移処理
+		//else if () {
+		//	// シーン変更
+		//	scene = Scene::kClear;
+		//	// 現在シーンの開放
+		//	delete gameScene;
+		//	gameScene = nullptr;
+		//	// 次シーンの生成と初期化
+		//	clearScene = new ClearScene();
+		//	clearScene->Initialize();
+		//}
 		break;
 
 	case Scene::kGameOver: // ゲームオーバー

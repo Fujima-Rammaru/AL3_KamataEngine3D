@@ -1,5 +1,4 @@
 #include "ClearScene.h"
-
 #include "DirectXCommon.h"
 #include "Input.h"
 #include "TitleScene.h"

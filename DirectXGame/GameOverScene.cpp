@@ -8,14 +8,14 @@ void GameOverScene::Initialize() {
 	modelGameOver_ = Model::CreateFromOBJ("GameOver", true);
 	viewProjection_.Initialize();
 	worldTransform.Initialize();
-	worldTransform.translation_ = {-11, -10, 0};
-	worldTransform.rotation_ = {0, 3.24f, 0};
+	worldTransform.translation_ = {-3, -1, 0};
+	worldTransform.rotation_ = {-1.4f, 0,0};
 	worldTransform.scale_ = {5, 5, 5};
 }
 
 void GameOverScene::Update() {
 
-	if (Input::GetInstance()->PushKey(DIK_SPACE)) {
+	if (Input::GetInstance()->PushKey(DIK_RETURN)) {
 		IsFinished_ = true;
 	}
 	worldTransform.UpdateMatrix();
