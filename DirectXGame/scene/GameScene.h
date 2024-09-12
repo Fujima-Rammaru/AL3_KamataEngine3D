@@ -104,7 +104,7 @@ private: // メンバ変数
 	MatrixFunction* matrixFunction = nullptr;
 	Phase phase_;
 
-	Box* box_= nullptr;
+	Box* box_ = nullptr;
 
 	// 終了フラグ
 	bool IsFinished_ = false;

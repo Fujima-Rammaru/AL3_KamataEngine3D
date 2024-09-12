@@ -2,6 +2,7 @@
 #include "AxisIndicator.h"
 #include "ClearScene.h"
 #include "DirectXCommon.h"
+#include "GameOverScene.h"
 #include "GameScene.h"
 #include "ImGuiManager.h"
 #include "PrimitiveDrawer.h"
@@ -12,12 +13,14 @@
 GameScene* gameScene = nullptr;
 TitleScene* titleScene = nullptr;
 ClearScene* clearScene = nullptr;
+GameOverScene* gameOverScene = nullptr;
 
 enum class Scene {
 	kUnknown = 0,
 	kTitle,
 	kGame,
 	kClear,
+	kGameOver,
 };
 
 // 現在シーン（型）
@@ -130,6 +133,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// 各種解放
 	delete titleScene;
 	delete gameScene;
+	delete gameOverScene;
+	delete clearScene;
 
 	// 3Dモデル解放
 	Model::StaticFinalize();
@@ -147,7 +152,7 @@ void ChangeScene() {
 
 	switch (scene) {
 
-	case Scene::kTitle:
+	case Scene::kTitle: // タイトル
 
 		if (titleScene->IsFinished()) {
 			// シーン変更
@@ -162,21 +167,59 @@ void ChangeScene() {
 		}
 		break;
 
-	case Scene::kGame:
+	case Scene::kGame: // プレイ画面
 
+		/// ゲームオーバー時のシーン遷移処理==========================
 		if (gameScene->IsFinished()) {
 			// シーン変更
-			scene = Scene::kTitle;
-			// 旧シーンの開放
+			scene = Scene::kGameOver;
+			// 現在シーンの開放
 			delete gameScene;
 			gameScene = nullptr;
-			// 新シーンの生成と初期化
+			// 次シーンの生成と初期化
+			gameOverScene = new GameOverScene();
+			gameOverScene->Initialize();
+		}
+		// ゲームクリア時のシーン遷移処理
+		else if () {
+			// シーン変更
+			scene = Scene::kClear;
+			// 現在シーンの開放
+			delete gameScene;
+			gameScene = nullptr;
+			// 次シーンの生成と初期化
+			clearScene = new ClearScene();
+			clearScene->Initialize();
+		}
+		break;
+
+	case Scene::kGameOver: // ゲームオーバー
+
+		if (gameOverScene->IsFinished()) {
+			// シーン変更
+			scene = Scene::kTitle;
+			// 現在シーンの開放
+			delete gameOverScene;
+			gameOverScene = nullptr;
+			// 次シーンの生成と初期化
 			titleScene = new TitleScene();
 			titleScene->Initialize();
 		}
 		break;
 
+	case Scene::kClear: // ゲームクリア
 
+		if (clearScene->IsFinished()) {
+			// シーン変更
+			scene = Scene::kTitle;
+			// 現在シーンの開放
+			delete clearScene;
+			clearScene = nullptr;
+			// 次シーンの生成と初期化
+			titleScene = new TitleScene();
+			titleScene->Initialize();
+		}
+		break;
 	}
 }
 
@@ -191,8 +234,12 @@ void UpdateScene() {
 		gameScene->Update();
 		break;
 
+	case Scene::kGameOver:
+		gameOverScene->Update();
+		break;
+
 	case Scene::kClear:
-		gameScene->Update();
+		clearScene->Update();
 		break;
 	}
 }
@@ -206,6 +253,10 @@ void DrawScene() {
 
 	case Scene::kGame:
 		gameScene->Draw();
+		break;
+
+	case Scene::kGameOver:
+		gameOverScene->Draw();
 		break;
 
 	case Scene::kClear:

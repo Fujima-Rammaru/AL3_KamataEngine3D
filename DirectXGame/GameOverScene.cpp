@@ -1,11 +1,11 @@
-#include "TitleScene.h"
+#include "GameOverScene.h"
 #include "DirectXCommon.h"
 #include "Input.h"
 
-TitleScene::~TitleScene() { delete modelTitle_; }
+GameOverScene::~GameOverScene() {}
 
-void TitleScene::Initialize() {
-	modelTitle_ = Model::CreateFromOBJ("Title", true);
+void GameOverScene::Initialize() {
+	modelGameOver_ = Model::CreateFromOBJ("GameOver", true);
 	viewProjection_.Initialize();
 	worldTransform.Initialize();
 	worldTransform.translation_ = {-11, -10, 0};
@@ -13,7 +13,7 @@ void TitleScene::Initialize() {
 	worldTransform.scale_ = {5, 5, 5};
 }
 
-void TitleScene::Update() {
+void GameOverScene::Update() {
 
 	if (Input::GetInstance()->PushKey(DIK_SPACE)) {
 		IsFinished_ = true;
@@ -21,14 +21,14 @@ void TitleScene::Update() {
 	worldTransform.UpdateMatrix();
 }
 
-void TitleScene::Draw() {
+void GameOverScene::Draw() {
 	DirectXCommon* dxCommon_ = DirectXCommon::GetInstance();
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
 
 	Model::PreDraw(commandList);
 
-	modelTitle_->Draw(worldTransform, viewProjection_);
+	modelGameOver_->Draw(worldTransform, viewProjection_);
 
 	Model::PostDraw();
 }

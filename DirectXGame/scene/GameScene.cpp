@@ -26,6 +26,7 @@ GameScene::~GameScene() {
 	delete deathParticles_;
 	delete matrixFunction;
 	delete box_;
+	
 }
 
 void GameScene::Initialize() {
@@ -79,10 +80,11 @@ void GameScene::Initialize() {
 	cameraController_->SetTarget(player_);
 	cameraController_->Reset();
 	cameraController_->SetMovableArea(area_);
-
+	
 	// スプライト初期化
 	box_ = new Box();
 	box_->Initialize();
+
 
 	// サウンド
 	BGM = audio_->LoadWave("sound/BGM.mp3");
@@ -195,7 +197,8 @@ void GameScene::CheckAllCollisions() {
 		enemy_->OnCollision(player_); // 敵の衝突時コールバックを呼び出す
 	}
 
-#pragma endregion
+#pragma endregion 自キャラとゴールの当たり判定
+
 }
 
 void GameScene::ChangePhase() {
