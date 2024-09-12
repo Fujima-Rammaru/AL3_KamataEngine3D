@@ -11,6 +11,8 @@ public:
 
 	void Draw();
 
+	
+
 private:
 	WorldTransform worldTransform_;
 	Model* model_ = nullptr;

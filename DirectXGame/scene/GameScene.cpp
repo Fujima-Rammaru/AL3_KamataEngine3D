@@ -26,7 +26,8 @@ GameScene::~GameScene() {
 	delete deathParticles_;
 	delete matrixFunction;
 	delete box_;
-	
+	delete goal_;
+	delete modelGoal_;
 }
 
 void GameScene::Initialize() {
@@ -80,11 +81,16 @@ void GameScene::Initialize() {
 	cameraController_->SetTarget(player_);
 	cameraController_->Reset();
 	cameraController_->SetMovableArea(area_);
-	
+
 	// スプライト初期化
 	box_ = new Box();
 	box_->Initialize();
 
+	// ゴール
+	Vector3 goalPos = mapChipField_->GetMapChipPositionByIndex(2, 17);
+	goal_ = new Goal();
+	modelGoal_ = Model::CreateFromOBJ("Goal", true);
+	goal_->Initialize(modelGoal_, &cameraViewProjection_, goalPos);
 
 	// サウンド
 	BGM = audio_->LoadWave("sound/BGM.mp3");
@@ -138,6 +144,8 @@ void GameScene::Draw() {
 	if (deathParticles_) {
 		deathParticles_->Draw();
 	}
+	goal_->Draw();
+
 	//	PrimitiveDrawer::GetInstance()->DrawLine3d({0, 0, 0}, {0, -40, 0}, {1.0f, 0.0f, 0.0f, 1.0f});
 	/// </summary>
 	// 3Dオブジェクト描画後処理
@@ -198,7 +206,6 @@ void GameScene::CheckAllCollisions() {
 	}
 
 #pragma endregion 自キャラとゴールの当たり判定
-
 }
 
 void GameScene::ChangePhase() {
@@ -216,7 +223,7 @@ void GameScene::ChangePhase() {
 		worldTransformBlocks_[18][1]->UpdateMatrix();
 		skyDome_->Update();
 		enemy_->Update();
-
+		goal_->Update();
 		CameraUpdate();
 
 		CheckAllCollisions();

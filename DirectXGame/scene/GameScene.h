@@ -7,6 +7,7 @@
 #include "DebugCamera.h"
 #include "DirectXCommon.h"
 #include "Enemy.h"
+#include "Goal.h"
 #include "Input.h"
 #include "MapChipField.h"
 #include "Model.h"
@@ -105,6 +106,10 @@ private: // メンバ変数
 	Phase phase_;
 
 	Box* box_ = nullptr;
+
+	// ゴール
+	Goal* goal_ = nullptr;
+	Model* modelGoal_ = nullptr;
 
 	// 終了フラグ
 	bool IsFinished_ = false;
