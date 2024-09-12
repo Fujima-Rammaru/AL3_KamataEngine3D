@@ -28,9 +28,9 @@ Player::~Player() {}
 void Player::Update() {
 
 	Move(); // 移動入力
-	        //  地面との当たり判定
+	        //  地面との当たり判定	
 
-	// Y座標が地面以下になったら着地
+	// Y座標が地面以下になったらゲームオーバー
 	if (worldTransform_.translation_.y <= -18.0f) {
 		isDead_ = true;
 	}
