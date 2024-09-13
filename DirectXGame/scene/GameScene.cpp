@@ -1,5 +1,6 @@
 #include "GameScene.h"
 #include "DebugCamera.h"
+#include "ImGuiManager.h"
 #include "PrimitiveDrawer.h"
 #include "TextureManager.h"
 
@@ -23,7 +24,7 @@ GameScene::~GameScene() {
 	delete modelParticles_;
 	delete deathParticles_;
 	delete matrixFunction;
-//	delete box_;
+	delete light_;
 	delete goal_;
 	delete modelGoal_;
 }
@@ -40,21 +41,24 @@ void GameScene::Initialize() {
 	PrimitiveDrawer::GetInstance()->SetViewProjection(&cameraViewProjection_);
 	matrixFunction = new MatrixFunction;
 
+	// マップチップの生成
 	mapChipField_ = new MapChipField;
 	mapChipField_->LoadMapChipCsv("Resources/stage1.csv"); // CSVファイル読み込み
 
+	// ブロックの初期化
 	blockTxHandle_ = TextureManager::Load("cube/cube.jpg");
 	modelBlock_ = Model::Create();
 	GenerateBlocks();
 
+	// プレイヤーの初期化
 	modelPlayer_ = Model::CreateFromOBJ("player", true); // 3Dモデルの生成
 	player_ = new Player();                              // 自キャラの生成
-	Vector3 playerposition = mapChipField_->GetMapChipPositionByIndex(2, 17);
+	playerposition = mapChipField_->GetMapChipPositionByIndex(2, 17);
 	player_->initialize(modelPlayer_, &cameraViewProjection_, playerposition, audio_); // 自キャラの初期化
 	player_->SetMapChipField(mapChipField_);
-
 	phase_ = Phase::kPlay;
 
+	// パーティクルの初期化
 	deathParticles_ = new DeathParticles();
 	modelParticles_ = Model::CreateFromOBJ("Particle", true);
 	deathParticles_->Initialize(modelParticles_, &cameraViewProjection_, playerposition);
@@ -63,7 +67,7 @@ void GameScene::Initialize() {
 	enemyTxhandle = TextureManager::Load("sample.png"); // テクスチャの読み込み
 	modelEnemy = Model::Create();
 	enemy_ = new Enemy();
-	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(20, 18);
+	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(50, 18);
 	enemy_->Initialize(modelEnemy, enemyTxhandle, &cameraViewProjection_, enemyPosition);
 	enemy_->SetPlayer(player_);
 
@@ -76,11 +80,16 @@ void GameScene::Initialize() {
 	cameraController_->SetMovableArea(area_);
 
 	// スプライト初期化
-	//box_ = new Box();
-	//box_->Initialize();
 
+	light_ = new Box();
+	light_->Initialize();
+
+	lightPos = light_->GetPosition();
+	lightSize = light_->GetSize();
+	stdLightPos = light_->GetPosition();
+	stdLightSize = light_->GetSize();
 	// ゴール
-	Vector3 goalPos = mapChipField_->GetMapChipPositionByIndex(4, 17);
+	Vector3 goalPos = mapChipField_->GetMapChipPositionByIndex(4, 10);
 	goal_ = new Goal();
 	modelGoal_ = Model::CreateFromOBJ("Goal", true);
 	goal_->Initialize(modelGoal_, &cameraViewProjection_, goalPos);
@@ -91,8 +100,31 @@ void GameScene::Initialize() {
 		BGM = audio_->PlayWave(BGM, true, 0.07f);
 	}
 }
+void GameScene::Update() {
 
-void GameScene::Update() { ChangePhase(); }
+	playerWorldT = player_->GetWorldTransform();
+	ChangePhase();
+
+	if (playerWorldT->translation_.x > 20.0f) {
+		if (lightSize.x == 3840) {
+			lightPos.x *= 2.5f;
+			lightPos.y *= 2.5f;
+			lightSize.x *= 2.f;
+			lightSize.y *= 2.f;
+		}
+		light_->Setposition(lightPos);
+		light_->SetSize(lightSize);
+	} else { // 条件を満たさないなら元に戻す
+		lightPos = stdLightPos;
+		lightSize = stdLightSize;
+		light_->Setposition(lightPos);
+		light_->SetSize(lightSize);
+	}
+	light_->Update();
+#ifdef _DEBUG
+	ImGui::Text("playerTrans.x=%3.2f", playerWorldT->translation_.x);
+#endif
+}
 
 void GameScene::Draw() {
 
@@ -152,7 +184,7 @@ void GameScene::Draw() {
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
-	//box_->Draw(commandList);
+	light_->Draw(commandList);
 #pragma endregion
 }
 
@@ -218,7 +250,7 @@ void GameScene::ChangePhase() {
 		if (player_->IsDeadGetter() == false) {
 			player_->Update();
 		}
-		
+
 		enemy_->Update();
 		goal_->Update();
 		CameraUpdate();
@@ -233,7 +265,7 @@ void GameScene::ChangePhase() {
 			deathParticles_->Initialize(modelParticles_, &cameraViewProjection_, deathParticlePosition);
 		}
 
-		//box_->Update();
+		// box_->Update();
 
 		break;
 

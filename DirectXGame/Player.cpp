@@ -4,9 +4,9 @@
 #include "ImGuiManager.h"
 #include "Input.h"
 #include "MapChipField.h"
+#include "mathFunction.h"
 #include <algorithm>
 #include <numbers>
-#include"mathFunction.h"
 
 void Player::initialize(Model* model, ViewProjection* viewProjection, const Vector3& position, Audio* audio) {
 
@@ -28,7 +28,7 @@ Player::~Player() {}
 void Player::Update() {
 
 	Move(); // 移動入力
-	        //  地面との当たり判定	
+	        //  地面との当たり判定
 
 	// Y座標が地面以下になったらゲームオーバー
 	if (worldTransform_.translation_.y <= -18.0f) {
@@ -85,6 +85,7 @@ void Player::Update() {
 #ifdef _DEBUG
 	ImGui::Text("info.move.x=%3.2f", info.move.x);
 	ImGui::Text("velocity.x=%3.2f\ninfo.hitWall=%d", velocity_.x, info.hitWall);
+	ImGui::Text("trans.x=%3.2f\n", worldTransform_.translation_.x);
 #endif
 	worldTransform_.UpdateMatrix();
 }
@@ -135,8 +136,8 @@ void Player::Move() { // 移動入力
 		velocity_.x *= (1.0f - kAttenuation); // 非入力時は移動減衰する
 	}
 
-	if (onGround_) {  // 接地状態
-		
+	if (onGround_) { // 接地状態
+
 		// ジャンプ処理
 		if (Input::GetInstance()->TriggerKey(DIK_UP)) { // 上キーを押した瞬間だけtrue
 			audio_->PlayWave(jumpSound, false, 0.05f);

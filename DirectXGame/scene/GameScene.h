@@ -73,7 +73,7 @@ public: // メンバ関数
 
 	void CameraUpdate();
 
-	//ゴールのGetter
+	// ゴールのGetter
 	bool IsGoaled();
 
 private: // メンバ変数
@@ -83,9 +83,10 @@ private: // メンバ変数
 	uint32_t playerTxHandle_ = 0u;
 	Model* modelPlayer_ = nullptr; // 自キャラ3Dmodel
 	WorldTransform worldTransform_;
-	
+	WorldTransform* playerWorldT;
 	ViewProjection cameraViewProjection_; // カメラ用
 	Player* player_ = nullptr;
+	Vector3 playerposition;
 	DeathParticles* deathParticles_ = nullptr;
 	Model* modelParticles_ = nullptr;
 	Enemy* enemy_ = nullptr;
@@ -106,7 +107,12 @@ private: // メンバ変数
 	MatrixFunction* matrixFunction = nullptr;
 	Phase phase_;
 
-	//Box* box_ = nullptr;
+	Box* light_ = nullptr;
+	Vector2 lightPos = {0};
+	Vector2 lightSize = {0};
+
+	Vector2 stdLightPos = {0};
+	Vector2 stdLightSize = {0};
 
 	// ゴール
 	Goal* goal_ = nullptr;

@@ -17,9 +17,9 @@ void CameraController::Update() {
 	CameraShake();
 
 	// 追従対象とオフセットと追従対象の速度からカメラの目標座標を計算
-	goalPosition.x = (targetWorldTransform.translation_.x + targetOffset_.x + targetVelocity.x * kVelocityBias) + shakePosition.x;
-	goalPosition.y = (targetWorldTransform.translation_.y + targetOffset_.y + targetVelocity.y * kVelocityBias) + shakePosition.y;
-	goalPosition.z = (targetWorldTransform.translation_.z + targetOffset_.z + targetVelocity.z * kVelocityBias);
+	goalPosition.x = (targetWorldTransform.translation_.x + targetOffset_.x + targetVelocity.x * kVelocityBiasX) + shakePosition.x;
+	goalPosition.y = (targetWorldTransform.translation_.y + targetOffset_.y + targetVelocity.y * kVelocityBiasY) + shakePosition.y;
+	goalPosition.z = (targetWorldTransform.translation_.z + targetOffset_.z + targetVelocity.z * kVelocityBiasX);
 
 	// 座標補間によりゆったり追従
 	viewProjection_.translation_ = LerpVector3();
