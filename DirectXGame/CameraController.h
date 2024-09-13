@@ -43,6 +43,8 @@ public:
 
 	void CameraShake();
 
+	void SetTargetOffset(const Vector3& targetOffset ); 
+
 private:
 	ViewProjection viewProjection_;
 	Player* target_ = nullptr;              // 追従対象のポインタ

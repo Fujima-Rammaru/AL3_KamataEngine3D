@@ -137,7 +137,6 @@ void GameScene::Draw() {
 	}
 	goal_->Draw();
 
-	//	PrimitiveDrawer::GetInstance()->DrawLine3d({0, 0, 0}, {0, -40, 0}, {1.0f, 0.0f, 0.0f, 1.0f});
 	/// </summary>
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
@@ -204,6 +203,7 @@ void GameScene::CheckAllCollisions() {
 	aabb4 = goal_->GetAABB();
 	if (aabb4.isHit(aabb3)) {
 		goal_->Oncollision(player_);
+		audio_->StopWave(BGM);
 	}
 }
 
@@ -265,7 +265,6 @@ void GameScene::BlocksUpdate() {
 			worldTransformBlock->matWorld_ = matrixFunction->MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
 			// 定数バッファに転送する
 			worldTransformBlock->UpdateMatrix();
-			// ImGui::Text("BlocksPos=%5.2f",worldTransformBlock->translation_.y );
 		}
 	}
 }

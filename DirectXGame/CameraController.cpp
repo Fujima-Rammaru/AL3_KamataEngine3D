@@ -31,10 +31,10 @@ void CameraController::Update() {
 	viewProjection_.translation_.y = std::min(viewProjection_.translation_.y, targetWorldTransform.translation_.y + kTargetMovableArea.top);
 
 	// 移動範囲制限
-	//viewProjection_.translation_.x = std::max(viewProjection_.translation_.x, movableArea_.left);
-	//viewProjection_.translation_.x = std::min(viewProjection_.translation_.x, movableArea_.right);
-	//viewProjection_.translation_.y = std::max(viewProjection_.translation_.y, movableArea_.bottom);
-	//viewProjection_.translation_.y = std::min(viewProjection_.translation_.y, movableArea_.top);
+	// viewProjection_.translation_.x = std::max(viewProjection_.translation_.x, movableArea_.left);
+	// viewProjection_.translation_.x = std::min(viewProjection_.translation_.x, movableArea_.right);
+	// viewProjection_.translation_.y = std::max(viewProjection_.translation_.y, movableArea_.bottom);
+	// viewProjection_.translation_.y = std::min(viewProjection_.translation_.y, movableArea_.top);
 	// 行列を更新
 	viewProjection_.UpdateMatrix();
 
@@ -69,7 +69,7 @@ Vector3 CameraController::LerpVector3() {
 
 void CameraController::CameraShake() {
 	srand(currentTime);
-	if (Input::GetInstance()->PushKey(DIK_RETURN)) {
+	if (Input::GetInstance()->PushKey(DIK_RETURN)) {//後で条件式変更
 		shakeRange.x = 40.0f;
 		shakeRange.y = 40.0f;
 		shakeTimer = 90;
@@ -100,3 +100,5 @@ void CameraController::CameraShake() {
 		isCountingTimer = false;
 	}
 }
+
+void CameraController::SetTargetOffset(const Vector3& targetOffset) { targetOffset_ = targetOffset; }
