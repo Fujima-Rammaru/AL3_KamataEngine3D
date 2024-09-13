@@ -7,13 +7,21 @@ void LightPowItem::Initialize(Model* model, ViewProjection* viewProjection, cons
 	viewProjection_ = viewProjection;
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = position;
-	worldTransform_.rotation_.y = -1.2f;
+	worldTransform_.rotation_.y = 0.0f;
 	worldTransform_.scale_ = Vector3(0.5f, 0.5f, 0.5f);
 }
 
-void LightPowItem::Update() { worldTransform_.UpdateMatrix(); }
+void LightPowItem::Update() {
+	if (!isGetting_) {
+		worldTransform_.UpdateMatrix();
+	}
+}
 
-void LightPowItem::Draw() { model_->Draw(worldTransform_, *viewProjection_); }
+void LightPowItem::Draw() {
+	if (isGetting_ == false) {
+		model_->Draw(worldTransform_, *viewProjection_);
+	}
+}
 
 AABB LightPowItem::GetAABB() {
 	AABB aabb;

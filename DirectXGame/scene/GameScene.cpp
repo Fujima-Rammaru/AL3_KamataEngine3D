@@ -95,7 +95,7 @@ void GameScene::Initialize() {
 	goal_->Initialize(modelGoal_, &cameraViewProjection_, goalPos);
 
 	// アイテム
-	Vector3 ItemPos = mapChipField_->GetMapChipPositionByIndex(13, 13);
+	Vector3 ItemPos = mapChipField_->GetMapChipPositionByIndex(10, 14);
 	lightPowItem_ = new LightPowItem();
 	mdlLightPowItem = Model::CreateFromOBJ("Item", true);
 	lightPowItem_->Initialize(mdlLightPowItem, &cameraViewProjection_, ItemPos);
@@ -249,8 +249,14 @@ void GameScene::CheckAllCollisions() {
 	AABB aabb5, aabb6;
 	aabb5 = player_->GetAABB();
 	aabb6 = lightPowItem_->GetAABB();
-	if (aabb6.isHit(aabb5)) {
+	if (aabb6.isHit(aabb5) && !lightPowItem_->IsFinishedGetter()) {
 		lightPowItem_->Oncollision(player_);
+		lightPos.x *= 2.125f;
+		lightPos.y *= 2.125f;
+		lightSize.x *= 1.75f;
+		lightSize.y *= 1.75f;
+		light_->Setposition(lightPos);
+		light_->SetSize(lightSize);
 	}
 #pragma endregion
 }
