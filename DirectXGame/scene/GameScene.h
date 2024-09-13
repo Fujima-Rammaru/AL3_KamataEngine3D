@@ -73,6 +73,9 @@ public: // メンバ関数
 
 	void CameraUpdate();
 
+	//ゴールのGetter
+	bool IsGoaled();
+
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -80,7 +83,7 @@ private: // メンバ変数
 	uint32_t playerTxHandle_ = 0u;
 	Model* modelPlayer_ = nullptr; // 自キャラ3Dmodel
 	WorldTransform worldTransform_;
-	ViewProjection viewProjection_;
+	
 	ViewProjection cameraViewProjection_; // カメラ用
 	Player* player_ = nullptr;
 	DeathParticles* deathParticles_ = nullptr;
@@ -98,14 +101,12 @@ private: // メンバ変数
 	bool isDebugCameraactive_ = false;
 	CameraController* cameraController_ = nullptr; // カメラコントローラー
 
-	SkyDome* skyDome_ = nullptr;
-	Model* modelSkyDome_ = nullptr;
 	MapChipField* mapChipField_; // マップチップフィールド
 
 	MatrixFunction* matrixFunction = nullptr;
 	Phase phase_;
 
-	Box* box_ = nullptr;
+	//Box* box_ = nullptr;
 
 	// ゴール
 	Goal* goal_ = nullptr;

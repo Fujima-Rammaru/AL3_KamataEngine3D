@@ -9,14 +9,14 @@ void ClearScene::Initialize() {
 	modelClear_ = Model::CreateFromOBJ("Clear", true);
 	viewProjection_.Initialize();
 	worldTransform.Initialize();
-	worldTransform.translation_ = {0, 10, 0};
-	worldTransform.rotation_ = {-4.4f, 3.2f, 0};
-	worldTransform.scale_ = {10, 10, 10};
+	worldTransform.translation_ = {0,0, 0};
+	worldTransform.rotation_ = {-4.8f, 3.2f, 0};
+	worldTransform.scale_ = {8, 8, 8};
 }
 
 void ClearScene::Update() {
 
-	if (Input::GetInstance()->PushKey(DIK_SPACE)) {
+	if (Input::GetInstance()->PushKey(DIK_RETURN)) {
 		IsFinished_ = true;
 	}
 	// viewProjection_.UpdateMatrix();

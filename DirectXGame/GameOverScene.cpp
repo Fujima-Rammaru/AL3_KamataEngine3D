@@ -10,7 +10,7 @@ void GameOverScene::Initialize() {
 	worldTransform.Initialize();
 	worldTransform.translation_ = {-3, -1, 0};
 	worldTransform.rotation_ = {-1.4f, 0,0};
-	worldTransform.scale_ = {5, 5, 5};
+	worldTransform.scale_ = {7, 7, 7};
 }
 
 void GameOverScene::Update() {

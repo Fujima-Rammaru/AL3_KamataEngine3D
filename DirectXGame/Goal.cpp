@@ -8,7 +8,7 @@ void Goal::Initialize(Model* model, ViewProjection* viewProjection, const Vector
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = position;
 	worldTransform_.rotation_.y = -1.2f;
-	worldTransform_.scale_ = Vector3(0.5f,0.5f,0.5f);
+	worldTransform_.scale_ = Vector3(0.5f, 0.5f, 0.5f);
 }
 
 void Goal::Update() { worldTransform_.UpdateMatrix(); }
@@ -32,4 +32,11 @@ Vector3 Goal::GetWorldPosition() {
 	worldPos.y = worldTransform_.matWorld_.m[3][1];
 	worldPos.z = worldTransform_.matWorld_.m[3][2];
 	return worldPos;
+}
+
+bool Goal::IsFinishedGetter() { return isFinished_; }
+
+void Goal::Oncollision(const Player* player) {
+	(void)player;
+	isFinished_ = true;
 }

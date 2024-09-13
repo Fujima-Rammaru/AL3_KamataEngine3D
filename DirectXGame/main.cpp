@@ -9,11 +9,14 @@
 #include "TextureManager.h"
 #include "TitleScene.h"
 #include "WinApp.h"
+#include "Goal.h"
 
 GameScene* gameScene = nullptr;
 TitleScene* titleScene = nullptr;
 ClearScene* clearScene = nullptr;
 GameOverScene* gameOverScene = nullptr;
+SkyDome* skyDome_ = nullptr;
+Model* modelSkyDome_ = nullptr;
 
 enum class Scene {
 	kUnknown = 0,
@@ -86,11 +89,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	titleScene = new TitleScene();
 	titleScene->Initialize();
 
+	// スカイドームの初期化
+	ViewProjection viewProjection_;
+	viewProjection_.Initialize();
+	skyDome_ = new SkyDome();                              // 天球の生成
+	modelSkyDome_ = Model::CreateFromOBJ("SkyDome", true); // 3Dモデルの生成
+	skyDome_->Initialize(modelSkyDome_, &viewProjection_); // 天球の初期化
+
+
+
 #ifdef _DEBUG
 	scene = Scene::kGame;
 	gameScene = new GameScene();
 	gameScene->Initialize();
-
 #endif // _DEBUG
 
 #pragma endregion
@@ -135,6 +146,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	delete gameScene;
 	delete gameOverScene;
 	delete clearScene;
+	delete skyDome_;
+	delete modelSkyDome_;
 
 	// 3Dモデル解放
 	Model::StaticFinalize();
@@ -179,17 +192,17 @@ void ChangeScene() {
 			gameOverScene = new GameOverScene();
 			gameOverScene->Initialize();
 		}
-		//// ゲームクリア時のシーン遷移処理
-		//else if () {
-		//	// シーン変更
-		//	scene = Scene::kClear;
-		//	// 現在シーンの開放
-		//	delete gameScene;
-		//	gameScene = nullptr;
-		//	// 次シーンの生成と初期化
-		//	clearScene = new ClearScene();
-		//	clearScene->Initialize();
-		//}
+		// ゲームクリア時のシーン遷移処理
+		else if (gameScene->IsGoaled()) { // ゴールのフラグがtrueなら
+			// シーン変更
+			scene = Scene::kClear;
+			// 現在シーンの開放
+			delete gameScene;
+			gameScene = nullptr;
+			// 次シーンの生成と初期化
+			clearScene = new ClearScene();
+			clearScene->Initialize();
+		}
 		break;
 
 	case Scene::kGameOver: // ゲームオーバー
@@ -223,6 +236,8 @@ void ChangeScene() {
 }
 
 void UpdateScene() {
+	skyDome_->Update();
+
 	switch (scene) {
 
 	case Scene::kTitle:
@@ -244,6 +259,8 @@ void UpdateScene() {
 }
 
 void DrawScene() {
+	skyDome_->Draw();
+
 	switch (scene) {
 
 	case Scene::kTitle:

@@ -18,14 +18,12 @@ GameScene::~GameScene() {
 	delete modelEnemy;
 	delete enemy_;
 	delete player_;
-	delete skyDome_;
-	delete modelSkyDome_;
 	delete mapChipField_;
 	delete cameraController_;
 	delete modelParticles_;
 	delete deathParticles_;
 	delete matrixFunction;
-	delete box_;
+//	delete box_;
 	delete goal_;
 	delete modelGoal_;
 }
@@ -37,7 +35,7 @@ void GameScene::Initialize() {
 	audio_ = Audio::GetInstance();
 
 	worldTransform_.Initialize();
-	viewProjection_.Initialize();
+
 	cameraViewProjection_.Initialize();
 	PrimitiveDrawer::GetInstance()->SetViewProjection(&cameraViewProjection_);
 	matrixFunction = new MatrixFunction;
@@ -49,7 +47,6 @@ void GameScene::Initialize() {
 	modelBlock_ = Model::Create();
 	GenerateBlocks();
 
-	// playerTxHandle_ = TextureManager::Load("sample.png"); // テクスチャの読み込み
 	modelPlayer_ = Model::CreateFromOBJ("player", true); // 3Dモデルの生成
 	player_ = new Player();                              // 自キャラの生成
 	Vector3 playerposition = mapChipField_->GetMapChipPositionByIndex(2, 17);
@@ -57,10 +54,6 @@ void GameScene::Initialize() {
 	player_->SetMapChipField(mapChipField_);
 
 	phase_ = Phase::kPlay;
-
-	skyDome_ = new SkyDome();                              // 天球の生成
-	modelSkyDome_ = Model::CreateFromOBJ("SkyDome", true); // 3Dモデルの生成
-	skyDome_->Initialize(modelSkyDome_, &viewProjection_); // 天球の初期化
 
 	deathParticles_ = new DeathParticles();
 	modelParticles_ = Model::CreateFromOBJ("Particle", true);
@@ -83,11 +76,11 @@ void GameScene::Initialize() {
 	cameraController_->SetMovableArea(area_);
 
 	// スプライト初期化
-	box_ = new Box();
-	box_->Initialize();
+	//box_ = new Box();
+	//box_->Initialize();
 
 	// ゴール
-	Vector3 goalPos = mapChipField_->GetMapChipPositionByIndex(2, 17);
+	Vector3 goalPos = mapChipField_->GetMapChipPositionByIndex(4, 17);
 	goal_ = new Goal();
 	modelGoal_ = Model::CreateFromOBJ("Goal", true);
 	goal_->Initialize(modelGoal_, &cameraViewProjection_, goalPos);
@@ -134,8 +127,6 @@ void GameScene::Draw() {
 		}
 	}
 
-	skyDome_->Draw();
-
 	if (player_->IsDeadGetter() == false) {
 		player_->Draw();
 	}
@@ -162,7 +153,7 @@ void GameScene::Draw() {
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
-	box_->Draw(commandList);
+	//box_->Draw(commandList);
 #pragma endregion
 }
 
@@ -206,6 +197,14 @@ void GameScene::CheckAllCollisions() {
 	}
 
 #pragma endregion 自キャラとゴールの当たり判定
+	AABB aabb3, aabb4;
+	// 自キャラの座標
+	aabb3 = player_->GetAABB();
+	// ゴールの座標
+	aabb4 = goal_->GetAABB();
+	if (aabb4.isHit(aabb3)) {
+		goal_->Oncollision(player_);
+	}
 }
 
 void GameScene::ChangePhase() {
@@ -219,9 +218,7 @@ void GameScene::ChangePhase() {
 		if (player_->IsDeadGetter() == false) {
 			player_->Update();
 		}
-		worldTransformBlocks_[18][1]->translation_.y += 0.05f;
-		worldTransformBlocks_[18][1]->UpdateMatrix();
-		skyDome_->Update();
+		
 		enemy_->Update();
 		goal_->Update();
 		CameraUpdate();
@@ -236,13 +233,13 @@ void GameScene::ChangePhase() {
 			deathParticles_->Initialize(modelParticles_, &cameraViewProjection_, deathParticlePosition);
 		}
 
-		box_->Update();
+		//box_->Update();
 
 		break;
 
 	case Phase::kDeath:
 		BlocksUpdate();
-		skyDome_->Update();
+
 		enemy_->Update();
 
 		CameraUpdate();
@@ -288,3 +285,5 @@ void GameScene::CameraUpdate() {
 		cameraViewProjection_.UpdateMatrix();
 	}
 }
+
+bool GameScene::IsGoaled() { return goal_->IsFinishedGetter(); }
