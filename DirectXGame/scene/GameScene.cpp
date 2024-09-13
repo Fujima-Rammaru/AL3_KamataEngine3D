@@ -67,7 +67,7 @@ void GameScene::Initialize() {
 	enemyTxhandle = TextureManager::Load("sample.png"); // テクスチャの読み込み
 	modelEnemy = Model::Create();
 	enemy_ = new Enemy();
-	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(50, 18);
+	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(70, 18);
 	enemy_->Initialize(modelEnemy, enemyTxhandle, &cameraViewProjection_, enemyPosition);
 	enemy_->SetPlayer(player_);
 
@@ -80,7 +80,6 @@ void GameScene::Initialize() {
 	cameraController_->SetMovableArea(area_);
 
 	// スプライト初期化
-
 	light_ = new Box();
 	light_->Initialize();
 
@@ -89,7 +88,7 @@ void GameScene::Initialize() {
 	stdLightPos = light_->GetPosition();
 	stdLightSize = light_->GetSize();
 	// ゴール
-	Vector3 goalPos = mapChipField_->GetMapChipPositionByIndex(4, 10);
+	Vector3 goalPos = mapChipField_->GetMapChipPositionByIndex(15, 16);
 	goal_ = new Goal();
 	modelGoal_ = Model::CreateFromOBJ("Goal", true);
 	goal_->Initialize(modelGoal_, &cameraViewProjection_, goalPos);
@@ -104,7 +103,7 @@ void GameScene::Update() {
 
 	playerWorldT = player_->GetWorldTransform();
 	ChangePhase();
-
+	// lightの大きさ変更処理（後で衝突応答による処理に変更）
 	if (playerWorldT->translation_.x > 20.0f) {
 		if (lightSize.x == 3840) {
 			lightPos.x *= 2.5f;
@@ -121,6 +120,7 @@ void GameScene::Update() {
 		light_->SetSize(lightSize);
 	}
 	light_->Update();
+
 #ifdef _DEBUG
 	ImGui::Text("playerTrans.x=%3.2f", playerWorldT->translation_.x);
 #endif
@@ -206,7 +206,6 @@ void GameScene::GenerateBlocks() {
 				worldTransformBlocks_[y][x]->translation_ = mapChipField_->GetMapChipPositionByIndex(x, y);
 			}
 			worldTransformBlocks_[y][x]->Initialize();
-			// ImGui::Text("BlocksPos=%5.2f",worldTransformBlocks_[0][19]->translation_.y);
 		}
 	}
 }
@@ -264,9 +263,6 @@ void GameScene::ChangePhase() {
 			const Vector3& deathParticlePosition = player_->GetWorldPosition();
 			deathParticles_->Initialize(modelParticles_, &cameraViewProjection_, deathParticlePosition);
 		}
-
-		// box_->Update();
-
 		break;
 
 	case Phase::kDeath:
