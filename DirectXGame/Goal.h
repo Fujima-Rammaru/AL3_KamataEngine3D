@@ -25,9 +25,9 @@ public:
 
 private:
 	// 横幅
-	static inline const float kWidth = 0.5f;
+	static inline const float kWidth = 0.25f;
 	// 縦幅
-	static inline const float kHeight = 4.0f;
+	static inline const float kHeight = 3.0f;
 	WorldTransform worldTransform_;
 	Model* model_ = nullptr;
 	ViewProjection* viewProjection_ = nullptr;
