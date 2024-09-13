@@ -92,7 +92,6 @@ private: // メンバ変数
 	Model* modelParticles_ = nullptr;
 	Enemy* enemy_ = nullptr;
 	Model* modelEnemy = nullptr;
-	uint32_t enemyTxhandle = 0u;
 
 	uint32_t BGM = 0;
 	Model* modelBlock_ = nullptr;                                    // ブロック
@@ -125,4 +124,7 @@ private: // メンバ変数
 
 	// 終了フラグ
 	bool IsFinished_ = false;
+
+	// 自機と敵の距離
+	float distance = 0;
 };

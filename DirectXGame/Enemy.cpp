@@ -3,11 +3,11 @@
 #include "mathFunction.h"
 #include <algorithm>
 #include <numbers>
-void Enemy::Initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection, const Vector3& position) {
+void Enemy::Initialize(Model* model,ViewProjection* viewProjection, const Vector3& position) {
 	assert(model);
 	model_ = model;
 
-	txHandle_ = textureHandle;
+
 	viewProjection_ = viewProjection;
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = position;
@@ -30,12 +30,12 @@ void Enemy::Update() {
 	velocity_ = Normalize(velocity_);
 	// 線形補間
 	velocity_ = Multiply(kWalkSpeed, Slerp(velocity_, toPlayer, t));
-	//worldTransform_.translation_ += velocity_;
+	worldTransform_.translation_ += velocity_;
 	worldTransform_.UpdateMatrix();
 	///=======================================================
 }
 
-void Enemy::Draw() { model_->Draw(worldTransform_, *viewProjection_, txHandle_); }
+void Enemy::Draw() { model_->Draw(worldTransform_, *viewProjection_); }
 
 AABB Enemy::GetAABB() {
 	AABB aabb;

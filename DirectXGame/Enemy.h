@@ -12,7 +12,7 @@ class Player;
 class Enemy {
 
 public:
-	void Initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection, const Vector3& position);
+	void Initialize(Model* model,ViewProjection* viewProjection, const Vector3& position);
 
 	void Update();
 	void Draw();
@@ -25,7 +25,6 @@ public:
 private:
 	WorldTransform worldTransform_;
 	Model* model_ = nullptr;
-	uint32_t txHandle_ = 0u;
 	ViewProjection* viewProjection_ = nullptr;
 	static inline const float kWalkSpeed = 0.1f;
 	Vector3 velocity_ = {};

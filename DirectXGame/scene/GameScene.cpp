@@ -66,11 +66,10 @@ void GameScene::Initialize() {
 	deathParticles_->Initialize(modelParticles_, &cameraViewProjection_, playerposition);
 
 	// 敵キャラの生成
-	enemyTxhandle = TextureManager::Load("sample.png"); // テクスチャの読み込み
-	modelEnemy = Model::Create();
+	modelEnemy = Model::CreateFromOBJ("Enemy", true);
 	enemy_ = new Enemy();
-	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(70, 18);
-	enemy_->Initialize(modelEnemy, enemyTxhandle, &cameraViewProjection_, enemyPosition);
+	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(30, 18);
+	enemy_->Initialize(modelEnemy,&cameraViewProjection_, enemyPosition);
 	enemy_->SetPlayer(player_);
 
 	// カメラコントローラー初期化
