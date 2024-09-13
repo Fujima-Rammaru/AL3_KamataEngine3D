@@ -102,7 +102,7 @@ void GameScene::Initialize() {
 	Vector3 itemPos[5];
 	mapChipField_->GetMapChipPositionByIndex(10, 14);
 	for (int i = 0; i < num; i++) {
-		itemPos[i] = mapChipField_->GetMapChipPositionByIndex(13, 18 - i);
+		itemPos[i] = mapChipField_->GetMapChipPositionByIndex(13, 13 - i);
 		lightPowItems_[i] = new LightPowItem();
 		lightPowItems_[i]->Initialize(mdlLightPowItem, &cameraViewProjection_, itemPos[i]);
 	}
@@ -259,16 +259,17 @@ void GameScene::CheckAllCollisions() {
 #pragma region 自キャラとアイテムの当たり判定
 	AABB aabb5, aabb6[5];
 	aabb5 = player_->GetAABB();
+	for (int i = 0; i < num; i++) {
+		aabb6[i] = lightPowItems_[i]->GetAABB();
+	}
 
 	for (int i = 0; i < num; i++) {
-
-		aabb6[i] = lightPowItems_[i]->GetAABB();
 		if (aabb6[i].isHit(aabb5) && !lightPowItems_[i]->IsFinishedGetter()) {
 			lightPowItems_[i]->Oncollision(player_);
-			lightPos.x -= 200.f;
-			lightPos.y -= 112.5f;
-			lightSize.x += 400.f;
-			lightSize.y += 225.0f;
+			lightPos.x -= 400.f;
+			lightPos.y -= 225.f;
+			lightSize.x += 800.f;
+			lightSize.y += 450.0f;
 			light_->Setposition(lightPos);
 			light_->SetSize(lightSize);
 		}
