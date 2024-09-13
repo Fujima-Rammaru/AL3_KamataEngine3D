@@ -119,8 +119,9 @@ private: // メンバ変数
 	Model* modelGoal_ = nullptr;
 
 	// アイテム
-	LightPowItem* lightPowItem_ = nullptr;
+	std::vector<LightPowItem*> lightPowItems_;
 	Model* mdlLightPowItem = nullptr;
+	int num = 5;
 
 	// 終了フラグ
 	bool IsFinished_ = false;

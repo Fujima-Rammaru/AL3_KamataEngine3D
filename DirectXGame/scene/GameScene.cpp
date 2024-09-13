@@ -27,7 +27,10 @@ GameScene::~GameScene() {
 	delete light_;
 	delete goal_;
 	delete modelGoal_;
-	delete lightPowItem_;
+	for (int i = 0; i < num; i++) {
+		delete lightPowItems_[i];
+	}
+
 	delete mdlLightPowItem;
 }
 
@@ -69,7 +72,7 @@ void GameScene::Initialize() {
 	modelEnemy = Model::CreateFromOBJ("Enemy", true);
 	enemy_ = new Enemy();
 	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(30, 18);
-	enemy_->Initialize(modelEnemy,&cameraViewProjection_, enemyPosition);
+	enemy_->Initialize(modelEnemy, &cameraViewProjection_, enemyPosition);
 	enemy_->SetPlayer(player_);
 
 	// カメラコントローラー初期化
@@ -93,11 +96,16 @@ void GameScene::Initialize() {
 	modelGoal_ = Model::CreateFromOBJ("Goal", true);
 	goal_->Initialize(modelGoal_, &cameraViewProjection_, goalPos);
 
-	// アイテム
-	Vector3 ItemPos = mapChipField_->GetMapChipPositionByIndex(10, 14);
-	lightPowItem_ = new LightPowItem();
+	// アイテム(複数化)
+	lightPowItems_.resize(num);
 	mdlLightPowItem = Model::CreateFromOBJ("Item", true);
-	lightPowItem_->Initialize(mdlLightPowItem, &cameraViewProjection_, ItemPos);
+	Vector3 itemPos[5];
+	mapChipField_->GetMapChipPositionByIndex(10, 14);
+	for (int i = 0; i < num; i++) {
+		itemPos[i] = mapChipField_->GetMapChipPositionByIndex(13, 18 - i);
+		lightPowItems_[i] = new LightPowItem();
+		lightPowItems_[i]->Initialize(mdlLightPowItem, &cameraViewProjection_, itemPos[i]);
+	}
 
 	// サウンド
 	BGM = audio_->LoadWave("sound/BGM.mp3");
@@ -174,7 +182,11 @@ void GameScene::Draw() {
 		deathParticles_->Draw();
 	}
 	goal_->Draw();
-	lightPowItem_->Draw();
+
+	for (int i = 0; i < num; i++) {
+		lightPowItems_[i]->Draw();
+	}
+
 	/// </summary>
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
@@ -245,18 +257,23 @@ void GameScene::CheckAllCollisions() {
 	}
 
 #pragma region 自キャラとアイテムの当たり判定
-	AABB aabb5, aabb6;
+	AABB aabb5, aabb6[5];
 	aabb5 = player_->GetAABB();
-	aabb6 = lightPowItem_->GetAABB();
-	if (aabb6.isHit(aabb5) && !lightPowItem_->IsFinishedGetter()) {
-		lightPowItem_->Oncollision(player_);
-		lightPos.x *= 2.125f;
-		lightPos.y *= 2.125f;
-		lightSize.x *= 1.75f;
-		lightSize.y *= 1.75f;
-		light_->Setposition(lightPos);
-		light_->SetSize(lightSize);
+
+	for (int i = 0; i < num; i++) {
+
+		aabb6[i] = lightPowItems_[i]->GetAABB();
+		if (aabb6[i].isHit(aabb5) && !lightPowItems_[i]->IsFinishedGetter()) {
+			lightPowItems_[i]->Oncollision(player_);
+			lightPos.x *= 2.125f;
+			lightPos.y *= 2.125f;
+			lightSize.x *= 1.75f;
+			lightSize.y *= 1.75f;
+			light_->Setposition(lightPos);
+			light_->SetSize(lightSize);
+		}
 	}
+
 #pragma endregion
 }
 
@@ -274,7 +291,11 @@ void GameScene::ChangePhase() {
 
 		enemy_->Update();
 		goal_->Update();
-		lightPowItem_->Update();
+
+		for (int i = 0; i < num; ++i) {
+			lightPowItems_[i]->Update();
+		}
+
 		CameraUpdate();
 
 		CheckAllCollisions();
