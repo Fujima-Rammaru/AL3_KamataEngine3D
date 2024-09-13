@@ -64,7 +64,7 @@ public:
 	bool IsDeadGetter();
 	void CollisionMapCheckAllDirection(CollisionMapInfo& info); // 全ての衝突判定関数を呼び出す
 	Vector3 GetWorldPosition();
-	
+
 private:
 	WorldTransform worldTransform_;
 
@@ -102,8 +102,8 @@ private:
 	static inline const float kJumpAcceleration = 0.7f;     // ジャンプ初速(上方向）
 	static inline const float kGroundPos = 2.0f;            // 地面の座標
 	bool landing = false;
-	static inline const float kWidth = 1.8f; // キャラクターの当たり判定サイズ
-	static inline const float kHeight = 1.8f;
+	static inline const float kWidth = 1.6f; // キャラクターの当たり判定サイズ
+	static inline const float kHeight = 1.6f;
 	static inline const float kAttenuationLanding = 0.5f; // 着地時の速度減衰率
 	bool isDead_ = false;
 };
