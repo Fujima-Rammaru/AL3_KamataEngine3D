@@ -9,15 +9,18 @@ public:
 	// コマンドリストの取得
 	void Initialize();
 	void Update();
-	void Draw(ID3D12GraphicsCommandList* commandList);
-	Vector2 GetPosition();
-	Vector2 GetSize();
-	void Setposition(const Vector2& position);
-	void SetSize(const Vector2& size);
-
+	void Draw();
+	bool IsFinished() const { return IsFinished_; }
 
 private:
 
-
+	// 終了フラグ
+	bool IsFinished_ = false;
+	// スプライト用変数
+	Vector4 color = {1, 1, 1, 1};
+	Vector2 position_ = {0.f, 0.f};
+	Vector2 anchorpoint = {0, 0};
+	Vector2 size_ = {1280.0f, 720.0f};
+	Sprite* sprite_ = nullptr;
+	uint32_t textuteHandle = 0u;
 };
-

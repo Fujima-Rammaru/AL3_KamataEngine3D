@@ -4,12 +4,13 @@
 #include "DirectXCommon.h"
 #include "GameOverScene.h"
 #include "GameScene.h"
+#include "Goal.h"
 #include "ImGuiManager.h"
 #include "PrimitiveDrawer.h"
 #include "TextureManager.h"
 #include "TitleScene.h"
+#include "Tutorial.h"
 #include "WinApp.h"
-#include "Goal.h"
 
 GameScene* gameScene = nullptr;
 TitleScene* titleScene = nullptr;
@@ -17,10 +18,12 @@ ClearScene* clearScene = nullptr;
 GameOverScene* gameOverScene = nullptr;
 SkyDome* skyDome_ = nullptr;
 Model* modelSkyDome_ = nullptr;
+Tutorial* tutorialScene = nullptr;
 
 enum class Scene {
 	kUnknown = 0,
 	kTitle,
+	kTutorial,
 	kGame,
 	kClear,
 	kGameOver,
@@ -96,8 +99,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	modelSkyDome_ = Model::CreateFromOBJ("SkyDome", true); // 3Dモデルの生成
 	skyDome_->Initialize(modelSkyDome_, &viewProjection_); // 天球の初期化
 
-
-
 #ifdef _DEBUG
 	scene = Scene::kGame;
 	gameScene = new GameScene();
@@ -148,6 +149,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	delete clearScene;
 	delete skyDome_;
 	delete modelSkyDome_;
+	delete tutorialScene;
 
 	// 3Dモデル解放
 	Model::StaticFinalize();
@@ -169,14 +171,28 @@ void ChangeScene() {
 
 		if (titleScene->IsFinished()) {
 			// シーン変更
-			scene = Scene::kGame;
-			// 旧シーンの開放
+			scene = Scene::kTutorial;
+			// 現在シーンの開放
 			delete titleScene;
 			titleScene = nullptr;
+			// 新シーンの生成と初期化
+			tutorialScene = new Tutorial();
+			tutorialScene->Initialize();
+		}
+		break;
+
+	case Scene::kTutorial:
+		if (tutorialScene->IsFinished()) {
+			// シーン変更
+			scene = Scene::kGame;
+			// 現在シーンの開放
+			delete tutorialScene;
+			tutorialScene = nullptr;
 			// 新シーンの生成と初期化
 			gameScene = new GameScene();
 			gameScene->Initialize();
 		}
+
 		break;
 
 	case Scene::kGame: // プレイ画面
@@ -244,6 +260,10 @@ void UpdateScene() {
 		titleScene->Update();
 		break;
 
+	case Scene::kTutorial:
+		tutorialScene->Update();
+		break;
+
 	case Scene::kGame:
 		gameScene->Update();
 		break;
@@ -265,6 +285,10 @@ void DrawScene() {
 
 	case Scene::kTitle:
 		titleScene->Draw();
+		break;
+
+	case Scene::kTutorial:
+		tutorialScene->Draw();
 		break;
 
 	case Scene::kGame:

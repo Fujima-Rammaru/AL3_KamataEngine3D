@@ -15,7 +15,7 @@ void TitleScene::Initialize() {
 
 void TitleScene::Update() {
 
-	if (Input::GetInstance()->PushKey(DIK_SPACE)) {
+	if (Input::GetInstance()->TriggerKey(DIK_SPACE)) {
 		IsFinished_ = true;
 	}
 	worldTransform.UpdateMatrix();
