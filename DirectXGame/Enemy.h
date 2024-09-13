@@ -12,7 +12,7 @@ class Player;
 class Enemy {
 
 public:
-	void Initialize(Model* model,ViewProjection* viewProjection, const Vector3& position);
+	void Initialize(Model* model, ViewProjection* viewProjection, const Vector3& position);
 
 	void Update();
 	void Draw();
@@ -26,7 +26,7 @@ private:
 	WorldTransform worldTransform_;
 	Model* model_ = nullptr;
 	ViewProjection* viewProjection_ = nullptr;
-	static inline const float kWalkSpeed = 0.1f;
+	static inline const float kWalkSpeed = 0.05f;
 	Vector3 velocity_ = {};
 	static inline const float kWalkMotionAngleStart = 1.0f;
 	static inline const float kWalkMotionAngleEnd = 20.0f;
@@ -35,6 +35,5 @@ private:
 	static inline const float kWidth = 1.90f;
 	static inline const float kHeight = 0.4f;
 	Player* player_ = nullptr;
-	//static inline const Vector3 kHomingSpeed = {0.1f, 0.1f, 0.1f};
 	float t = 0.01f;
 };

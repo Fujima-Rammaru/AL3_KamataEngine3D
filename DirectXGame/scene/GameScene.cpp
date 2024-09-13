@@ -127,12 +127,7 @@ void GameScene::Update() {
 		}
 		light_->Setposition(lightPos);
 		light_->SetSize(lightSize);
-	} // else { // 条件を満たさないなら元に戻す
-	// lightPos = stdLightPos;
-	// lightSize = stdLightSize;
-	// light_->Setposition(lightPos);
-	// light_->SetSize(lightSize);
-	//}
+	}
 	light_->Update();
 
 #ifdef _DEBUG
