@@ -27,6 +27,8 @@ GameScene::~GameScene() {
 	delete light_;
 	delete goal_;
 	delete modelGoal_;
+	delete lightPowItem_;
+	delete mdlLightPowItem;
 }
 
 void GameScene::Initialize() {
@@ -82,7 +84,6 @@ void GameScene::Initialize() {
 	// スプライト初期化
 	light_ = new Box();
 	light_->Initialize();
-
 	lightPos = light_->GetPosition();
 	lightSize = light_->GetSize();
 	stdLightPos = light_->GetPosition();
@@ -92,6 +93,12 @@ void GameScene::Initialize() {
 	goal_ = new Goal();
 	modelGoal_ = Model::CreateFromOBJ("Goal", true);
 	goal_->Initialize(modelGoal_, &cameraViewProjection_, goalPos);
+
+	// アイテム
+	Vector3 ItemPos = mapChipField_->GetMapChipPositionByIndex(13, 13);
+	lightPowItem_ = new LightPowItem();
+	mdlLightPowItem = Model::CreateFromOBJ("Item", true);
+	lightPowItem_->Initialize(mdlLightPowItem, &cameraViewProjection_, ItemPos);
 
 	// サウンド
 	BGM = audio_->LoadWave("sound/BGM.mp3");
@@ -105,7 +112,7 @@ void GameScene::Update() {
 	ChangePhase();
 	// lightの大きさ変更処理（後で衝突応答による処理に変更）
 	if (playerWorldT->translation_.x > 20.0f) {
-		if (lightSize.x > 3840-560) {
+		if (lightSize.x > 3840 - 560) {
 			lightPos.x += 2.f;
 			lightPos.y += 1.125f;
 			lightSize.x -= 4.f;
@@ -116,8 +123,8 @@ void GameScene::Update() {
 	} // else { // 条件を満たさないなら元に戻す
 	// lightPos = stdLightPos;
 	// lightSize = stdLightSize;
-	//light_->Setposition(lightPos);
-	//light_->SetSize(lightSize);
+	// light_->Setposition(lightPos);
+	// light_->SetSize(lightSize);
 	//}
 	light_->Update();
 
@@ -168,7 +175,7 @@ void GameScene::Draw() {
 		deathParticles_->Draw();
 	}
 	goal_->Draw();
-
+	lightPowItem_->Draw();
 	/// </summary>
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
@@ -237,6 +244,15 @@ void GameScene::CheckAllCollisions() {
 		goal_->Oncollision(player_);
 		audio_->StopWave(BGM);
 	}
+
+#pragma region 自キャラとアイテムの当たり判定
+	AABB aabb5, aabb6;
+	aabb5 = player_->GetAABB();
+	aabb6 = lightPowItem_->GetAABB();
+	if (aabb6.isHit(aabb5)) {
+		lightPowItem_->Oncollision(player_);
+	}
+#pragma endregion
 }
 
 void GameScene::ChangePhase() {
@@ -253,6 +269,7 @@ void GameScene::ChangePhase() {
 
 		enemy_->Update();
 		goal_->Update();
+		lightPowItem_->Update();
 		CameraUpdate();
 
 		CheckAllCollisions();

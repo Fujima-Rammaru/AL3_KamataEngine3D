@@ -34,5 +34,5 @@ private:
 	WorldTransform worldTransform_;
 	Model* model_ = nullptr;
 	ViewProjection* viewProjection_ = nullptr;
-	bool isFinished_ = false;
+	bool isGetting_ = false;
 };

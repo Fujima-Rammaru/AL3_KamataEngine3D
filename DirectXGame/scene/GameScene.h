@@ -17,6 +17,7 @@
 #include "Sprite.h"
 #include "Vector4.h"
 #include "ViewProjection.h"
+#include "lightPowerItem.h"
 #include <vector>
 /// <summary>
 /// ゲームシーン
@@ -117,6 +118,10 @@ private: // メンバ変数
 	// ゴール
 	Goal* goal_ = nullptr;
 	Model* modelGoal_ = nullptr;
+
+	// アイテム
+	LightPowItem* lightPowItem_ = nullptr;
+	Model* mdlLightPowItem = nullptr;
 
 	// 終了フラグ
 	bool IsFinished_ = false;
