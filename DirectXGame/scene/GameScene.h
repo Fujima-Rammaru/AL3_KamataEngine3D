@@ -121,7 +121,7 @@ private: // メンバ変数
 	// アイテム
 	std::vector<LightPowItem*> lightPowItems_;
 	Model* mdlLightPowItem = nullptr;
-	int num = 6;
+	int num = 9;
 
 	// 終了フラグ
 	bool IsFinished_ = false;

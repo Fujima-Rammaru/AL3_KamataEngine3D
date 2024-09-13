@@ -71,7 +71,7 @@ void GameScene::Initialize() {
 	// 敵キャラの生成
 	modelEnemy = Model::CreateFromOBJ("Enemy", true);
 	enemy_ = new Enemy();
-	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(15, 18);
+	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(10, 18);
 	enemyPosition.x *= -1;
 	enemy_->Initialize(modelEnemy, &cameraViewProjection_, enemyPosition);
 	enemy_->SetPlayer(player_);
@@ -100,11 +100,14 @@ void GameScene::Initialize() {
 	// アイテム(複数化)
 	lightPowItems_.resize(num);
 	mdlLightPowItem = Model::CreateFromOBJ("Item", true);
-	Vector3 itemPos[6];
+	Vector3 itemPos[9];
 	for (int i = 0; i < num; i++) {
 		itemPos[i] = mapChipField_->GetMapChipPositionByIndex(13, 13 - i);
 		lightPowItems_[i] = new LightPowItem();
 		itemPos[5] = mapChipField_->GetMapChipPositionByIndex(56, 6);
+		itemPos[6] = mapChipField_->GetMapChipPositionByIndex(70, 10);
+		itemPos[7] = mapChipField_->GetMapChipPositionByIndex(92, 12);
+		itemPos[8] = mapChipField_->GetMapChipPositionByIndex(119, 13);
 		lightPowItems_[i]->Initialize(mdlLightPowItem, &cameraViewProjection_, itemPos[i]);
 	}
 
@@ -253,7 +256,7 @@ void GameScene::CheckAllCollisions() {
 	}
 
 #pragma region 自キャラとアイテムの当たり判定
-	AABB aabb5, aabb6[6];
+	AABB aabb5, aabb6[9];
 	aabb5 = player_->GetAABB();
 	for (int i = 0; i < num; i++) {
 		aabb6[i] = lightPowItems_[i]->GetAABB();
