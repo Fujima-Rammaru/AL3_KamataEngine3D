@@ -14,7 +14,7 @@ void CameraController::Update() {
 
 	targetVelocity = target_->GetVelocity();
 
-	CameraShake();
+	//CameraShake();
 
 	// 追従対象とオフセットと追従対象の速度からカメラの目標座標を計算
 	goalPosition.x = (targetWorldTransform.translation_.x + targetOffset_.x + targetVelocity.x * kVelocityBiasX) + shakePosition.x;

@@ -7,7 +7,9 @@
 
 class Player;
 
-class Goal {
+class LightPowItem {
+
+
 public:
 	void Initialize(Model* model, ViewProjection* viewProjection, const Vector3& position);
 
@@ -23,11 +25,12 @@ public:
 	// 衝突応答
 	void Oncollision(const Player* player);
 
+
 private:
 	// 横幅
-	static inline const float kWidth = 0.5f;
+	static inline const float kWidth = 1.0f;
 	// 縦幅
-	static inline const float kHeight = 4.0f;
+	static inline const float kHeight = 1.0f;
 	WorldTransform worldTransform_;
 	Model* model_ = nullptr;
 	ViewProjection* viewProjection_ = nullptr;

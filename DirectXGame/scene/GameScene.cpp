@@ -105,20 +105,20 @@ void GameScene::Update() {
 	ChangePhase();
 	// lightの大きさ変更処理（後で衝突応答による処理に変更）
 	if (playerWorldT->translation_.x > 20.0f) {
-		if (lightSize.x == 3840) {
-			lightPos.x *= 2.5f;
-			lightPos.y *= 2.5f;
-			lightSize.x *= 2.f;
-			lightSize.y *= 2.f;
+		if (lightSize.x > 3840-560) {
+			lightPos.x += 2.f;
+			lightPos.y += 1.125f;
+			lightSize.x -= 4.f;
+			lightSize.y -= 2.25f;
 		}
 		light_->Setposition(lightPos);
 		light_->SetSize(lightSize);
-	} else { // 条件を満たさないなら元に戻す
-		lightPos = stdLightPos;
-		lightSize = stdLightSize;
-		light_->Setposition(lightPos);
-		light_->SetSize(lightSize);
-	}
+	} // else { // 条件を満たさないなら元に戻す
+	// lightPos = stdLightPos;
+	// lightSize = stdLightSize;
+	//light_->Setposition(lightPos);
+	//light_->SetSize(lightSize);
+	//}
 	light_->Update();
 
 #ifdef _DEBUG
@@ -185,6 +185,7 @@ void GameScene::Draw() {
 	// スプライト描画後処理
 	Sprite::PostDraw();
 	light_->Draw(commandList);
+
 #pragma endregion
 }
 

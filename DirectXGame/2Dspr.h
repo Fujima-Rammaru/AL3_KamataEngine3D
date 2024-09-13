@@ -20,9 +20,10 @@ public:
 private:
 	// スプライト用変数
 	Vector4 color = {1, 1, 1, 1};
-	Vector2 position_ = {-1273.0f, -720.0f};
+	Vector2 position_ = {-1280.0f, -720.0f};//16:9
 	Vector2 anchorpoint = {0, 0};
 	Vector2 size_ = {3840.0f, 2160.0f};
 	Sprite* sprite_ = nullptr;
 	uint32_t textuteHandle = 0u;
+	//1280/180
 };

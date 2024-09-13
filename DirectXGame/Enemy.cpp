@@ -30,7 +30,7 @@ void Enemy::Update() {
 	velocity_ = Normalize(velocity_);
 	// 線形補間
 	velocity_ = Multiply(kWalkSpeed, Slerp(velocity_, toPlayer, t));
-	worldTransform_.translation_ += velocity_;
+	//worldTransform_.translation_ += velocity_;
 	worldTransform_.UpdateMatrix();
 	///=======================================================
 }
