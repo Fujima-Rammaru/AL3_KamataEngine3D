@@ -92,7 +92,7 @@ void GameScene::Initialize() {
 	stdLightPos = light_->GetPosition();
 	stdLightSize = light_->GetSize();
 	// ゴール
-	Vector3 goalPos = mapChipField_->GetMapChipPositionByIndex(15, 16);
+	Vector3 goalPos = mapChipField_->GetMapChipPositionByIndex(146, 10);
 	goal_ = new Goal();
 	modelGoal_ = Model::CreateFromOBJ("Goal", true);
 	goal_->Initialize(modelGoal_, &cameraViewProjection_, goalPos);
@@ -100,11 +100,11 @@ void GameScene::Initialize() {
 	// アイテム(複数化)
 	lightPowItems_.resize(num);
 	mdlLightPowItem = Model::CreateFromOBJ("Item", true);
-	Vector3 itemPos[5];
-	mapChipField_->GetMapChipPositionByIndex(10, 14);
+	Vector3 itemPos[6];
 	for (int i = 0; i < num; i++) {
 		itemPos[i] = mapChipField_->GetMapChipPositionByIndex(13, 13 - i);
 		lightPowItems_[i] = new LightPowItem();
+		itemPos[5] = mapChipField_->GetMapChipPositionByIndex(56, 6);
 		lightPowItems_[i]->Initialize(mdlLightPowItem, &cameraViewProjection_, itemPos[i]);
 	}
 
@@ -253,7 +253,7 @@ void GameScene::CheckAllCollisions() {
 	}
 
 #pragma region 自キャラとアイテムの当たり判定
-	AABB aabb5, aabb6[5];
+	AABB aabb5, aabb6[6];
 	aabb5 = player_->GetAABB();
 	for (int i = 0; i < num; i++) {
 		aabb6[i] = lightPowItems_[i]->GetAABB();
@@ -262,10 +262,10 @@ void GameScene::CheckAllCollisions() {
 	for (int i = 0; i < num; i++) {
 		if (aabb6[i].isHit(aabb5) && !lightPowItems_[i]->IsFinishedGetter()) {
 			lightPowItems_[i]->Oncollision(player_);
-			lightPos.x -= 400.f;
-			lightPos.y -= 225.f;
-			lightSize.x += 800.f;
-			lightSize.y += 450.0f;
+			lightPos.x -= 800.f;
+			lightPos.y -= 450.f;
+			lightSize.x += 1600.f;
+			lightSize.y += 900.0f;
 			light_->Setposition(lightPos);
 			light_->SetSize(lightSize);
 		}

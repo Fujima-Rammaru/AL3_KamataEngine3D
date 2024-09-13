@@ -26,7 +26,7 @@ private:
 	WorldTransform worldTransform_;
 	Model* model_ = nullptr;
 	ViewProjection* viewProjection_ = nullptr;
-	static inline const float kWalkSpeed = 0.05f;
+	static inline const float kWalkSpeed = 0.07f;
 	Vector3 velocity_ = {};
 	static inline const float kWalkMotionAngleStart = 1.0f;
 	static inline const float kWalkMotionAngleEnd = 20.0f;
