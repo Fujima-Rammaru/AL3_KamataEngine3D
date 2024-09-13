@@ -265,10 +265,10 @@ void GameScene::CheckAllCollisions() {
 		aabb6[i] = lightPowItems_[i]->GetAABB();
 		if (aabb6[i].isHit(aabb5) && !lightPowItems_[i]->IsFinishedGetter()) {
 			lightPowItems_[i]->Oncollision(player_);
-			lightPos.x *= 2.125f;
-			lightPos.y *= 2.125f;
-			lightSize.x *= 1.75f;
-			lightSize.y *= 1.75f;
+			lightPos.x -= 200.f;
+			lightPos.y -= 112.5f;
+			lightSize.x += 400.f;
+			lightSize.y += 225.0f;
 			light_->Setposition(lightPos);
 			light_->SetSize(lightSize);
 		}
