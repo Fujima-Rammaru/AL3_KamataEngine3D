@@ -16,6 +16,7 @@ public:
 	void Draw();
 	bool IsFinished() const { return IsFinished_; }
 
+
 private:
 	// 終了フラグ
 	bool IsFinished_ = false;
