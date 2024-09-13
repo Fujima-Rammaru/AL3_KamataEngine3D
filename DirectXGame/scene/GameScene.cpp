@@ -71,7 +71,8 @@ void GameScene::Initialize() {
 	// 敵キャラの生成
 	modelEnemy = Model::CreateFromOBJ("Enemy", true);
 	enemy_ = new Enemy();
-	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(30, 18);
+	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(15, 18);
+	enemyPosition.x *= -1;
 	enemy_->Initialize(modelEnemy, &cameraViewProjection_, enemyPosition);
 	enemy_->SetPlayer(player_);
 
