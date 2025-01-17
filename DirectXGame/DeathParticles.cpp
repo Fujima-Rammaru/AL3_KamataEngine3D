@@ -6,7 +6,7 @@ void DeathParticles::Initialize(Model* model, ViewProjection* viewProjection, co
 	model_ = model;
 	viewProjection_ = viewProjection;
 	objectColor_.Initialize();
-	color_ = {1, 1, 1, 1};
+	color_ = {0.5f, 0, 1, 1};
 	// ワールド変換の初期化
 	for (auto& worldTransform : worldTransforms_) {
 		worldTransform.Initialize();

@@ -46,7 +46,7 @@ public:
 	const Vector3& GetVelocity() const { return velocity_; };                          // 自キャラの速度を取得するためのgetter
 	void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; } // setter
 	void Move();
-	//	void CollisionMapCheck(CollisionMapInfo& info); // マップ衝突判定
+	
 	void CollisionMapCheckUp(CollisionMapInfo& info); // 衝突判定上方向
 	void CollisionMapCheckDown(CollisionMapInfo& info);
 	void CollisionMapCheckLeft(CollisionMapInfo& info);

@@ -11,6 +11,7 @@
 #include "TitleScene.h"
 #include "Tutorial.h"
 #include "WinApp.h"
+#include<fstream>
 
 GameScene* gameScene = nullptr;
 TitleScene* titleScene = nullptr;
@@ -51,7 +52,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// ゲームウィンドウの作成
 	win = WinApp::GetInstance();
 
-	win->CreateGameWindow(L"GC2A_10_フジマ_ランマル_AL3");
+	win->CreateGameWindow(L"6001_地獄旅行");
 
 	// DirectX初期化処理
 	dxCommon = DirectXCommon::GetInstance();
